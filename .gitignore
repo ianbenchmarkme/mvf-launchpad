@@ -28,6 +28,9 @@ yarn-error.log*
 .env.*.local
 .env.local
 
+# Claude Code (local settings only - skills are shared)
+.claude/settings.local.json
+
 # IDE
 .vscode
 .idea
