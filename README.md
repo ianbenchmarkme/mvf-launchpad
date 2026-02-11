@@ -6,7 +6,7 @@ A modern web application built with Next.js, React, Tailwind CSS, and shadcn/ui.
 
 ### Prerequisites
 
-- Node.js 18+ and npm/yarn
+- Node.js 18+ and npm
 
 ### Installation
 
@@ -32,7 +32,8 @@ npm start
 ### Linting
 
 ```bash
-npm run lint
+npm run lint        # check for issues
+npm run lint:fix    # auto-fix issues
 ```
 
 ### Type Checking
@@ -50,11 +51,13 @@ npm run type-check
 
 ## Tech Stack
 
-- **Framework**: [Next.js](https://nextjs.org/)
-- **UI Library**: [React](https://react.dev/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **UI Library**: [React 19](https://react.dev/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) (CSS-first config)
 - **Component Library**: [shadcn/ui](https://ui.shadcn.com/)
-- **Language**: TypeScript
+- **Linting**: [ESLint 9](https://eslint.org/) (flat config)
+- **Dark Mode**: [next-themes](https://github.com/pacocoursey/next-themes)
+- **Language**: TypeScript (strict mode)
 
 ## License
 

@@ -11,7 +11,8 @@ MVF Launchpad is a Next.js application with React, Tailwind CSS, and shadcn/ui f
 - **Dev server**: `npm run dev` — Starts Next.js dev server at http://localhost:3000
 - **Build**: `npm run build` — Builds for production
 - **Start**: `npm start` — Runs production server (requires build first)
-- **Lint**: `npm run lint` — Runs ESLint (Next.js config)
+- **Lint**: `npm run lint` — Runs ESLint with flat config
+- **Lint fix**: `npm run lint:fix` — Auto-fix lint issues
 - **Type check**: `npm run type-check` — Runs TypeScript compiler without emitting files
 
 ## Project Structure
@@ -26,14 +27,13 @@ MVF Launchpad is a Next.js application with React, Tailwind CSS, and shadcn/ui f
 
 ### Configuration Files
 - **`next.config.ts`** - Next.js configuration
-- **`tailwind.config.ts`** - Tailwind CSS theme and content paths
 - **`tsconfig.json`** - TypeScript config with `@/*` path alias for imports
-- **`postcss.config.mjs`** - PostCSS config for Tailwind and Autoprefixer
-- **`.eslintrc.json`** - ESLint config using Next.js defaults
+- **`postcss.config.mjs`** - PostCSS config for Tailwind v4 via `@tailwindcss/postcss`
+- **`eslint.config.mjs`** - ESLint 9 flat config with Next.js rules
 
 ## Design System & Style Guide
 
-**IMPORTANT**: Always reference and follow the **mvf-styleguide** skill when building new screens and features, and when modifying existing components.
+**IMPORTANT**: Always reference and follow the **frontend-design** skill when building new screens and features, and when modifying existing components.
 
 The style guide governs:
 - **Colors** - Use semantic color names (e.g., `bg-primary`, `text-destructive`, `bg-sidebar-primary`)
@@ -44,11 +44,12 @@ The style guide governs:
 - **Accessibility** - Ensure WCAG AA compliance (4.5:1 contrast minimum)
 - **Dark Mode** - All components must work in both light and dark modes
 
-Invoke the skill with `/mvf-styleguide` before starting any styling work to review current design tokens and best practices.
+Invoke the skill with `/frontend-design` before starting any styling work to review current design tokens and best practices.
 
 ## Key Patterns
 
 ### Styling
+- Tailwind v4 with CSS-first configuration via `@theme inline` in `app/globals.css`
 - Use Tailwind CSS utility classes with semantic color tokens from the design system
 - Use `cn()` helper from `lib/utils.ts` to conditionally merge Tailwind classes
 - Global styles in `app/globals.css` (contains all CSS variables for light/dark modes)
@@ -78,9 +79,9 @@ Invoke the skill with `/mvf-styleguide` before starting any styling work to revi
 
 ## Adding shadcn/ui Components
 
-Use the shadcn/ui CLI to add components:
+Use the shadcn CLI to add components:
 ```bash
-npx shadcn-ui@latest add [component-name]
+npx shadcn@latest add [component-name]
 ```
 
 Components are added to `/components/ui` and can be imported and customized.
