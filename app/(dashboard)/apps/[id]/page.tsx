@@ -49,7 +49,7 @@ export default async function AppProfilePage({ params }: PageProps) {
           </div>
           <p className="mt-1 text-muted-foreground">{typedApp.problem_statement}</p>
         </div>
-        <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium">
+        <span className="rounded bg-muted px-2 py-1 text-xs font-medium">
           {STATUS_LABELS[typedApp.status]}
         </span>
       </div>
@@ -101,7 +101,7 @@ export default async function AppProfilePage({ params }: PageProps) {
             {typedFlags.map((flag) => (
               <li
                 key={flag.id}
-                className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm"
+                className="flex items-center gap-2 rounded border px-3 py-2 text-sm"
               >
                 <span className={`h-2 w-2 rounded-full ${
                   flag.severity === 'critical' ? 'bg-red-500' :

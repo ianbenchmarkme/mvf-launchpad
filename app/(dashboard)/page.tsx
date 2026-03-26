@@ -44,7 +44,7 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold">My Dashboard</h1>
         <Link
           href="/register"
-          className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 rounded bg-mvf-pink px-4 py-2.5 text-sm font-semibold text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
         >
           <PlusCircle className="h-4 w-4" />
           Register New App
@@ -52,14 +52,14 @@ export default async function DashboardPage() {
       </div>
 
       {/* Capacity */}
-      <div className="rounded-lg border bg-card p-4 max-w-xs">
+      <div className="rounded border bg-card p-4 max-w-xs">
         <h2 className="text-sm font-medium text-card-foreground mb-2">My Capacity</h2>
         <CapacityIndicator used={capacityUsed} limit={CAPACITY_LIMIT} />
       </div>
 
       {/* Action Required */}
       {unresolvedFlags.length > 0 && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+        <div className="rounded border border-amber-200 bg-amber-50 p-4">
           <h2 className="text-sm font-semibold text-amber-800 mb-2">
             Action Required ({unresolvedFlags.length})
           </h2>
@@ -83,7 +83,7 @@ export default async function DashboardPage() {
       <div>
         <h2 className="text-lg font-semibold mb-4">My Apps</h2>
         {apps.length === 0 ? (
-          <div className="rounded-lg border border-dashed p-8 text-center text-muted-foreground">
+          <div className="rounded border border-dashed p-8 text-center text-muted-foreground">
             <p>No apps registered yet.</p>
             <Link href="/register" className="text-primary underline mt-2 inline-block">
               Register your first app

@@ -39,7 +39,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+                className="flex items-center gap-3 rounded px-3 py-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
               >
                 <item.icon className="h-4 w-4" />
                 {item.label}
@@ -69,7 +69,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
           <form action="/api/auth/signout" method="POST" className="mt-2">
             <button
               type="submit"
-              className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-sidebar-accent transition-colors"
+              className="flex w-full items-center gap-3 rounded px-3 py-2 text-sm text-muted-foreground hover:bg-sidebar-accent transition-colors"
             >
               <LogOut className="h-4 w-4" />
               Sign out

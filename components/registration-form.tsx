@@ -227,7 +227,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="What's your tool called?"
                   autoFocus
-                  className="w-full rounded-lg border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                  className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
                 />
                 {errors.name && <p className="text-sm text-red-500 flex items-center gap-1 mt-1">{errors.name}</p>}
               </div>
@@ -242,7 +242,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   onChange={(e) => setProblemStatement(e.target.value)}
                   placeholder="What problem are you trying to solve?"
                   rows={4}
-                  className="w-full rounded-lg border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none resize-none"
+                  className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none resize-none"
                 />
                 {errors.problem_statement && (
                   <p className="text-sm text-red-500 mt-1">{errors.problem_statement}</p>
@@ -264,13 +264,13 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                         key={opt.value}
                         type="button"
                         onClick={() => setLayer(opt.value)}
-                        className={`flex items-start gap-4 rounded-lg border p-4 text-left transition-all duration-200 ${
+                        className={`flex items-start gap-4 rounded border p-4 text-left transition-all duration-200 ${
                           layer === opt.value
                             ? 'border-mvf-purple bg-mvf-purple/10 ring-2 ring-mvf-purple/20'
                             : 'border-input bg-background hover:border-mvf-purple/40 hover:bg-mvf-purple/5'
                         }`}
                       >
-                        <div className={`mt-0.5 rounded-lg p-2 ${
+                        <div className={`mt-0.5 rounded p-2 ${
                           layer === opt.value ? 'bg-mvf-purple text-white' : 'bg-muted text-muted-foreground'
                         }`}>
                           <Icon className="h-4 w-4" />
@@ -294,7 +294,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                       key={opt.value}
                       type="button"
                       onClick={() => setTargetUsers(opt.value)}
-                      className={`flex-1 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                      className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                         targetUsers === opt.value
                           ? 'border-mvf-purple bg-mvf-purple text-white'
                           : 'border-input bg-background hover:border-mvf-purple/40'
@@ -317,7 +317,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   value={potentialRoi}
                   onChange={(e) => setPotentialRoi(e.target.value)}
                   placeholder="e.g., saves 2h/week for 5 people"
-                  className="w-full rounded-lg border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                  className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
                 />
               </div>
             </div>
@@ -352,7 +352,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                       key={opt.value}
                       type="button"
                       onClick={() => setUsesApiKeys(opt.value)}
-                      className={`flex-1 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                      className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                         usesApiKeys === opt.value
                           ? 'border-mvf-purple bg-mvf-purple text-white'
                           : 'border-input bg-background hover:border-mvf-purple/40'
@@ -374,7 +374,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                       onChange={(e) => setApiKeyServices(e.target.value)}
                       placeholder="e.g., OpenAI, Stripe, Replicate"
                       autoFocus
-                      className="w-full rounded-lg border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                      className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
                     />
                     {errors.api_key_services && (
                       <p className="text-sm text-red-500">{errors.api_key_services}</p>
@@ -397,7 +397,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   <button
                     type="button"
                     onClick={() => setReplacesThirdParty(true)}
-                    className={`flex-1 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                    className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                       replacesThirdParty
                         ? 'border-mvf-purple bg-mvf-purple text-white'
                         : 'border-input bg-background hover:border-mvf-purple/40'
@@ -408,7 +408,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   <button
                     type="button"
                     onClick={() => setReplacesThirdParty(false)}
-                    className={`flex-1 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                    className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                       !replacesThirdParty
                         ? 'border-mvf-purple bg-mvf-purple text-white'
                         : 'border-input bg-background hover:border-mvf-purple/40'
@@ -430,7 +430,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                         onChange={(e) => setReplacedToolName(e.target.value)}
                         placeholder="e.g., Canva Pro"
                         autoFocus
-                        className="w-full rounded-lg border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                        className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
                       />
                       {errors.replaced_tool_name && (
                         <p className="text-sm text-red-500">{errors.replaced_tool_name}</p>
@@ -446,7 +446,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                         value={replacedToolCost}
                         onChange={(e) => setReplacedToolCost(e.target.value)}
                         placeholder="e.g., £2,000/year"
-                        className="w-full rounded-lg border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                        className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
                       />
                     </div>
                   </div>
@@ -454,7 +454,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               </fieldset>
 
               {/* Review Summary */}
-              <div className="rounded-lg border bg-card/50 p-4 space-y-3">
+              <div className="rounded border bg-card/50 p-4 space-y-3">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
                   <Check className="h-4 w-4 text-mvf-light-blue" />
                   Review your answers
@@ -481,7 +481,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               <button
                 type="button"
                 onClick={goBack}
-                className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 rounded px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back
@@ -494,7 +494,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center gap-2 rounded-lg bg-mvf-purple px-6 py-2.5 text-sm font-semibold text-white hover:bg-mvf-purple/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-mvf-purple/20"
+                className="flex items-center gap-2 rounded bg-mvf-pink px-6 py-2.5 text-sm font-semibold text-white hover:bg-mvf-pink/85 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
               >
                 {isSubmitting ? (
                   <>
@@ -511,7 +511,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
             ) : (
               <button
                 type="submit"
-                className="flex items-center gap-2 rounded-lg bg-mvf-purple px-6 py-2.5 text-sm font-semibold text-white hover:bg-mvf-purple/90 transition-all duration-200 shadow-lg shadow-mvf-purple/20"
+                className="flex items-center gap-2 rounded bg-mvf-pink px-6 py-2.5 text-sm font-semibold text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
               >
                 Next
                 <ArrowRight className="h-4 w-4" />
@@ -551,7 +551,7 @@ function TristateField({
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`flex-1 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
               value === opt.value
                 ? 'border-mvf-purple bg-mvf-purple text-white'
                 : 'border-input bg-background hover:border-mvf-purple/40'
@@ -562,7 +562,7 @@ function TristateField({
         ))}
       </div>
       {alert && (
-        <p className="text-sm text-amber-600 bg-amber-50 rounded-lg px-3 py-2 flex items-center gap-2">
+        <p className="text-sm text-amber-600 bg-amber-50 rounded px-3 py-2 flex items-center gap-2">
           <Scale className="h-4 w-4 shrink-0" />
           {alert}
         </p>

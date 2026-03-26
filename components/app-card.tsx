@@ -11,7 +11,7 @@ export function AppCard({ app }: AppCardProps) {
   return (
     <Link
       href={`/apps/${app.id}`}
-      className="block rounded-lg border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
+      className="block rounded border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-semibold text-card-foreground">{app.name}</h3>

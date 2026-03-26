@@ -94,7 +94,7 @@ export default async function GovernancePage() {
             {typedFlags.map((flag) => (
               <li
                 key={flag.id}
-                className="flex items-center gap-3 rounded-md border px-4 py-3 text-sm"
+                className="flex items-center gap-3 rounded border px-4 py-3 text-sm"
               >
                 <span className={`h-2 w-2 rounded-full shrink-0 ${
                   flag.severity === 'critical' ? 'bg-red-500' :
