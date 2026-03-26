@@ -50,7 +50,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Capacity */}
-      <div className="rounded-[8px] border border-mvf-dark-blue/8 bg-mvf-dark-blue/[0.02] p-4 max-w-[240px] shadow-xs dark:border-white/6 dark:bg-white/[0.03]">
+      <div className="rounded-[8px] border border-mvf-dark-blue/6 bg-white p-4 max-w-[240px] shadow-xs dark:border-white/6 dark:bg-[#161650]">
         <h2 className="text-[12px] font-medium text-muted-foreground mb-2">Capacity</h2>
         <CapacityIndicator used={capacityUsed} limit={CAPACITY_LIMIT} />
       </div>

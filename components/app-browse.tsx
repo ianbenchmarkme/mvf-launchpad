@@ -115,7 +115,7 @@ export function AppBrowse({ apps }: AppBrowseProps) {
               <Link
                 key={app.id}
                 href={`/apps/${app.id}`}
-                className="group relative flex flex-col rounded-[8px] border border-mvf-dark-blue/8 bg-mvf-dark-blue/[0.02] py-5 px-6 min-h-[140px] shadow-xs transition-all duration-150 hover:border-mvf-purple/20 hover:bg-mvf-dark-blue/[0.04] hover:shadow-sm dark:border-white/6 dark:bg-white/[0.03] dark:hover:border-mvf-purple/25 dark:hover:bg-white/[0.05]"
+                className="group relative flex flex-col rounded-[8px] border border-mvf-dark-blue/6 bg-white py-5 px-6 min-h-[140px] shadow-xs transition-all duration-150 hover:border-mvf-purple/20 hover:shadow-md dark:border-white/6 dark:bg-[#161650] dark:hover:border-mvf-purple/25"
               >
                 <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${accent} opacity-60 group-hover:opacity-100 transition-opacity duration-150`} />
                 <div className="flex items-start justify-between gap-2">

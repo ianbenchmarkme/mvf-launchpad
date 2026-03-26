@@ -32,7 +32,7 @@ export default function RegisterPage() {
             Tell us what you&apos;re building. Takes about 30 seconds.
           </p>
         </div>
-        <div className="rounded-[8px] border border-mvf-dark-blue/8 bg-mvf-dark-blue/[0.02] p-6 shadow-xs dark:border-white/6 dark:bg-white/[0.03]">
+        <div className="rounded-[8px] border border-mvf-dark-blue/6 bg-white p-6 shadow-xs dark:border-white/6 dark:bg-[#161650]">
           <RegistrationForm onSubmit={handleSubmit} />
         </div>
       </div>
