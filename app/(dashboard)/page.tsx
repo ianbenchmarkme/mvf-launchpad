@@ -77,7 +77,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {apps.map((app: App) => (
               <AppCard key={app.id} app={app} />
             ))}
