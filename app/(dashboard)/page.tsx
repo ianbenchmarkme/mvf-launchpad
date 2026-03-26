@@ -50,14 +50,14 @@ export default async function DashboardPage() {
       </div>
 
       {/* Capacity */}
-      <div className="rounded-[8px] border border-mvf-dark-blue/6 bg-white p-4 max-w-[240px] shadow-xs dark:border-white/6 dark:bg-[#161650]">
+      <div className="rounded-[8px] border border-mvf-dark-blue/6 bg-white p-4 max-w-[240px] card-shadow dark:border-white/6 dark:bg-[#161650]">
         <h2 className="text-[12px] font-medium text-muted-foreground mb-2">Capacity</h2>
         <CapacityIndicator used={capacityUsed} limit={CAPACITY_LIMIT} />
       </div>
 
       {/* Action Required */}
       {unresolvedFlags.length > 0 && (
-        <div className="rounded-[8px] border border-amber-500/20 bg-amber-500/5 p-4 shadow-xs">
+        <div className="rounded-[8px] border border-amber-500/20 bg-amber-500/5 p-4 card-shadow">
           <h2 className="text-[13px] font-semibold text-amber-600 mb-2">
             Action Required ({unresolvedFlags.length})
           </h2>
