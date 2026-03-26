@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { LayoutDashboard, PlusCircle, Shield, LogOut } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Search, Shield, LogOut } from 'lucide-react';
 import type { Profile } from '@/lib/supabase/types';
 
 interface DashboardShellProps {
@@ -10,8 +10,9 @@ interface DashboardShellProps {
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/browse', label: 'App Library', icon: Search },
   { href: '/register', label: 'Register App', icon: PlusCircle },
-  { href: '/governance', label: 'Governance', icon: Shield },
+  { href: '/governance', label: 'Governance', icon: Shield, adminOnly: true },
 ];
 
 export function DashboardShell({ user, children }: DashboardShellProps) {
@@ -31,8 +32,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
 
         <nav className="space-y-1 flex-1">
           {navItems.map((item) => {
-            // Only show Governance to admins and viewers
-            if (item.href === '/governance' && user.role === 'maker') {
+            if ('adminOnly' in item && item.adminOnly && user.role === 'maker') {
               return null;
             }
             return (
