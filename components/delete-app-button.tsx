@@ -76,7 +76,7 @@ export function DeleteAppButton({ appId, appName, isAdmin }: DeleteAppButtonProp
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-[8px] bg-white dark:bg-[#161650] border border-mvf-dark-blue/10 dark:border-white/10 p-6 space-y-4">
+          <div className="w-full max-w-md rounded-[8px] bg-white dark:bg-[#08082A] border border-mvf-dark-blue/10 dark:border-white/10 p-6 space-y-4">
             {success ? (
               /* Success state */
               <>
