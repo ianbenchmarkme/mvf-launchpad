@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, Filter, ArrowUpRight } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { LAYER_LABELS, STATUS_LABELS, TIER_LABELS } from '@/lib/constants';
 import type { App, AppTier, AppLayer } from '@/lib/supabase/types';
@@ -122,10 +122,7 @@ export function AppBrowse({ apps }: AppBrowseProps) {
                   <h3 className="text-[13px] font-semibold text-card-foreground group-hover:text-mvf-purple transition-colors duration-150">
                     {app.name}
                   </h3>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <TierBadge tier={app.tier} />
-                    <ArrowUpRight className="h-3 w-3 text-muted-foreground/0 group-hover:text-muted-foreground/50 transition-all duration-150" />
-                  </div>
+                  <TierBadge tier={app.tier} className="shrink-0" />
                 </div>
                 <p className="mt-2 text-[12px] leading-[1.6] text-foreground/60 dark:text-white/50 line-clamp-4 flex-1">
                   {app.problem_statement}
