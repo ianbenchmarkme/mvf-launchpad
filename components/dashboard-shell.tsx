@@ -1,13 +1,20 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { LayoutDashboard, PlusCircle, Search, Shield, LogOut } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Search, Shield, LogOut, AlertTriangle } from 'lucide-react';
 import { CapacityIndicator } from '@/components/capacity-indicator';
 import { CAPACITY_LIMIT } from '@/lib/constants';
 import type { Profile } from '@/lib/supabase/types';
 
+interface UnresolvedFlag {
+  id: string;
+  app_id: string;
+  flag_type: string;
+}
+
 interface DashboardShellProps {
   user: Profile;
   capacityUsed: number;
+  unresolvedFlags: UnresolvedFlag[];
   children: React.ReactNode;
 }
 
@@ -18,7 +25,7 @@ const navItems = [
   { href: '/governance', label: 'Governance', icon: Shield, adminOnly: true },
 ];
 
-export function DashboardShell({ user, capacityUsed, children }: DashboardShellProps) {
+export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }: DashboardShellProps) {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -47,6 +54,35 @@ export function DashboardShell({ user, capacityUsed, children }: DashboardShellP
             );
           })}
         </nav>
+
+        {/* Action Required */}
+        {unresolvedFlags.length > 0 && (
+          <div className="border-t border-sidebar-border px-3 py-3">
+            <div className="flex items-center gap-1.5 mb-2">
+              <AlertTriangle className="h-3 w-3 text-amber-400" />
+              <p className="text-[11px] font-medium text-amber-400">
+                Action Required ({unresolvedFlags.length})
+              </p>
+            </div>
+            <ul className="space-y-0.5">
+              {unresolvedFlags.slice(0, 5).map((flag) => (
+                <li key={flag.id}>
+                  <Link
+                    href={`/apps/${flag.app_id}`}
+                    className="flex items-center rounded-[6px] px-2 h-6 text-[11px] text-sidebar-foreground/50 hover:text-sidebar-foreground/80 hover:bg-sidebar-accent transition-colors duration-150 capitalize"
+                  >
+                    {flag.flag_type.replace(/_/g, ' ')}
+                  </Link>
+                </li>
+              ))}
+              {unresolvedFlags.length > 5 && (
+                <li className="px-2 text-[11px] text-sidebar-foreground/30">
+                  +{unresolvedFlags.length - 5} more
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
 
         {/* Capacity */}
         <div className="border-t border-sidebar-border px-4 py-3">

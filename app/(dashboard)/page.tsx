@@ -18,17 +18,6 @@ export default async function DashboardPage() {
     .map((o: Record<string, unknown>) => o.apps as App)
     .filter((a: App | null): a is App => a !== null && a.status !== 'archived');
 
-  const appIds = apps.map((a: App) => a.id);
-  const { data: flags } = appIds.length > 0
-    ? await supabase
-        .from('risk_flags')
-        .select('*')
-        .in('app_id', appIds)
-        .is('resolved_at', null)
-    : { data: [] };
-
-  const unresolvedFlags = flags || [];
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -42,29 +31,6 @@ export default async function DashboardPage() {
           Register App
         </Link>
       </div>
-
-      {/* Action Required */}
-      {unresolvedFlags.length > 0 && (
-        <div className="rounded-[8px] border border-amber-500/20 bg-amber-500/5 p-4">
-          <h2 className="text-[13px] font-semibold text-amber-600 mb-2">
-            Action Required ({unresolvedFlags.length})
-          </h2>
-          <ul className="space-y-1">
-            {unresolvedFlags.map((flag: Record<string, unknown>) => (
-              <li key={flag.id as string} className="text-[12px] text-amber-600/80">
-                <span className="capitalize">{(flag.flag_type as string).replace(/_/g, ' ')}</span>
-                {' — '}
-                <Link
-                  href={`/apps/${flag.app_id}`}
-                  className="text-amber-700 underline decoration-amber-700/30 hover:decoration-amber-700"
-                >
-                  View
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {/* My Apps */}
       <div>
