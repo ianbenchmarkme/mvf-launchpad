@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { createAuthServerClient } from '@/lib/supabase/auth-server';
 import { TierBadge } from '@/components/tier-badge';
+import { DeleteAppButton } from '@/components/delete-app-button';
 import { LAYER_LABELS, STATUS_LABELS, TARGET_USERS_LABELS } from '@/lib/constants';
 import type { App, AppOwner, Profile, RiskFlag } from '@/lib/supabase/types';
 
@@ -116,6 +117,12 @@ export default async function AppProfilePage({ params }: PageProps) {
           </ul>
         </div>
       )}
+
+      {/* Danger Zone */}
+      <div className="border-t pt-6">
+        <h2 className="text-sm font-medium text-muted-foreground mb-3">Danger Zone</h2>
+        <DeleteAppButton appId={typedApp.id} appName={typedApp.name} />
+      </div>
     </div>
   );
 }
