@@ -167,7 +167,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
       : 'opacity-0 -translate-x-8';
 
   return (
-    <div ref={contentRef} className="max-w-2xl">
+    <div ref={contentRef} className="w-full">
       {/* ── Progress Indicator ──────────────────────────────── */}
       <div className="flex items-center justify-between mb-6">
         {STEPS.map((_step, i) => (

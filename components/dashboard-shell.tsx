@@ -122,8 +122,8 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto flex flex-col">
-        <div className="flex-1 px-8 py-6 max-w-5xl">
+      <main className="flex-1 overflow-auto flex flex-col min-h-screen">
+        <div className="flex-1 px-8 py-6 w-full">
           {children}
         </div>
       </main>

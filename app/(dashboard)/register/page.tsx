@@ -24,15 +24,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-full items-center justify-center">
-      <div className="w-full max-w-2xl space-y-4">
+    <div className="flex flex-1 items-center justify-center min-h-[calc(100vh-48px)]">
+      <div className="w-full max-w-3xl space-y-5">
         <div>
           <h1 className="text-lg font-semibold tracking-tight">Register New App</h1>
           <p className="text-[13px] text-muted-foreground mt-0.5">
             Tell us what you&apos;re building. Takes about 30 seconds.
           </p>
         </div>
-        <div className="rounded-[8px] border border-mvf-dark-blue/6 bg-white p-8 card-shadow dark:border-white/6 dark:bg-[#08082A]">
+        <div className="rounded-[8px] border border-mvf-dark-blue/6 bg-white p-10 card-shadow dark:border-white/6 dark:bg-[#08082A]">
           <RegistrationForm onSubmit={handleSubmit} />
         </div>
       </div>
