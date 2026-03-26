@@ -1,96 +1,118 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
 
-MVF Launchpad is an internal platform for managing vibe-coded tools. It provides a Starter Kit (standardized dev environment), an App Library (internal app store with Community/Verified/Supported tiers), and a Support team. The key innovation is an automated ingestion pipeline that brings existing Claude Code-built apps (Next.js + Tailwind + shadcn/ui) into the Launchpad ecosystem by swapping design tokens — no architecture changes needed.
+MVF Launchpad is an internal app registry and governance platform. Makers (employees who build internal tools with Lovable, Claude Code, etc.) register their tools here. Leadership gets governance visibility via dashboards. The platform uses a traffic-light tier system (Red/Amber/Green) and progressive registration.
 
-## Key Documentation
+**PRD:** `/Users/adriaanhitge/Dropbox/ai-apps/anita/docs/launchpad-prd.md`
 
-- **[`README.md`](README.md)** — Full project context: vision, lifecycle, ingestion strategy, design decisions
-- **[`docs/Launchpad_PRD.md`](docs/Launchpad_PRD.md)** — Product requirements document (problem, solution, phases, metrics, governance)
-- **[`docs/Launchpad_OnePager.md`](docs/Launchpad_OnePager.md)** — Executive one-pager for stakeholder pitches
-- **[`docs/plans/2025-02-13-ingestion-strategy-decision.md`](docs/plans/2025-02-13-ingestion-strategy-decision.md)** — Ingestion strategy decision tree (4 approaches with pros/cons)
+## Tech Stack
 
-Always read the README.md and relevant docs before making product or architecture decisions.
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Styling | Tailwind CSS v4 (CSS-first config via `@theme inline` in globals.css) |
+| Components | Custom components + Lucide icons |
+| Auth | Supabase Auth with Google OAuth |
+| Database | Supabase (PostgreSQL) with RLS |
+| Hosting | Vercel |
+| Testing | Vitest + Testing Library |
+| Validation | Zod v4 |
 
 ## Development Commands
 
-- **Dev server**: `npm run dev` — Starts Next.js dev server at http://localhost:3000
-- **Build**: `npm run build` — Builds for production
-- **Start**: `npm start` — Runs production server (requires build first)
-- **Lint**: `npm run lint` — Runs ESLint with flat config
-- **Lint fix**: `npm run lint:fix` — Auto-fix lint issues
-- **Type check**: `npm run type-check` — Runs TypeScript compiler without emitting files
+```bash
+npm run dev          # Dev server on localhost:3004
+npm run build        # Production build
+npm run test         # Vitest watch mode
+npm run test:run     # Vitest single run
+npm run type-check   # TypeScript check
+npm run lint         # ESLint
+```
+
+**Port:** 3004 (configured in `.env.local` as `NEXT_PUBLIC_SITE_URL`)
 
 ## Project Structure
 
-### Core Directories
-- **`/app`** - Next.js App Router with layouts and pages. All routes are file-based (e.g., `app/about/page.tsx` → `/about`)
-- **`/components`** - Reusable React components
-  - **`/ui`** - shadcn/ui components and custom base UI components
-  - Other subdirectories for feature-specific components
-- **`/lib`** - Utility functions (`utils.ts` exports `cn()` for merging Tailwind classes)
-- **`/public`** - Static files served at root
-
-### Configuration Files
-- **`next.config.ts`** - Next.js configuration
-- **`tsconfig.json`** - TypeScript config with `@/*` path alias for imports
-- **`postcss.config.mjs`** - PostCSS config for Tailwind v4 via `@tailwindcss/postcss`
-- **`eslint.config.mjs`** - ESLint 9 flat config with Next.js rules
-
-## Design System & Style Guide
-
-**IMPORTANT**: Always reference and follow the **frontend-design** skill when building new screens and features, and when modifying existing components.
-
-The style guide governs:
-- **Colors** - Use semantic color names (e.g., `bg-primary`, `text-destructive`, `bg-sidebar-primary`)
-- **Typography** - Follow font stack guidelines (sans, serif, mono)
-- **Spacing & Sizing** - Use consistent spacing scale (4px multiples)
-- **Shadows** - Apply appropriate elevation levels (sm, md, lg, xl)
-- **Components** - Follow button, card, input, and modal guidelines
-- **Accessibility** - Ensure WCAG AA compliance (4.5:1 contrast minimum)
-- **Dark Mode** - All components must work in both light and dark modes
-
-Invoke the skill with `/frontend-design` before starting any styling work to review current design tokens and best practices.
-
-## Key Patterns
-
-### Styling
-- Tailwind v4 with CSS-first configuration via `@theme inline` in `app/globals.css`
-- Use Tailwind CSS utility classes with semantic color tokens from the design system
-- Use `cn()` helper from `lib/utils.ts` to conditionally merge Tailwind classes
-- Global styles in `app/globals.css` (contains all CSS variables for light/dark modes)
-- Never use arbitrary colors; always use the defined palette
-- Test components in both light and dark modes
-
-### File-based Routing
-- Pages: `app/page.tsx` (root), `app/features/page.tsx` (nested routes)
-- Layouts: `app/layout.tsx` (root), `app/features/layout.tsx` (nested layouts)
-- API routes: `app/api/route.ts`
-
-### Component Structure
-- Functional components with TypeScript
-- Props passed with explicit types
-- UI components in `/components/ui` for reusability
-
-### Imports
-- Use `@/*` path alias (e.g., `import { cn } from '@/lib/utils'`)
-- Avoid relative imports; use absolute paths with alias
-
-## TypeScript
-
-- Strict mode enabled
-- All files are `.ts` or `.tsx` (no `.js`)
-- Type definitions for React, Next.js, and Node.js included
-- No unused variables or parameters allowed
-
-## Adding shadcn/ui Components
-
-Use the shadcn CLI to add components:
-```bash
-npx shadcn@latest add [component-name]
+```
+app/
+  (auth)/login/           # Google SSO login page
+  (auth)/auth/callback/   # OAuth callback handler
+  (dashboard)/            # Authenticated routes (sidebar + topbar shell)
+    page.tsx              # Maker dashboard (My Apps, Capacity, Action Required)
+    register/             # Multi-step registration wizard (4 steps)
+    apps/[id]/            # App profile page (details, owners, flags, admin controls)
+    governance/           # Governance dashboard (landscape grid, flags, all-apps table)
+  api/
+    apps/                 # CRUD + fuzzy search
+    apps/[id]/flags/      # Risk flag management
+    flags/[flagId]/       # Resolve individual flags
+    profiles/me/          # Current user + computed capacity
+    auth/signout/         # Sign out
+components/
+  registration-form.tsx   # 4-step animated wizard with per-step validation
+  similar-tools-check.tsx # Debounced fuzzy match at registration
+  admin-actions.tsx       # Tier change + add flags (admin only)
+  risk-flags-list.tsx     # Flags with resolve buttons (app profile)
+  governance-flags-list.tsx # Flags with resolve + app links (governance)
+  dashboard-shell.tsx     # Sidebar + topbar layout
+  app-card.tsx            # App summary card
+  tier-badge.tsx          # Red/Amber/Green badge
+  capacity-indicator.tsx  # Weighted capacity progress bar
+  delete-app-button.tsx   # Delete with governance placeholder message
+  google-sign-in-button.tsx
+lib/
+  constants.ts            # Tier weights, capacity limit, label maps
+  validators.ts           # Zod schemas (registration, etc.)
+  utils.ts                # cn() helper
+  supabase/               # Client wrappers (browser, auth-server, service-role)
+  supabase/types.ts       # TypeScript types mirroring DB schema
+supabase/
+  schema.sql              # Full DB schema (enums, tables, triggers, RLS, indexes)
+  functions.sql           # pg_trgm fuzzy search function
+  seed.sql                # 3 amnesty apps + admin promotion
+middleware.ts             # Auth guard (redirect to /login if unauthenticated)
 ```
 
-Components are added to `/components/ui` and can be imported and customized.
+## Key Design Decisions
+
+- **Tier system:** Red (Experimental, 0.5 capacity points), Amber (Verified, 1 point), Green (Supported, 0 team-owned)
+- **Capacity:** 5-point weighted limit per maker, computed not stored
+- **Registration:** Progressive 4-step wizard. Intent-first, grows with the tool.
+- **Risk flags:** Auto-created for "Unsure" PII/data/API responses. Admins resolve.
+- **RLS:** Authorization enforced at database level. API routes are thin wrappers.
+- **Route groups:** `(auth)` = no shell, `(dashboard)` = sidebar + topbar
+- **RBAC:** Maker (default), Admin, Viewer roles
+
+## MVF Brand Colours
+
+Defined as CSS variables in `globals.css`, mapped to Tailwind via `@theme inline`:
+
+| Name | Hex | Usage |
+|------|-----|-------|
+| `mvf-pink` | #FF00A5 | Primary CTAs |
+| `mvf-orange` | #FF5A41 | Accents |
+| `mvf-dark-blue` | #0F0F4B | Dark background, sidebar |
+| `mvf-purple` | #8264C8 | Step indicators, active states, admin controls |
+| `mvf-yellow` | #FADC28 | Highlights |
+| `mvf-light-grey` | #DCDCDC | Borders, muted backgrounds |
+| `mvf-light-blue` | #00C8C8 | Completed steps, success |
+| `mvf-dark-grey` | #64788C | Card backgrounds (dark mode) |
+
+## Environment Variables
+
+```
+NEXT_PUBLIC_SUPABASE_URL     # Supabase project URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY # Supabase anon key
+SUPABASE_SERVICE_ROLE_KEY     # Supabase service role (server only)
+NEXT_PUBLIC_SITE_URL          # http://localhost:3004
+```
+
+## Testing
+
+69 tests across 7 suites. TDD approach — tests written before implementation.
+
+- `__tests__/lib/` — constants, validators (Zod schema validation)
+- `__tests__/components/` — tier badge, capacity indicator, app card, registration form, auth button
+
+Run: `npm run test:run`

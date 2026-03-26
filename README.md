@@ -1,64 +1,58 @@
 # MVF Launchpad
 
-A modern web application built with Next.js, React, Tailwind CSS, and shadcn/ui.
+**Ship tools fast. Keep them running.**
 
-## Getting Started
+An internal app registry and governance platform for MVF's vibe-coded tools.
 
-### Prerequisites
+## What It Does
 
-- Node.js 18+ and npm
+Launchpad gives visibility into what internal tools exist, who built them, what data they touch, and whether they're safe to depend on. It replaces the amnesty spreadsheet with a proper registry.
 
-### Installation
+### For Makers
+- Register your tool in 30 seconds (4-step wizard)
+- Track your apps and capacity on the dashboard
+- Progressive governance — requirements grow with your tool, not upfront
 
-```bash
-npm install
-```
+### For Leadership
+- Governance dashboard: see all tools by layer and tier
+- Risk flags surface issues (PII, stale owners, missing backups)
+- Tier system (Red/Amber/Green) communicates support levels
 
-### Development
+### For Everyone
+- Browse and discover internal tools (coming soon)
+- Know what's safe to depend on
+- Find existing solutions before building duplicates
 
-```bash
-npm run dev
-```
+## Tier System
 
-The application will start at [http://localhost:3000](http://localhost:3000).
-
-### Build
-
-```bash
-npm run build
-npm start
-```
-
-### Linting
-
-```bash
-npm run lint        # check for issues
-npm run lint:fix    # auto-fix issues
-```
-
-### Type Checking
-
-```bash
-npm run type-check
-```
-
-## Project Structure
-
-- `/app` - Next.js App Router pages and layouts
-- `/components` - React components (UI components in `/ui` subdirectory)
-- `/lib` - Utility functions and helpers
-- `/public` - Static assets
+| Tier | Label | Meaning |
+|------|-------|---------|
+| Red | Experimental | Early-stage. Maker-supported only. Use at own risk. |
+| Amber | Verified | Security reviewed, documented, shared ownership. |
+| Green | Supported | Production-ready. Formal support + SLA. |
 
 ## Tech Stack
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-- **UI Library**: [React 19](https://react.dev/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) (CSS-first config)
-- **Component Library**: [shadcn/ui](https://ui.shadcn.com/)
-- **Linting**: [ESLint 9](https://eslint.org/) (flat config)
-- **Dark Mode**: [next-themes](https://github.com/pacocoursey/next-themes)
-- **Language**: TypeScript (strict mode)
+Next.js 16 · Supabase (Postgres + Auth) · Tailwind v4 · Vitest · Vercel
 
-## License
+## Getting Started
 
-ISC
+```bash
+npm install
+cp .env.example .env.local  # Add Supabase credentials
+npm run dev                  # http://localhost:3004
+```
+
+### Database Setup
+
+1. Create a Supabase project
+2. Enable Google OAuth provider
+3. Run `supabase/schema.sql` in SQL Editor
+4. Run `supabase/functions.sql`
+5. Run `supabase/seed.sql` (after first sign-in)
+
+## Status
+
+**Phase 1 complete** — registry MVP with Google SSO, multi-step registration, maker dashboard, governance dashboard, admin controls, risk flag management.
+
+Phase 2 (progressive registration, usage tracking, automated flags, Slack notifications) is next.
