@@ -177,7 +177,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               data-testid={`step-indicator-${i + 1}`}
               onClick={() => goToStep(i)}
               disabled={i >= currentStep}
-              className={`relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold transition-all duration-200 ${
+              className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold transition-all duration-200 ${
                 i === currentStep
                   ? 'bg-mvf-purple text-white shadow-lg shadow-mvf-purple/30 scale-110 active'
                   : i < currentStep
@@ -203,9 +203,9 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
             const Icon = STEPS[currentStep].icon;
             return <Icon className="h-4 w-4 text-mvf-purple" />;
           })()}
-          <h2 className="text-[15px] font-semibold tracking-tight">{STEPS[currentStep].title}</h2>
+          <h2 className="text-[18px] font-semibold tracking-tight">{STEPS[currentStep].title}</h2>
         </div>
-        <p className="text-[12px] text-muted-foreground ml-6">{STEPS[currentStep].subtitle}</p>
+        <p className="text-[14px] text-muted-foreground ml-6">{STEPS[currentStep].subtitle}</p>
       </div>
 
       {/* ── Step Content ────────────────────────────────────── */}
@@ -218,7 +218,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
           {currentStep === 0 && (
             <div className="space-y-4">
               <div className="space-y-1">
-                <label htmlFor="app-name" className="block text-[13px] font-medium">
+                <label htmlFor="app-name" className="block text-[15px] font-medium">
                   App Name
                 </label>
                 <input
@@ -228,13 +228,13 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="What's your tool called?"
                   autoFocus
-                  className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
+                  className="w-full rounded-[6px] border bg-background px-4 h-[52px] text-[15px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                 />
-                {errors.name && <p className="text-[12px] text-red-500 flex items-center gap-1 mt-1">{errors.name}</p>}
+                {errors.name && <p className="text-[14px] text-red-500 flex items-center gap-1 mt-1">{errors.name}</p>}
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="problem-statement" className="block text-[13px] font-medium">
+                <label htmlFor="problem-statement" className="block text-[15px] font-medium">
                   Problem Statement
                 </label>
                 <textarea
@@ -242,11 +242,11 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   value={problemStatement}
                   onChange={(e) => setProblemStatement(e.target.value)}
                   placeholder="What problem are you trying to solve?"
-                  rows={4}
-                  className="w-full rounded-[6px] border bg-background px-3 py-2 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50 resize-none"
+                  rows={5}
+                  className="w-full rounded-[6px] border bg-background px-4 py-4 text-[15px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50 resize-none"
                 />
                 {errors.problem_statement && (
-                  <p className="text-[12px] text-red-500 mt-1">{errors.problem_statement}</p>
+                  <p className="text-[14px] text-red-500 mt-1">{errors.problem_statement}</p>
                 )}
               </div>
 
@@ -258,7 +258,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
           {currentStep === 1 && (
             <div className="space-y-4">
               <fieldset className="space-y-3">
-                <legend className="text-[13px] font-medium">Layer</legend>
+                <legend className="text-[15px] font-medium">Layer</legend>
                 <div className="grid gap-3">
                   {LAYER_OPTIONS.map((opt) => {
                     const Icon = opt.icon;
@@ -286,18 +286,18 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                     );
                   })}
                 </div>
-                {errors.layer && <p className="text-[12px] text-red-500">{errors.layer}</p>}
+                {errors.layer && <p className="text-[14px] text-red-500">{errors.layer}</p>}
               </fieldset>
 
               <fieldset className="space-y-3">
-                <legend className="text-[13px] font-medium">Target Users</legend>
+                <legend className="text-[15px] font-medium">Target Users</legend>
                 <div className="flex gap-2">
                   {TARGET_OPTIONS.map((opt) => (
                     <button
                       key={opt.value}
                       type="button"
                       onClick={() => setTargetUsers(opt.value)}
-                      className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
+                      className={`flex-1 rounded border px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
                         targetUsers === opt.value
                           ? 'border-mvf-purple bg-mvf-purple text-white'
                           : 'border-input bg-background hover:border-mvf-purple/40'
@@ -307,11 +307,11 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                     </button>
                   ))}
                 </div>
-                {errors.target_users && <p className="text-[12px] text-red-500">{errors.target_users}</p>}
+                {errors.target_users && <p className="text-[14px] text-red-500">{errors.target_users}</p>}
               </fieldset>
 
               <div className="space-y-1">
-                <label htmlFor="potential-roi" className="block text-[13px] font-medium">
+                <label htmlFor="potential-roi" className="block text-[15px] font-medium">
                   Potential ROI <span className="text-muted-foreground font-normal">(optional)</span>
                 </label>
                 <input
@@ -320,7 +320,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   value={potentialRoi}
                   onChange={(e) => setPotentialRoi(e.target.value)}
                   placeholder="e.g., saves 2h/week for 5 people"
-                  className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
+                  className="w-full rounded-[6px] border bg-background px-4 h-[52px] text-[15px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                 />
               </div>
             </div>
@@ -345,7 +345,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               />
 
               <fieldset className="space-y-3">
-                <legend className="text-[13px] font-medium flex items-center gap-2">
+                <legend className="text-[15px] font-medium flex items-center gap-2">
                   <KeyRound className="h-4 w-4 text-mvf-purple" />
                   Uses API Keys or External Services?
                 </legend>
@@ -355,7 +355,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                       key={opt.value}
                       type="button"
                       onClick={() => setUsesApiKeys(opt.value)}
-                      className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
+                      className={`flex-1 rounded border px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
                         usesApiKeys === opt.value
                           ? 'border-mvf-purple bg-mvf-purple text-white'
                           : 'border-input bg-background hover:border-mvf-purple/40'
@@ -367,7 +367,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                 </div>
                 {usesApiKeys === 'yes' && (
                   <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <label htmlFor="api-services" className="block text-[13px] font-medium">
+                    <label htmlFor="api-services" className="block text-[15px] font-medium">
                       Which services?
                     </label>
                     <input
@@ -377,10 +377,10 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                       onChange={(e) => setApiKeyServices(e.target.value)}
                       placeholder="e.g., OpenAI, Stripe, Replicate"
                       autoFocus
-                      className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
+                      className="w-full rounded-[6px] border bg-background px-4 h-[52px] text-[15px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                     />
                     {errors.api_key_services && (
-                      <p className="text-[12px] text-red-500">{errors.api_key_services}</p>
+                      <p className="text-[14px] text-red-500">{errors.api_key_services}</p>
                     )}
                   </div>
                 )}
@@ -392,7 +392,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
           {currentStep === 3 && (
             <div className="space-y-4">
               <fieldset className="space-y-3">
-                <legend className="text-[13px] font-medium flex items-center gap-2">
+                <legend className="text-[15px] font-medium flex items-center gap-2">
                   <Replace className="h-4 w-4 text-mvf-purple" />
                   Replaces a Third-Party Tool?
                 </legend>
@@ -400,7 +400,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   <button
                     type="button"
                     onClick={() => setReplacesThirdParty(true)}
-                    className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
+                    className={`flex-1 rounded border px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
                       replacesThirdParty
                         ? 'border-mvf-purple bg-mvf-purple text-white'
                         : 'border-input bg-background hover:border-mvf-purple/40'
@@ -411,7 +411,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   <button
                     type="button"
                     onClick={() => setReplacesThirdParty(false)}
-                    className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
+                    className={`flex-1 rounded border px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
                       !replacesThirdParty
                         ? 'border-mvf-purple bg-mvf-purple text-white'
                         : 'border-input bg-background hover:border-mvf-purple/40'
@@ -423,7 +423,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                 {replacesThirdParty && (
                   <div className="space-y-4">
                     <div className="space-y-1">
-                      <label htmlFor="replaced-tool" className="block text-[13px] font-medium">
+                      <label htmlFor="replaced-tool" className="block text-[15px] font-medium">
                         Which tool does it replace?
                       </label>
                       <input
@@ -433,14 +433,14 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                         onChange={(e) => setReplacedToolName(e.target.value)}
                         placeholder="e.g., Canva Pro"
                         autoFocus
-                        className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
+                        className="w-full rounded-[6px] border bg-background px-4 h-[52px] text-[15px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                       />
                       {errors.replaced_tool_name && (
-                        <p className="text-[12px] text-red-500">{errors.replaced_tool_name}</p>
+                        <p className="text-[14px] text-red-500">{errors.replaced_tool_name}</p>
                       )}
                     </div>
                     <div className="space-y-1">
-                      <label htmlFor="replaced-cost" className="block text-[13px] font-medium">
+                      <label htmlFor="replaced-cost" className="block text-[15px] font-medium">
                         Approximate annual cost
                       </label>
                       <input
@@ -449,7 +449,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                         value={replacedToolCost}
                         onChange={(e) => setReplacedToolCost(e.target.value)}
                         placeholder="e.g., £2,000/year"
-                        className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
+                        className="w-full rounded-[6px] border bg-background px-4 h-[52px] text-[15px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                       />
                     </div>
                   </div>
@@ -458,7 +458,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
               {/* Review Summary */}
               <div className="rounded border bg-card/50 p-4 space-y-3">
-                <h3 className="text-[13px] font-medium flex items-center gap-2">
+                <h3 className="text-[15px] font-medium flex items-center gap-2">
                   <Check className="h-4 w-4 text-mvf-light-blue" />
                   Review your answers
                 </h3>
@@ -484,7 +484,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               <button
                 type="button"
                 onClick={goBack}
-                className="flex items-center gap-2 rounded px-4 py-2.5 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 rounded px-4 py-2.5 text-[15px] font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back
@@ -497,7 +497,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center gap-2 rounded-[6px] bg-mvf-pink px-4 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
+                className="flex items-center gap-2 rounded-[6px] bg-mvf-pink px-6 h-[52px] text-[15px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
               >
                 {isSubmitting ? (
                   <>
@@ -514,7 +514,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
             ) : (
               <button
                 type="submit"
-                className="flex items-center gap-2 rounded-[6px] bg-mvf-pink px-4 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
+                className="flex items-center gap-2 rounded-[6px] bg-mvf-pink px-6 h-[52px] text-[15px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
               >
                 Next
                 <ArrowRight className="h-4 w-4" />
@@ -544,7 +544,7 @@ function TristateField({
 }) {
   return (
     <fieldset className="space-y-3">
-      <legend className="text-[13px] font-medium flex items-center gap-2">
+      <legend className="text-[15px] font-medium flex items-center gap-2">
         <Icon className="h-4 w-4 text-mvf-purple" />
         {label}
       </legend>
@@ -554,7 +554,7 @@ function TristateField({
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
+            className={`flex-1 rounded border px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
               value === opt.value
                 ? 'border-mvf-purple bg-mvf-purple text-white'
                 : 'border-input bg-background hover:border-mvf-purple/40'
