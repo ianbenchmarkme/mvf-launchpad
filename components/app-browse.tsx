@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, ArrowUpRight } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { LAYER_LABELS, STATUS_LABELS, TIER_LABELS } from '@/lib/constants';
 import type { App, AppTier, AppLayer } from '@/lib/supabase/types';
@@ -109,28 +109,35 @@ export function AppBrowse({ apps }: AppBrowseProps) {
         </div>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((app) => (
-            <Link
-              key={app.id}
-              href={`/apps/${app.id}`}
-              className="group block rounded-[8px] border bg-card p-4 transition-all duration-150 hover:border-mvf-purple/20 hover:bg-accent/50"
-            >
-              <div className="flex items-start justify-between gap-2 mb-1.5">
-                <h3 className="text-[13px] font-semibold text-card-foreground group-hover:text-mvf-purple transition-colors duration-150">
-                  {app.name}
-                </h3>
-                <TierBadge tier={app.tier} />
-              </div>
-              <p className="text-[12px] leading-relaxed text-muted-foreground line-clamp-2 mb-3">
-                {app.problem_statement}
-              </p>
-              <div className="flex items-center gap-2 text-[11px] text-muted-foreground/60">
-                <span>{LAYER_LABELS[app.layer]}</span>
-                <span className="opacity-30">·</span>
-                <span>{STATUS_LABELS[app.status]}</span>
-              </div>
-            </Link>
-          ))}
+          {filtered.map((app) => {
+            const accent = app.tier === 'green' ? 'bg-emerald-500' : app.tier === 'amber' ? 'bg-amber-500' : 'bg-red-500';
+            return (
+              <Link
+                key={app.id}
+                href={`/apps/${app.id}`}
+                className="group relative block rounded-[8px] border border-mvf-dark-blue/8 bg-mvf-dark-blue/[0.02] p-4 pl-5 transition-all duration-150 hover:border-mvf-purple/20 hover:bg-mvf-dark-blue/[0.04] hover:shadow-sm dark:border-white/6 dark:bg-white/[0.03] dark:hover:border-mvf-purple/25 dark:hover:bg-white/[0.05]"
+              >
+                <div className={`absolute left-0 top-3 bottom-3 w-[3px] rounded-full ${accent} opacity-60 group-hover:opacity-100 transition-opacity duration-150`} />
+                <div className="flex items-start justify-between gap-2 mb-1.5">
+                  <h3 className="text-[13px] font-semibold text-card-foreground group-hover:text-mvf-purple transition-colors duration-150">
+                    {app.name}
+                  </h3>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <TierBadge tier={app.tier} />
+                    <ArrowUpRight className="h-3 w-3 text-muted-foreground/0 group-hover:text-muted-foreground/50 transition-all duration-150" />
+                  </div>
+                </div>
+                <p className="text-[12px] leading-relaxed text-muted-foreground line-clamp-2 mb-3">
+                  {app.problem_statement}
+                </p>
+                <div className="flex items-center gap-2 text-[11px] text-muted-foreground/50">
+                  <span>{LAYER_LABELS[app.layer]}</span>
+                  <span className="opacity-30">·</span>
+                  <span>{STATUS_LABELS[app.status]}</span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

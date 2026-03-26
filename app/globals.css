@@ -16,7 +16,7 @@
 :root {
   --background: #fafafa;
   --foreground: #1a1a2e;
-  --card: #ffffff;
+  --card: rgba(15, 15, 75, 0.03);
   --card-foreground: #1a1a2e;
   --popover: #ffffff;
   --popover-foreground: #1a1a2e;
@@ -60,7 +60,7 @@
 .dark {
   --background: #0F0F4B;
   --foreground: #f0f0f5;
-  --card: #64788C;
+  --card: rgba(255, 255, 255, 0.04);
   --card-foreground: #f0f0f5;
   --popover: #1a1a5e;
   --popover-foreground: #f0f0f5;
