@@ -25,11 +25,11 @@ export default function RegisterPage() {
 
   return (
     <div className="flex min-h-full items-center justify-center">
-      <div className="w-full max-w-2xl space-y-6">
+      <div className="w-full max-w-lg space-y-4">
         <div>
-          <h1 className="text-2xl font-bold">Register New App</h1>
-          <p className="mt-1 text-muted-foreground">
-            Tell us what you&apos;re building. This takes about 30 seconds.
+          <h1 className="text-lg font-semibold tracking-tight">Register New App</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">
+            Tell us what you&apos;re building. Takes about 30 seconds.
           </p>
         </div>
         <RegistrationForm onSubmit={handleSubmit} />

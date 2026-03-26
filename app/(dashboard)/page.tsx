@@ -10,7 +10,6 @@ export default async function DashboardPage() {
   const supabase = await createAuthServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Fetch user's apps (as primary owner)
   const { data: ownedApps } = await supabase
     .from('app_owners')
     .select('app_id, apps(*)')
@@ -21,12 +20,10 @@ export default async function DashboardPage() {
     .map((o: Record<string, unknown>) => o.apps as App)
     .filter((a: App | null): a is App => a !== null && a.status !== 'archived');
 
-  // Compute capacity
   const capacityUsed = apps.reduce((sum: number, app: App) => {
     return sum + (TIER_WEIGHTS[app.tier] || 0);
   }, 0);
 
-  // Fetch unresolved flags for user's apps
   const appIds = apps.map((a: App) => a.id);
   const { data: flags } = appIds.length > 0
     ? await supabase
@@ -39,39 +36,41 @@ export default async function DashboardPage() {
   const unresolvedFlags = flags || [];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">My Dashboard</h1>
+        <h1 className="text-lg font-semibold tracking-tight">Dashboard</h1>
         <Link
           href="/register"
-          className="flex items-center gap-2 rounded bg-mvf-pink px-4 py-2.5 text-sm font-semibold text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
+          className="flex items-center gap-1.5 rounded-[6px] bg-mvf-pink px-3 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150"
         >
-          <PlusCircle className="h-4 w-4" />
-          Register New App
+          <PlusCircle className="h-3.5 w-3.5" />
+          Register App
         </Link>
       </div>
 
       {/* Capacity */}
-      <div className="rounded border bg-card p-4 max-w-xs">
-        <h2 className="text-sm font-medium text-card-foreground mb-2">My Capacity</h2>
+      <div className="rounded-[8px] border bg-card p-4 max-w-[240px]">
+        <h2 className="text-[12px] font-medium text-muted-foreground mb-2">Capacity</h2>
         <CapacityIndicator used={capacityUsed} limit={CAPACITY_LIMIT} />
       </div>
 
       {/* Action Required */}
       {unresolvedFlags.length > 0 && (
-        <div className="rounded border border-amber-200 bg-amber-50 p-4">
-          <h2 className="text-sm font-semibold text-amber-800 mb-2">
+        <div className="rounded-[8px] border border-amber-500/20 bg-amber-500/5 p-4">
+          <h2 className="text-[13px] font-semibold text-amber-600 mb-2">
             Action Required ({unresolvedFlags.length})
           </h2>
-          <ul className="space-y-1 text-sm text-amber-700">
+          <ul className="space-y-1">
             {unresolvedFlags.map((flag: Record<string, unknown>) => (
-              <li key={flag.id as string}>
-                • {(flag.flag_type as string).replace(/_/g, ' ')} —{' '}
+              <li key={flag.id as string} className="text-[12px] text-amber-600/80">
+                <span className="capitalize">{(flag.flag_type as string).replace(/_/g, ' ')}</span>
+                {' — '}
                 <Link
                   href={`/apps/${flag.app_id}`}
-                  className="underline hover:no-underline"
+                  className="text-amber-700 underline decoration-amber-700/30 hover:decoration-amber-700"
                 >
-                  View app
+                  View
                 </Link>
               </li>
             ))}
@@ -81,16 +80,16 @@ export default async function DashboardPage() {
 
       {/* My Apps */}
       <div>
-        <h2 className="text-lg font-semibold mb-4">My Apps</h2>
+        <h2 className="text-[13px] font-semibold text-muted-foreground mb-3">My Apps</h2>
         {apps.length === 0 ? (
-          <div className="rounded border border-dashed p-8 text-center text-muted-foreground">
-            <p>No apps registered yet.</p>
-            <Link href="/register" className="text-primary underline mt-2 inline-block">
+          <div className="rounded-[8px] border border-dashed py-12 text-center">
+            <p className="text-[13px] text-muted-foreground">No apps registered yet.</p>
+            <Link href="/register" className="text-[13px] text-mvf-purple hover:underline mt-1 inline-block">
               Register your first app
             </Link>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {apps.map((app: App) => (
               <AppCard key={app.id} app={app} />
             ))}

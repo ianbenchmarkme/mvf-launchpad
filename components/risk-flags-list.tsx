@@ -35,7 +35,7 @@ export function RiskFlagsList({ flags, isAdmin }: RiskFlagsListProps) {
         {flags.map((flag) => (
           <li
             key={flag.id}
-            className="flex items-center gap-2 rounded border px-3 py-2 text-sm"
+            className="flex items-center gap-2 rounded-[6px] border px-3 py-2 text-[13px]"
           >
             <span className={`h-2 w-2 shrink-0 rounded-full ${
               flag.severity === 'critical' ? 'bg-red-500' :
@@ -54,7 +54,7 @@ export function RiskFlagsList({ flags, isAdmin }: RiskFlagsListProps) {
                 type="button"
                 disabled={resolvingId === flag.id}
                 onClick={() => resolveFlag(flag.id)}
-                className="flex items-center gap-1 rounded border border-emerald-200 px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50 active:scale-[0.98] transition-all duration-150 disabled:opacity-50 shrink-0"
+                className="flex items-center gap-1 rounded-[6px] border border-emerald-200 px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50 active:scale-[0.98] transition-all duration-150 disabled:opacity-50 shrink-0"
               >
                 <CheckCircle className="h-3 w-3" />
                 {resolvingId === flag.id ? 'Resolving...' : 'Resolve'}

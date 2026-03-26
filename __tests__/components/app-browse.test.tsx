@@ -72,7 +72,7 @@ describe('AppBrowse', () => {
 
     // Click the Verified filter button (not the badge)
     const filterButtons = screen.getAllByRole('button');
-    const verifiedFilter = filterButtons.find(b => b.textContent === 'Verified' && b.classList.contains('rounded'));
+    const verifiedFilter = filterButtons.find(b => b.textContent === 'Verified' && b.getAttribute('type') === 'button');
     expect(verifiedFilter).toBeDefined();
     await user.click(verifiedFilter!);
 

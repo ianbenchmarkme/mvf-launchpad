@@ -90,7 +90,7 @@ export function AdminActions({ appId, currentTier }: AdminActionsProps) {
     <div className="space-y-6">
       {/* Tier Change */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium flex items-center gap-2">
+        <h3 className="text-[13px] font-medium flex items-center gap-2">
           <ShieldCheck className="h-4 w-4 text-mvf-purple" />
           Change Tier
         </h3>
@@ -101,7 +101,7 @@ export function AdminActions({ appId, currentTier }: AdminActionsProps) {
               type="button"
               disabled={saving}
               onClick={() => changeTier(tier)}
-              className={`flex-1 rounded border px-3 py-2 text-sm font-medium transition-all duration-150 disabled:opacity-50 ${
+              className={`flex-1 rounded-[6px] border px-3 py-2 text-[13px] font-medium transition-all duration-150 disabled:opacity-50 ${
                 tier === currentTier
                   ? tierColorsActive[tier]
                   : `${tierColors[tier]} hover:opacity-80`
@@ -112,7 +112,7 @@ export function AdminActions({ appId, currentTier }: AdminActionsProps) {
           ))}
         </div>
         {tierSuccess && (
-          <p className="text-sm text-emerald-600 flex items-center gap-1">
+          <p className="text-[13px] text-emerald-600 flex items-center gap-1">
             <Check className="h-3.5 w-3.5" /> Tier updated
           </p>
         )}
@@ -120,7 +120,7 @@ export function AdminActions({ appId, currentTier }: AdminActionsProps) {
 
       {/* Add Flag */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium flex items-center gap-2">
+        <h3 className="text-[13px] font-medium flex items-center gap-2">
           <Flag className="h-4 w-4 text-mvf-purple" />
           Add Risk Flag
         </h3>
@@ -130,7 +130,7 @@ export function AdminActions({ appId, currentTier }: AdminActionsProps) {
               key={opt.type}
               type="button"
               onClick={() => setSelectedFlag(selectedFlag?.type === opt.type ? null : opt)}
-              className={`rounded border px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+              className={`rounded-[6px] border px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
                 selectedFlag?.type === opt.type
                   ? 'border-mvf-purple bg-mvf-purple/10 text-mvf-purple'
                   : 'border-input bg-background hover:border-mvf-purple/40'
@@ -147,20 +147,20 @@ export function AdminActions({ appId, currentTier }: AdminActionsProps) {
               value={flagDescription}
               onChange={(e) => setFlagDescription(e.target.value)}
               placeholder="Optional description..."
-              className="w-full rounded border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple"
+              className="w-full rounded-[6px] border bg-background px-3 py-2 text-[13px] outline-none focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple"
             />
             <button
               type="button"
               disabled={saving}
               onClick={addFlag}
-              className="rounded bg-mvf-pink px-4 py-2 text-sm font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-sm disabled:opacity-50"
+              className="rounded-[6px] bg-mvf-pink px-4 py-2 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-sm disabled:opacity-50"
             >
               Add Flag
             </button>
           </div>
         )}
         {flagSuccess && (
-          <p className="text-sm text-emerald-600 flex items-center gap-1">
+          <p className="text-[13px] text-emerald-600 flex items-center gap-1">
             <Check className="h-3.5 w-3.5" /> Flag added
           </p>
         )}

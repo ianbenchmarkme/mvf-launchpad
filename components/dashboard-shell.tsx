@@ -18,19 +18,16 @@ const navItems = [
 export function DashboardShell({ user, children }: DashboardShellProps) {
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <aside className="w-64 border-r bg-sidebar p-4 flex flex-col">
-        <div className="mb-8">
+      {/* Sidebar — 240px, Linear-density */}
+      <aside className="w-60 border-r border-sidebar-border bg-sidebar flex flex-col">
+        <div className="px-4 pt-5 pb-6">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/mvf-logo-white.svg" alt="MVF" width={63} height={21} />
-            <span className="text-lg font-bold text-sidebar-foreground">Launchpad</span>
+            <Image src="/mvf-logo-white.svg" alt="MVF" width={56} height={19} />
+            <span className="text-[13px] font-semibold text-sidebar-foreground tracking-tight">Launchpad</span>
           </Link>
-          <p className="text-xs text-sidebar-foreground/50 mt-1">
-            Ship tools fast. Keep them running.
-          </p>
         </div>
 
-        <nav className="space-y-1 flex-1">
+        <nav className="flex-1 px-2 space-y-0.5">
           {navItems.map((item) => {
             if ('adminOnly' in item && item.adminOnly && user.role === 'maker') {
               return null;
@@ -39,29 +36,29 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 rounded px-3 py-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+                className="flex items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-150"
               >
-                <item.icon className="h-4 w-4" />
+                <item.icon className="h-[15px] w-[15px] opacity-60" />
                 {item.label}
               </Link>
             );
           })}
         </nav>
 
-        <div className="border-t pt-4 mt-4">
-          <div className="flex items-center gap-3 px-3">
+        <div className="border-t border-sidebar-border px-3 py-3">
+          <div className="flex items-center gap-2.5 px-1">
             {user.avatar_url && (
               <img
                 src={user.avatar_url}
                 alt=""
-                className="h-8 w-8 rounded-full"
+                className="h-6 w-6 rounded-full"
               />
             )}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-sidebar-foreground">
+              <p className="truncate text-[13px] font-medium text-sidebar-foreground">
                 {user.full_name || user.email}
               </p>
-              <p className="truncate text-xs text-muted-foreground capitalize">
+              <p className="truncate text-[11px] text-sidebar-foreground/40 capitalize">
                 {user.role}
               </p>
             </div>
@@ -69,9 +66,9 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
           <form action="/api/auth/signout" method="POST" className="mt-2">
             <button
               type="submit"
-              className="flex w-full items-center gap-3 rounded px-3 py-2 text-sm text-muted-foreground hover:bg-sidebar-accent transition-colors"
+              className="flex w-full items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] text-sidebar-foreground/40 hover:text-sidebar-foreground/75 hover:bg-sidebar-accent transition-colors duration-150"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="h-[15px] w-[15px]" />
               Sign out
             </button>
           </form>
@@ -79,8 +76,10 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-8 overflow-auto flex flex-col">
-        {children}
+      <main className="flex-1 overflow-auto flex flex-col">
+        <div className="flex-1 px-8 py-6 max-w-5xl">
+          {children}
+        </div>
       </main>
     </div>
   );

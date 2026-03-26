@@ -12,11 +12,11 @@ export default async function BrowsePage() {
     .order('name', { ascending: true });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold">App Library</h1>
-        <p className="mt-1 text-muted-foreground">
-          Discover internal tools built across MVF. Find what exists before building something new.
+        <h1 className="text-lg font-semibold tracking-tight">App Library</h1>
+        <p className="text-[13px] text-muted-foreground mt-0.5">
+          Discover internal tools. Find what exists before building something new.
         </p>
       </div>
       <AppBrowse apps={(apps || []) as App[]} />

@@ -8,29 +8,29 @@ export function CapacityIndicator({ used, limit }: CapacityIndicatorProps) {
   const isWarning = percentage >= 80 && percentage < 100;
   const isFull = percentage >= 100;
 
-  let barColor = 'bg-emerald-500';
+  let barColor = 'bg-mvf-light-blue';
   if (isFull) barColor = 'bg-red-500';
   else if (isWarning) barColor = 'bg-amber-500';
 
   let stateClass = '';
-  if (isFull) stateClass = 'text-red-600';
-  else if (isWarning) stateClass = 'text-amber-600 warning';
+  if (isFull) stateClass = 'text-red-500';
+  else if (isWarning) stateClass = 'text-amber-500 warning';
 
   return (
-    <div className={`space-y-1 ${stateClass}`}>
-      <div className="flex items-baseline justify-between text-sm">
-        <span className="font-medium">{used}</span>
-        <span className="text-muted-foreground">/ {limit} points</span>
+    <div className={`space-y-1.5 ${stateClass}`}>
+      <div className="flex items-baseline justify-between text-[13px]">
+        <span className="font-semibold tabular-nums">{used}</span>
+        <span className="text-muted-foreground text-[12px]">/ {limit} points</span>
       </div>
       <div
         role="progressbar"
         aria-valuenow={percentage}
         aria-valuemin={0}
         aria-valuemax={100}
-        className="h-2 w-full rounded-full bg-muted overflow-hidden"
+        className="h-1.5 w-full rounded-full bg-muted overflow-hidden"
       >
         <div
-          className={`h-full rounded-full transition-all ${barColor}`}
+          className={`h-full rounded-full transition-all duration-300 ${barColor}`}
           style={{ width: `${percentage}%` }}
         />
       </div>

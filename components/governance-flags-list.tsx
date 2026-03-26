@@ -40,7 +40,7 @@ export function GovernanceFlagsList({ flags }: GovernanceFlagsListProps) {
         {flags.map((flag) => (
           <li
             key={flag.id}
-            className="flex items-center gap-3 rounded border px-4 py-3 text-sm"
+            className="flex items-center gap-3 rounded-[6px] border px-4 py-3 text-[13px]"
           >
             <span className={`h-2 w-2 rounded-full shrink-0 ${
               flag.severity === 'critical' ? 'bg-red-500' :
@@ -59,7 +59,7 @@ export function GovernanceFlagsList({ flags }: GovernanceFlagsListProps) {
               type="button"
               disabled={resolvingId === flag.id}
               onClick={() => resolveFlag(flag.id)}
-              className="flex items-center gap-1 rounded border border-emerald-200 px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50 active:scale-[0.98] transition-all duration-150 disabled:opacity-50 shrink-0"
+              className="flex items-center gap-1 rounded-[6px] border border-emerald-200 px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50 active:scale-[0.98] transition-all duration-150 disabled:opacity-50 shrink-0"
             >
               <CheckCircle className="h-3 w-3" />
               {resolvingId === flag.id ? 'Resolving...' : 'Resolve'}

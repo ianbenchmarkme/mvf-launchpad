@@ -169,7 +169,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
   return (
     <div ref={contentRef} className="max-w-2xl">
       {/* ── Progress Indicator ──────────────────────────────── */}
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex items-center justify-between mb-6">
         {STEPS.map((_step, i) => (
           <div key={i} className="flex items-center flex-1 last:flex-none">
             <button
@@ -177,7 +177,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               data-testid={`step-indicator-${i + 1}`}
               onClick={() => goToStep(i)}
               disabled={i >= currentStep}
-              className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition-all duration-300 ${
+              className={`relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold transition-all duration-200 ${
                 i === currentStep
                   ? 'bg-mvf-purple text-white shadow-lg shadow-mvf-purple/30 scale-110 active'
                   : i < currentStep
@@ -197,15 +197,15 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
       </div>
 
       {/* ── Step Header ─────────────────────────────────────── */}
-      <div className={`mb-8 transition-all duration-300 ${slideClass}`}>
-        <div className="flex items-center gap-3 mb-1">
+      <div className={`mb-5 transition-all duration-200 ${slideClass}`}>
+        <div className="flex items-center gap-2 mb-0.5">
           {(() => {
             const Icon = STEPS[currentStep].icon;
-            return <Icon className="h-6 w-6 text-mvf-purple" />;
+            return <Icon className="h-4 w-4 text-mvf-purple" />;
           })()}
-          <h2 className="text-xl font-bold">{STEPS[currentStep].title}</h2>
+          <h2 className="text-[15px] font-semibold tracking-tight">{STEPS[currentStep].title}</h2>
         </div>
-        <p className="text-muted-foreground ml-9">{STEPS[currentStep].subtitle}</p>
+        <p className="text-[12px] text-muted-foreground ml-6">{STEPS[currentStep].subtitle}</p>
       </div>
 
       {/* ── Step Content ────────────────────────────────────── */}
@@ -216,9 +216,9 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
         >
           {/* Step 1: Identity */}
           {currentStep === 0 && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="space-y-1">
-                <label htmlFor="app-name" className="block text-sm font-medium">
+                <label htmlFor="app-name" className="block text-[13px] font-medium">
                   App Name
                 </label>
                 <input
@@ -228,13 +228,13 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="What's your tool called?"
                   autoFocus
-                  className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                  className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                 />
-                {errors.name && <p className="text-sm text-red-500 flex items-center gap-1 mt-1">{errors.name}</p>}
+                {errors.name && <p className="text-[12px] text-red-500 flex items-center gap-1 mt-1">{errors.name}</p>}
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="problem-statement" className="block text-sm font-medium">
+                <label htmlFor="problem-statement" className="block text-[13px] font-medium">
                   Problem Statement
                 </label>
                 <textarea
@@ -243,10 +243,10 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   onChange={(e) => setProblemStatement(e.target.value)}
                   placeholder="What problem are you trying to solve?"
                   rows={4}
-                  className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none resize-none"
+                  className="w-full rounded-[6px] border bg-background px-3 py-2 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50 resize-none"
                 />
                 {errors.problem_statement && (
-                  <p className="text-sm text-red-500 mt-1">{errors.problem_statement}</p>
+                  <p className="text-[12px] text-red-500 mt-1">{errors.problem_statement}</p>
                 )}
               </div>
 
@@ -256,9 +256,9 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
           {/* Step 2: Context */}
           {currentStep === 1 && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <fieldset className="space-y-3">
-                <legend className="text-sm font-medium">Layer</legend>
+                <legend className="text-[13px] font-medium">Layer</legend>
                 <div className="grid gap-3">
                   {LAYER_OPTIONS.map((opt) => {
                     const Icon = opt.icon;
@@ -279,25 +279,25 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                           <Icon className="h-4 w-4" />
                         </div>
                         <div>
-                          <div className="font-medium text-sm">{opt.label}</div>
+                          <div className="font-medium text-[13px]">{opt.label}</div>
                           <div className="text-xs text-muted-foreground mt-0.5">{opt.description}</div>
                         </div>
                       </button>
                     );
                   })}
                 </div>
-                {errors.layer && <p className="text-sm text-red-500">{errors.layer}</p>}
+                {errors.layer && <p className="text-[12px] text-red-500">{errors.layer}</p>}
               </fieldset>
 
               <fieldset className="space-y-3">
-                <legend className="text-sm font-medium">Target Users</legend>
+                <legend className="text-[13px] font-medium">Target Users</legend>
                 <div className="flex gap-2">
                   {TARGET_OPTIONS.map((opt) => (
                     <button
                       key={opt.value}
                       type="button"
                       onClick={() => setTargetUsers(opt.value)}
-                      className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                      className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
                         targetUsers === opt.value
                           ? 'border-mvf-purple bg-mvf-purple text-white'
                           : 'border-input bg-background hover:border-mvf-purple/40'
@@ -307,11 +307,11 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                     </button>
                   ))}
                 </div>
-                {errors.target_users && <p className="text-sm text-red-500">{errors.target_users}</p>}
+                {errors.target_users && <p className="text-[12px] text-red-500">{errors.target_users}</p>}
               </fieldset>
 
               <div className="space-y-1">
-                <label htmlFor="potential-roi" className="block text-sm font-medium">
+                <label htmlFor="potential-roi" className="block text-[13px] font-medium">
                   Potential ROI <span className="text-muted-foreground font-normal">(optional)</span>
                 </label>
                 <input
@@ -320,7 +320,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   value={potentialRoi}
                   onChange={(e) => setPotentialRoi(e.target.value)}
                   placeholder="e.g., saves 2h/week for 5 people"
-                  className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                  className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                 />
               </div>
             </div>
@@ -328,7 +328,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
           {/* Step 3: Data & Security */}
           {currentStep === 2 && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <TristateField
                 icon={Database}
                 label="Needs Business Data?"
@@ -345,7 +345,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               />
 
               <fieldset className="space-y-3">
-                <legend className="text-sm font-medium flex items-center gap-2">
+                <legend className="text-[13px] font-medium flex items-center gap-2">
                   <KeyRound className="h-4 w-4 text-mvf-purple" />
                   Uses API Keys or External Services?
                 </legend>
@@ -355,7 +355,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                       key={opt.value}
                       type="button"
                       onClick={() => setUsesApiKeys(opt.value)}
-                      className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                      className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
                         usesApiKeys === opt.value
                           ? 'border-mvf-purple bg-mvf-purple text-white'
                           : 'border-input bg-background hover:border-mvf-purple/40'
@@ -367,7 +367,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                 </div>
                 {usesApiKeys === 'yes' && (
                   <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <label htmlFor="api-services" className="block text-sm font-medium">
+                    <label htmlFor="api-services" className="block text-[13px] font-medium">
                       Which services?
                     </label>
                     <input
@@ -377,10 +377,10 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                       onChange={(e) => setApiKeyServices(e.target.value)}
                       placeholder="e.g., OpenAI, Stripe, Replicate"
                       autoFocus
-                      className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                      className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                     />
                     {errors.api_key_services && (
-                      <p className="text-sm text-red-500">{errors.api_key_services}</p>
+                      <p className="text-[12px] text-red-500">{errors.api_key_services}</p>
                     )}
                   </div>
                 )}
@@ -390,9 +390,9 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
           {/* Step 4: Final Details */}
           {currentStep === 3 && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <fieldset className="space-y-3">
-                <legend className="text-sm font-medium flex items-center gap-2">
+                <legend className="text-[13px] font-medium flex items-center gap-2">
                   <Replace className="h-4 w-4 text-mvf-purple" />
                   Replaces a Third-Party Tool?
                 </legend>
@@ -400,7 +400,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   <button
                     type="button"
                     onClick={() => setReplacesThirdParty(true)}
-                    className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                    className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
                       replacesThirdParty
                         ? 'border-mvf-purple bg-mvf-purple text-white'
                         : 'border-input bg-background hover:border-mvf-purple/40'
@@ -411,7 +411,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   <button
                     type="button"
                     onClick={() => setReplacesThirdParty(false)}
-                    className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                    className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
                       !replacesThirdParty
                         ? 'border-mvf-purple bg-mvf-purple text-white'
                         : 'border-input bg-background hover:border-mvf-purple/40'
@@ -423,7 +423,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                 {replacesThirdParty && (
                   <div className="space-y-4">
                     <div className="space-y-1">
-                      <label htmlFor="replaced-tool" className="block text-sm font-medium">
+                      <label htmlFor="replaced-tool" className="block text-[13px] font-medium">
                         Which tool does it replace?
                       </label>
                       <input
@@ -433,14 +433,14 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                         onChange={(e) => setReplacedToolName(e.target.value)}
                         placeholder="e.g., Canva Pro"
                         autoFocus
-                        className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                        className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                       />
                       {errors.replaced_tool_name && (
-                        <p className="text-sm text-red-500">{errors.replaced_tool_name}</p>
+                        <p className="text-[12px] text-red-500">{errors.replaced_tool_name}</p>
                       )}
                     </div>
                     <div className="space-y-1">
-                      <label htmlFor="replaced-cost" className="block text-sm font-medium">
+                      <label htmlFor="replaced-cost" className="block text-[13px] font-medium">
                         Approximate annual cost
                       </label>
                       <input
@@ -449,7 +449,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                         value={replacedToolCost}
                         onChange={(e) => setReplacedToolCost(e.target.value)}
                         placeholder="e.g., £2,000/year"
-                        className="w-full rounded border bg-background px-4 py-3 text-sm transition-shadow focus:ring-2 focus:ring-mvf-purple/30 focus:border-mvf-purple outline-none"
+                        className="w-full rounded-[6px] border bg-background px-3 h-9 text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
                       />
                     </div>
                   </div>
@@ -458,11 +458,11 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
               {/* Review Summary */}
               <div className="rounded border bg-card/50 p-4 space-y-3">
-                <h3 className="text-sm font-semibold flex items-center gap-2">
+                <h3 className="text-[13px] font-medium flex items-center gap-2">
                   <Check className="h-4 w-4 text-mvf-light-blue" />
                   Review your answers
                 </h3>
-                <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="grid grid-cols-2 gap-3 text-[13px]">
                   <SummaryItem label="App Name" value={name} onEdit={() => goToStep(0)} />
                   <SummaryItem label="Layer" value={
                     LAYER_OPTIONS.find(o => o.value === layer)?.label || '—'
@@ -484,7 +484,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               <button
                 type="button"
                 onClick={goBack}
-                className="flex items-center gap-2 rounded px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 rounded px-4 py-2.5 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back
@@ -497,7 +497,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center gap-2 rounded bg-mvf-pink px-6 py-2.5 text-sm font-semibold text-white hover:bg-mvf-pink/85 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
+                className="flex items-center gap-2 rounded-[6px] bg-mvf-pink px-4 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
               >
                 {isSubmitting ? (
                   <>
@@ -514,7 +514,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
             ) : (
               <button
                 type="submit"
-                className="flex items-center gap-2 rounded bg-mvf-pink px-6 py-2.5 text-sm font-semibold text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
+                className="flex items-center gap-2 rounded-[6px] bg-mvf-pink px-4 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150 shadow-md shadow-mvf-pink/25 border border-mvf-pink/20"
               >
                 Next
                 <ArrowRight className="h-4 w-4" />
@@ -544,7 +544,7 @@ function TristateField({
 }) {
   return (
     <fieldset className="space-y-3">
-      <legend className="text-sm font-medium flex items-center gap-2">
+      <legend className="text-[13px] font-medium flex items-center gap-2">
         <Icon className="h-4 w-4 text-mvf-purple" />
         {label}
       </legend>
@@ -554,7 +554,7 @@ function TristateField({
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`flex-1 rounded border px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 rounded border px-3 py-2.5 text-[13px] font-medium transition-all duration-200 ${
               value === opt.value
                 ? 'border-mvf-purple bg-mvf-purple text-white'
                 : 'border-input bg-background hover:border-mvf-purple/40'
@@ -565,7 +565,7 @@ function TristateField({
         ))}
       </div>
       {alert && (
-        <p className="text-sm text-amber-600 bg-amber-50 rounded px-3 py-2 flex items-center gap-2">
+        <p className="text-[13px] text-amber-600 bg-amber-50 rounded px-3 py-2 flex items-center gap-2">
           <Scale className="h-4 w-4 shrink-0" />
           {alert}
         </p>

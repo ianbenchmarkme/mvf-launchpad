@@ -51,23 +51,23 @@ export default async function AppProfilePage({ params }: PageProps) {
   const typedFlags = (flags || []) as RiskFlag[];
 
   return (
-    <div className="space-y-8 max-w-3xl">
+    <div className="space-y-6 max-w-3xl">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold">{typedApp.name}</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-semibold tracking-tight">{typedApp.name}</h1>
             <TierBadge tier={typedApp.tier} />
           </div>
-          <p className="mt-1 text-muted-foreground">{typedApp.problem_statement}</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">{typedApp.problem_statement}</p>
         </div>
-        <span className="rounded bg-muted px-2 py-1 text-xs font-medium">
+        <span className="rounded-[5px] bg-muted px-1.5 py-0.5 text-[11px] font-medium">
           {STATUS_LABELS[typedApp.status]}
         </span>
       </div>
 
       {/* Details grid */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <DetailItem label="Layer" value={LAYER_LABELS[typedApp.layer]} />
         <DetailItem label="Target Users" value={TARGET_USERS_LABELS[typedApp.target_users]} />
         {typedApp.potential_roi && <DetailItem label="Potential ROI" value={typedApp.potential_roi} />}
@@ -85,9 +85,9 @@ export default async function AppProfilePage({ params }: PageProps) {
 
       {/* Owners */}
       <div>
-        <h2 className="text-lg font-semibold mb-2">Owners</h2>
+        <h2 className="text-[13px] font-semibold text-muted-foreground mb-2">Owners</h2>
         {typedOwners.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No owners assigned</p>
+          <p className="text-[13px] text-muted-foreground">No owners assigned</p>
         ) : (
           <ul className="space-y-2">
             {typedOwners.map((owner) => (
@@ -95,7 +95,7 @@ export default async function AppProfilePage({ params }: PageProps) {
                 {owner.profiles.avatar_url && (
                   <img src={owner.profiles.avatar_url} alt="" className="h-6 w-6 rounded-full" />
                 )}
-                <span className="text-sm">{owner.profiles.full_name || owner.profiles.email}</span>
+                <span className="text-[13px]">{owner.profiles.full_name || owner.profiles.email}</span>
                 <span className="rounded-full bg-muted px-2 py-0.5 text-xs capitalize">
                   {owner.owner_role}
                 </span>
@@ -111,14 +111,14 @@ export default async function AppProfilePage({ params }: PageProps) {
       {/* Admin Controls */}
       {isAdmin && (
         <div className="border-t pt-6">
-          <h2 className="text-sm font-medium text-muted-foreground mb-3">Admin Controls</h2>
+          <h2 className="text-[12px] font-medium text-muted-foreground mb-3">Admin Controls</h2>
           <AdminActions appId={typedApp.id} currentTier={typedApp.tier} />
         </div>
       )}
 
       {/* Danger Zone */}
       <div className="border-t pt-6">
-        <h2 className="text-sm font-medium text-muted-foreground mb-3">Danger Zone</h2>
+        <h2 className="text-[12px] font-medium text-muted-foreground mb-3">Danger Zone</h2>
         <DeleteAppButton appId={typedApp.id} appName={typedApp.name} />
       </div>
     </div>
@@ -128,10 +128,10 @@ export default async function AppProfilePage({ params }: PageProps) {
 function DetailItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="space-y-0.5">
-      <dt className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+      <dt className="text-[11px] font-medium text-muted-foreground/70 uppercase tracking-wider">
         {label}
       </dt>
-      <dd className="text-sm capitalize">{value}</dd>
+      <dd className="text-[13px] capitalize">{value}</dd>
     </div>
   );
 }
