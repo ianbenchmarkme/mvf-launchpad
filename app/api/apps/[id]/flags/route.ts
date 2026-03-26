@@ -22,22 +22,34 @@ export async function GET(_request: NextRequest, context: RouteContext) {
   return NextResponse.json(data);
 }
 
-// POST /api/apps/[id]/flags — add a flag (admin only)
+// POST /api/apps/[id]/flags — add a flag (admin or app owner)
 export async function POST(request: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   const supabase = await createAuthServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  // Check admin role
+  // Check admin role or app ownership
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single();
 
-  if (!profile || (profile as { role: string }).role !== 'admin') {
-    return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+  const isAdmin = (profile as { role: string } | null)?.role === 'admin';
+
+  if (!isAdmin) {
+    // Check if user is an owner of this app
+    const { data: ownership } = await supabase
+      .from('app_owners')
+      .select('id')
+      .eq('app_id', id)
+      .eq('user_id', user.id)
+      .limit(1);
+
+    if (!ownership || ownership.length === 0) {
+      return NextResponse.json({ error: 'Admin or app owner access required' }, { status: 403 });
+    }
   }
 
   const body = await request.json();

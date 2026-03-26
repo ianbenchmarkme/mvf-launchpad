@@ -119,7 +119,7 @@ export default async function AppProfilePage({ params }: PageProps) {
       {/* Danger Zone */}
       <div className="border-t pt-6">
         <h2 className="text-[12px] font-medium text-muted-foreground mb-3">Danger Zone</h2>
-        <DeleteAppButton appId={typedApp.id} appName={typedApp.name} />
+        <DeleteAppButton appId={typedApp.id} appName={typedApp.name} isAdmin={isAdmin} />
       </div>
     </div>
   );
