@@ -45,8 +45,8 @@
   --font-mono: "SF Mono", ui-monospace, monospace;
   --radius: 6px;
   --shadow-2xs: none;
-  --shadow-xs: 0 2px 6px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.15);
-  --shadow-sm: 0 3px 10px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.15);
+  --shadow-xs: 0 4px 12px rgba(255, 255, 0, 0.8);
+  --shadow-sm: 0 6px 16px rgba(255, 255, 0, 0.8);
   --shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
