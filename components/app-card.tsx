@@ -23,15 +23,15 @@ export function AppCard({ app }: AppCardProps) {
       {/* Left accent stripe */}
       <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${accentColor[app.tier]} opacity-60 group-hover:opacity-100 transition-opacity duration-150`} />
 
-      {/* Tier badge — top right, aligned with card padding */}
-      <div className="absolute top-5 right-5 flex items-center gap-1.5">
-        <TierBadge tier={app.tier} />
-        <ArrowUpRight className="h-3 w-3 text-muted-foreground/0 group-hover:text-muted-foreground/50 transition-all duration-150" />
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-[13px] font-semibold text-card-foreground group-hover:text-mvf-purple transition-colors duration-150">
+          {app.name}
+        </h3>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <TierBadge tier={app.tier} />
+          <ArrowUpRight className="h-3 w-3 text-muted-foreground/0 group-hover:text-muted-foreground/50 transition-all duration-150" />
+        </div>
       </div>
-
-      <h3 className="text-[13px] font-semibold text-card-foreground group-hover:text-mvf-purple transition-colors duration-150 pr-24">
-        {app.name}
-      </h3>
       <p className="mt-2 text-[12px] leading-[1.6] text-foreground/60 dark:text-white/50 line-clamp-4 flex-1">
         {app.problem_statement}
       </p>
