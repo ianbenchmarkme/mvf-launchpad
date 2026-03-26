@@ -1,10 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { LayoutDashboard, PlusCircle, Search, Shield, LogOut } from 'lucide-react';
+import { CapacityIndicator } from '@/components/capacity-indicator';
+import { CAPACITY_LIMIT } from '@/lib/constants';
 import type { Profile } from '@/lib/supabase/types';
 
 interface DashboardShellProps {
   user: Profile;
+  capacityUsed: number;
   children: React.ReactNode;
 }
 
@@ -15,10 +18,10 @@ const navItems = [
   { href: '/governance', label: 'Governance', icon: Shield, adminOnly: true },
 ];
 
-export function DashboardShell({ user, children }: DashboardShellProps) {
+export function DashboardShell({ user, capacityUsed, children }: DashboardShellProps) {
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar — 240px, Linear-density */}
+      {/* Sidebar */}
       <aside className="w-60 border-r border-sidebar-border bg-sidebar flex flex-col">
         <div className="px-4 pt-5 pb-6">
           <Link href="/" className="flex items-center gap-2">
@@ -45,6 +48,13 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
           })}
         </nav>
 
+        {/* Capacity */}
+        <div className="border-t border-sidebar-border px-4 py-3">
+          <p className="text-[11px] font-medium text-sidebar-foreground/40 mb-1.5">Capacity</p>
+          <CapacityIndicator used={capacityUsed} limit={CAPACITY_LIMIT} variant="sidebar" />
+        </div>
+
+        {/* User */}
         <div className="border-t border-sidebar-border px-3 py-3">
           <div className="flex items-center gap-2.5 px-1">
             {user.avatar_url && (
