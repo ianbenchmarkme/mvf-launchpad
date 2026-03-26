@@ -61,7 +61,7 @@ export function DashboardShell({ user, capacityUsed, children }: DashboardShellP
               <img
                 src={user.avatar_url}
                 alt=""
-                className="h-6 w-6 rounded-full"
+                className="h-9 w-9 rounded-full"
               />
             )}
             <div className="min-w-0 flex-1">
