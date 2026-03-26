@@ -4,7 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MVF Launchpad is a Next.js application with React, Tailwind CSS, and shadcn/ui for building modern web interfaces.
+MVF Launchpad is an internal platform for managing vibe-coded tools. It provides a Starter Kit (standardized dev environment), an App Library (internal app store with Community/Verified/Supported tiers), and a Support team. The key innovation is an automated ingestion pipeline that brings existing Claude Code-built apps (Next.js + Tailwind + shadcn/ui) into the Launchpad ecosystem by swapping design tokens — no architecture changes needed.
+
+## Key Documentation
+
+- **[`README.md`](README.md)** — Full project context: vision, lifecycle, ingestion strategy, design decisions
+- **[`docs/Launchpad_PRD.md`](docs/Launchpad_PRD.md)** — Product requirements document (problem, solution, phases, metrics, governance)
+- **[`docs/Launchpad_OnePager.md`](docs/Launchpad_OnePager.md)** — Executive one-pager for stakeholder pitches
+- **[`docs/plans/2025-02-13-ingestion-strategy-decision.md`](docs/plans/2025-02-13-ingestion-strategy-decision.md)** — Ingestion strategy decision tree (4 approaches with pros/cons)
+
+Always read the README.md and relevant docs before making product or architecture decisions.
 
 ## Development Commands
 
