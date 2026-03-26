@@ -158,6 +158,16 @@
     letter-spacing: -0.006em;
   }
 
+  .dark body {
+    background: linear-gradient(
+      160deg,
+      #0F0F4B 0%,
+      #0B0B38 40%,
+      #08082A 100%
+    );
+    background-attachment: fixed;
+  }
+
   h1, h2, h3, h4 {
     letter-spacing: -0.02em;
     font-weight: 600;
