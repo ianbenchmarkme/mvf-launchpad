@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { LayoutDashboard, PlusCircle, Shield, LogOut } from 'lucide-react';
 import type { Profile } from '@/lib/supabase/types';
@@ -19,10 +20,11 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
       {/* Sidebar */}
       <aside className="w-64 border-r bg-sidebar p-4 flex flex-col">
         <div className="mb-8">
-          <Link href="/" className="text-xl font-bold text-sidebar-foreground">
-            Launchpad
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/mvf-logo-white.svg" alt="MVF" width={63} height={21} />
+            <span className="text-lg font-bold text-sidebar-foreground">Launchpad</span>
           </Link>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-xs text-sidebar-foreground/50 mt-1 ml-[71px]">
             Ship tools fast. Keep them running.
           </p>
         </div>
