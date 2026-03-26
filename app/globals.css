@@ -44,14 +44,6 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "SF Mono", ui-monospace, monospace;
   --radius: 6px;
-  --shadow-2xs: none;
-  --shadow-xs: 0 4px 12px rgba(255, 255, 0, 0.8);
-  --shadow-sm: 0 6px 16px rgba(255, 255, 0, 0.8);
-  --shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.1);
-  --shadow-2xl: 0 16px 48px rgba(0, 0, 0, 0.12);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 }
@@ -85,14 +77,6 @@
   --sidebar-accent-foreground: rgba(255, 255, 255, 0.92);
   --sidebar-border: rgba(255, 255, 255, 0.06);
   --sidebar-ring: var(--mvf-purple);
-  --shadow-2xs: none;
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-2xl: 0 16px 48px rgba(0, 0, 0, 0.5);
 }
 
 /* ── Map CSS variables → Tailwind utility classes ────────── */
@@ -128,15 +112,15 @@
   --font-mono: var(--font-mono);
   --radius-lg: var(--radius);
 
-  /* Shadows */
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
+  /* Shadows — values defined directly (not via var) for Tailwind v4 */
+  --shadow-2xs: none;
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.06);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 16px 48px rgba(0, 0, 0, 0.25);
 
   /* MVF Brand */
   --color-mvf-pink: var(--mvf-pink);
