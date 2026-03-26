@@ -107,7 +107,7 @@ export function AppBrowse({ apps }: AppBrowseProps) {
           <p className="text-[13px]">No apps found matching your filters.</p>
         </div>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((app) => (
             <AppCard key={app.id} app={app} />
           ))}
