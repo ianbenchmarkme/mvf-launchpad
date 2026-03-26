@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { createAuthServerClient } from '@/lib/supabase/auth-server';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
+import { AdminActions } from '@/components/admin-actions';
 import { LAYER_LABELS, STATUS_LABELS, TARGET_USERS_LABELS } from '@/lib/constants';
 import type { App, AppOwner, Profile, RiskFlag } from '@/lib/supabase/types';
 
@@ -35,6 +36,15 @@ export default async function AppProfilePage({ params }: PageProps) {
     .eq('app_id', id)
     .is('resolved_at', null);
 
+  // Fetch current user role
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user!.id)
+    .single();
+
+  const isAdmin = (profile as Profile | null)?.role === 'admin';
   const typedApp = app as App;
   const typedOwners = (owners || []) as (AppOwner & { profiles: Profile })[];
   const typedFlags = (flags || []) as RiskFlag[];
@@ -115,6 +125,14 @@ export default async function AppProfilePage({ params }: PageProps) {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* Admin Controls */}
+      {isAdmin && (
+        <div className="border-t pt-6">
+          <h2 className="text-sm font-medium text-muted-foreground mb-3">Admin Controls</h2>
+          <AdminActions appId={typedApp.id} currentTier={typedApp.tier} />
         </div>
       )}
 

@@ -9,6 +9,7 @@ import {
   Replace,
 } from 'lucide-react';
 import { registrationSchema, type RegistrationInput } from '@/lib/validators';
+import { SimilarToolsCheck } from '@/components/similar-tools-check';
 
 interface RegistrationFormProps {
   onSubmit: (data: RegistrationInput) => Promise<void> | void;
@@ -169,7 +170,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
     <div ref={contentRef} className="max-w-2xl">
       {/* ── Progress Indicator ──────────────────────────────── */}
       <div className="flex items-center justify-between mb-10">
-        {STEPS.map((step, i) => (
+        {STEPS.map((_step, i) => (
           <div key={i} className="flex items-center flex-1 last:flex-none">
             <button
               type="button"
@@ -248,6 +249,8 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   <p className="text-sm text-red-500 mt-1">{errors.problem_statement}</p>
                 )}
               </div>
+
+              <SimilarToolsCheck query={name || problemStatement} />
             </div>
           )}
 

@@ -1,19 +1,60 @@
 -- Seed data: 3 apps from the amnesty CSV
 -- Run AFTER schema.sql and after at least one user has signed in
--- Replace 'ADMIN_USER_ID' with the actual UUID of the admin user
+-- Uses the first profile found as the creator/owner
 
--- To find your user ID after first sign-in:
--- SELECT id, email FROM profiles;
+-- First, promote the first user to admin
+UPDATE profiles SET role = 'admin'
+WHERE id = (SELECT id FROM profiles ORDER BY created_at ASC LIMIT 1);
 
--- INSERT INTO apps (name, problem_statement, layer, target_users, needs_business_data, handles_pii, uses_api_keys, tier, status, created_by)
--- VALUES
---   ('ArtyFish', 'Utilise AI to generate paid marketing wins', 'L2', 'department', 'unsure', 'unsure', 'yes', 'amber', 'active', 'ADMIN_USER_ID'),
---   ('Allegros', 'Internal portal for Legal', 'L2', 'department', 'unsure', 'yes', 'unsure', 'red', 'active', 'ADMIN_USER_ID'),
---   ('Partner Portal', 'Partner portal for external partners', 'L2', 'org_wide', 'yes', 'unsure', 'unsure', 'red', 'active', 'ADMIN_USER_ID');
+-- Insert the 3 amnesty apps
+INSERT INTO apps (name, problem_statement, layer, target_users, potential_roi, needs_business_data, handles_pii, uses_api_keys, api_key_services, replaces_third_party, tier, status, created_by)
+VALUES
+  (
+    'ArtyFish',
+    'Utilise AI to generate paid marketing wins through AI-powered creative tools',
+    'L2', 'department',
+    'Significant time savings for the creative team',
+    'unsure', 'unsure', 'yes', 'OpenAI, Replicate',
+    false,
+    'amber', 'active',
+    (SELECT id FROM profiles ORDER BY created_at ASC LIMIT 1)
+  ),
+  (
+    'Allegros',
+    'Internal portal for the Legal department — centralised legal workflows and document management',
+    'L2', 'department',
+    NULL,
+    'unsure', 'yes', 'unsure', NULL,
+    false,
+    'red', 'active',
+    (SELECT id FROM profiles ORDER BY created_at ASC LIMIT 1)
+  ),
+  (
+    'Partner Portal',
+    'External-facing partner portal for managing partner relationships and communications',
+    'L2', 'org_wide',
+    NULL,
+    'yes', 'unsure', 'unsure', NULL,
+    false,
+    'red', 'active',
+    (SELECT id FROM profiles ORDER BY created_at ASC LIMIT 1)
+  );
 
--- After inserting, create ownership records:
--- INSERT INTO app_owners (app_id, user_id, owner_role)
--- SELECT id, 'ADMIN_USER_ID', 'primary' FROM apps WHERE name IN ('ArtyFish', 'Allegros', 'Partner Portal');
+-- Create ownership records
+INSERT INTO app_owners (app_id, user_id, owner_role)
+SELECT a.id, (SELECT id FROM profiles ORDER BY created_at ASC LIMIT 1), 'primary'
+FROM apps a
+WHERE a.name IN ('ArtyFish', 'Allegros', 'Partner Portal');
 
--- Note: ArtyFish is set to 'amber' as it's the exemplar graduated app.
--- Allegros and Partner Portal are 'red' (experimental) pending review.
+-- Auto-create risk flags for 'unsure' and 'yes' PII entries
+INSERT INTO risk_flags (app_id, flag_type, severity, description)
+SELECT a.id, 'unsure_pii', 'warning', 'Maker selected "Unsure" for PII handling. Follow up within 5 business days.'
+FROM apps a WHERE a.name = 'ArtyFish';
+
+INSERT INTO risk_flags (app_id, flag_type, severity, description)
+SELECT a.id, 'unsure_business_data', 'info', 'Maker selected "Unsure" for business data needs. Follow up within 5 business days.'
+FROM apps a WHERE a.name IN ('ArtyFish', 'Allegros');
+
+INSERT INTO risk_flags (app_id, flag_type, severity, description)
+SELECT a.id, 'unsure_api_keys', 'info', 'Maker selected "Unsure" for API key usage. Follow up within 5 business days.'
+FROM apps a WHERE a.name IN ('Allegros', 'Partner Portal');
