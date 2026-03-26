@@ -3,6 +3,7 @@ import { createAuthServerClient } from '@/lib/supabase/auth-server';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
 import { AdminActions } from '@/components/admin-actions';
+import { RiskFlagsList } from '@/components/risk-flags-list';
 import { LAYER_LABELS, STATUS_LABELS, TARGET_USERS_LABELS } from '@/lib/constants';
 import type { App, AppOwner, Profile, RiskFlag } from '@/lib/supabase/types';
 
@@ -105,28 +106,7 @@ export default async function AppProfilePage({ params }: PageProps) {
       </div>
 
       {/* Risk Flags */}
-      {typedFlags.length > 0 && (
-        <div>
-          <h2 className="text-lg font-semibold mb-2">Active Flags</h2>
-          <ul className="space-y-2">
-            {typedFlags.map((flag) => (
-              <li
-                key={flag.id}
-                className="flex items-center gap-2 rounded border px-3 py-2 text-sm"
-              >
-                <span className={`h-2 w-2 rounded-full ${
-                  flag.severity === 'critical' ? 'bg-red-500' :
-                  flag.severity === 'warning' ? 'bg-amber-500' : 'bg-blue-500'
-                }`} />
-                <span className="capitalize">{flag.flag_type.replace(/_/g, ' ')}</span>
-                {flag.description && (
-                  <span className="text-muted-foreground">— {flag.description}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <RiskFlagsList flags={typedFlags} isAdmin={isAdmin} />
 
       {/* Admin Controls */}
       {isAdmin && (

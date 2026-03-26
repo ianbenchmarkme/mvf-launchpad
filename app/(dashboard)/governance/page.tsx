@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createAuthServerClient } from '@/lib/supabase/auth-server';
 import { TierBadge } from '@/components/tier-badge';
+import { GovernanceFlagsList } from '@/components/governance-flags-list';
 import { LAYER_LABELS } from '@/lib/constants';
 import type { App, RiskFlag, Profile } from '@/lib/supabase/types';
 
@@ -85,30 +86,7 @@ export default async function GovernancePage() {
       </div>
 
       {/* Risk Flags */}
-      {typedFlags.length > 0 && (
-        <div>
-          <h2 className="text-lg font-semibold mb-4">
-            Active Risk Flags ({typedFlags.length})
-          </h2>
-          <ul className="space-y-2">
-            {typedFlags.map((flag) => (
-              <li
-                key={flag.id}
-                className="flex items-center gap-3 rounded border px-4 py-3 text-sm"
-              >
-                <span className={`h-2 w-2 rounded-full shrink-0 ${
-                  flag.severity === 'critical' ? 'bg-red-500' :
-                  flag.severity === 'warning' ? 'bg-amber-500' : 'bg-blue-500'
-                }`} />
-                <span className="font-medium">{flag.apps?.name || 'Unknown app'}</span>
-                <span className="text-muted-foreground capitalize">
-                  {flag.flag_type.replace(/_/g, ' ')}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <GovernanceFlagsList flags={typedFlags as (RiskFlag & { apps: { name: string } | null })[]} />
 
       {/* All Apps List */}
       <div>
