@@ -24,7 +24,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
             <Image src="/mvf-logo-white.svg" alt="MVF" width={63} height={21} />
             <span className="text-lg font-bold text-sidebar-foreground">Launchpad</span>
           </Link>
-          <p className="text-xs text-sidebar-foreground/50 mt-1 ml-[71px]">
+          <p className="text-xs text-sidebar-foreground/50 mt-1">
             Ship tools fast. Keep them running.
           </p>
         </div>
@@ -79,7 +79,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-8 overflow-auto flex flex-col">
         {children}
       </main>
     </div>

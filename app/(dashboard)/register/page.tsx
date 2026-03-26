@@ -24,14 +24,16 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Register New App</h1>
-        <p className="mt-1 text-muted-foreground">
-          Tell us what you&apos;re building. This takes about 30 seconds.
-        </p>
+    <div className="flex min-h-full items-center justify-center">
+      <div className="w-full max-w-2xl space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold">Register New App</h1>
+          <p className="mt-1 text-muted-foreground">
+            Tell us what you&apos;re building. This takes about 30 seconds.
+          </p>
+        </div>
+        <RegistrationForm onSubmit={handleSubmit} />
       </div>
-      <RegistrationForm onSubmit={handleSubmit} />
     </div>
   );
 }
