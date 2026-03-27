@@ -1,6 +1,6 @@
 # MVF Launchpad — TODO
 
-Last updated: 2026-03-27 (session 2)
+Last updated: 2026-03-27 (session 3)
 
 ---
 
@@ -55,10 +55,18 @@ Last updated: 2026-03-27 (session 2)
   - `ThemeToggle` layout shift: fixed-size placeholder on mount instead of `null`
   - Dev script: `next dev --port 3004`
 
+### Shipped (session 2+3, 2026-03-27)
+
+- [x] **Login page content** — two-panel layout (dark gradient + auth), audience cards, tier blocks
+- [x] **Light/dark theme toggle** — Sun/Moon button in sidebar, `next-themes` integration
+- [x] **Sidebar pinned bottom** — sticky positioning for Action Required, Capacity, user section
+- [x] **Light mode card fix** — semantic CSS tokens only, no `dark:` utilities (Tailwind v4 compatibility)
+- [x] **Animations** — Framer Motion: PageTransition (enter + exit), stagger on app cards, AnimatePresence on browse grid, PulseBadge
+- [x] **Production deploy** — live at https://mvf-launchpad.vercel.app, Google OAuth working, Vercel auto-deploys on merge to main
+- [x] **Vercel branch deploy** — preview deployments disabled, only `main` deploys to production
+
 ### Next up
 
-- [ ] **Merge PR** — `feat/login-page-light-mode-animations` into `main` (Vercel auto-deploys on merge)
-- [ ] **Demo to stakeholders** — share Vercel URL post-merge
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app
 - [ ] **Automated risk flags** — stale owner detection, high-WAU Red-tier alerts, capacity exceeded
 - [ ] **Dormancy attestation** — auto-flag apps with no activity for 60 days, require owner confirmation

@@ -4,7 +4,7 @@
 
 MVF Launchpad is an internal app registry and governance platform. Makers (employees who build internal tools with Lovable, Claude Code, etc.) register their tools here. Leadership gets governance visibility via dashboards. The platform uses a traffic-light tier system (Red/Amber/Green) and progressive registration.
 
-**Status (2026-03-27):** Phase 1 complete + Phase 2 progressive registration merged. Login page, theme toggle, animations, and light mode fixes merged and deployed to Vercel. 137 tests, 11 suites, zero TS errors.
+**Status (2026-03-27):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Login page, theme toggle, light mode, and animations shipped. 137 tests, 11 suites, zero TS errors.
 
 ## Documentation
 
@@ -71,17 +71,20 @@ app/
     auth/signout/         # Sign out
 components/
   app-profile-client.tsx  # App profile with section-based inline editing
-  editable-section.tsx    # Generic view/edit toggle wrapper
+  editable-section.tsx    # Generic view/edit toggle wrapper (animated via Framer Motion)
   fields/
     tristate-field.tsx    # Reusable Yes/No/Unsure button group
   registration-form.tsx   # 4-step animated wizard with per-step validation
   similar-tools-check.tsx # Debounced fuzzy match at registration + edit
-  app-browse.tsx          # App Library with search + tier/layer filters
-  app-card.tsx            # App card with tier accent stripe + badge
+  app-browse.tsx          # App Library with search + tier/layer filters (AnimatePresence grid)
+  app-card.tsx            # App card with tier accent stripe, badge, stagger animation
   admin-actions.tsx       # Tier change + add flags (admin only)
   risk-flags-list.tsx     # Flags with resolve buttons (app profile)
   governance-flags-list.tsx # Flags with resolve + app links (governance)
-  dashboard-shell.tsx     # Sidebar: nav, action required, capacity, user profile
+  dashboard-shell.tsx     # Sidebar: nav, pinned bottom (action required, capacity, user, theme toggle)
+  page-transition.tsx     # Framer Motion page enter/exit, keyed by pathname, respects reduced-motion
+  pulse-badge.tsx         # Animated action-required count badge, respects reduced-motion
+  theme-toggle.tsx        # Sun/Moon toggle via next-themes, layout-shift-safe placeholder
   tier-badge.tsx          # Red/Amber/Green badge with Lucide icons
   capacity-indicator.tsx  # Weighted capacity progress bar (default + sidebar variants)
   delete-app-button.tsx   # Role-based: admin deletes, makers request deletion
@@ -129,7 +132,10 @@ Linear-inspired with MVF brand colours. Key principles:
 - **Borders:** 6px radius controls, 8px cards, rgba opacity borders
 - **Transitions:** 150ms everywhere
 - **Dark mode:** Japanese-inspired gradient (#0F0F4B → #0B0B38 → #08082A), fixed attachment
-- **Cards:** White bg (light) / #08082A (dark), tier accent stripe on left, hover border glow
+- **Cards:** `bg-card` semantic token (light: #f8f8fb, dark: #16165a), tier accent stripe on left, hover border glow
+- **Dark mode:** Use only semantic CSS variable tokens (`bg-card`, `text-muted-foreground` etc.) — never `dark:` Tailwind utilities. Tailwind v4 compiles `dark:` as `@media (prefers-color-scheme)` which overrides `next-themes` class toggling.
+- **Logo theming:** CSS variable `--logo-filter` (`:root: none`, `.dark: brightness(0) invert(1)`) — same reason as above
+- **Animations:** Framer Motion v12. `PageTransition` (enter y:8→0, exit y:0→-8, 0.3s). List stagger (index × 0.05s). `AnimatePresence mode="popLayout"` on browse grid. All animations respect `useReducedMotion()`.
 
 ## MVF Brand Colours
 
@@ -165,9 +171,9 @@ All pieces of work follow this mandatory sequence:
 4. **Create PR** — Claude opens a pull request for review (never merges directly to main)
 5. **PR reviewed** — User reviews the PR
 6. **Approval** — User approves the PR
-7. **Merge** — User merges (or Claude merges on explicit instruction)
+7. **Merge** — User approves in conversation; Claude merges to main and pushes
 
-> No code is written without an approved plan. No code lands on main without a reviewed PR.
+> No code is written without an approved plan. No code lands on main without an approved PR.
 
 ## Testing
 
