@@ -27,7 +27,7 @@ export function AppCard({ app, index = 0 }: AppCardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8, scale: 0.97 }}
       transition={{ duration: 0.3, delay: index * 0.05, ease: EASE }}
-      whileHover={{ y: -2, transition: { duration: 0.15, ease: EASE } }}
+      whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.34, 1.56, 0.64, 1] } }}
     >
       <Link
         href={`/apps/${app.id}`}
