@@ -12,6 +12,7 @@ export type FlagType =
   | 'no_backup'
   | 'stale_owner'
   | 'pii_undisclosed'
+  | 'pii_confirmed'
   | 'unsure_pii'
   | 'unsure_business_data'
   | 'unsure_api_keys'

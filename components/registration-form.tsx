@@ -4,20 +4,20 @@ import { useState, useRef, useEffect } from 'react';
 import {
   Rocket, Users, Shield, Sparkles,
   ArrowLeft, ArrowRight, Check,
-  Code, Palette, Lightbulb,
   Database, KeyRound, Scale,
   Replace,
 } from 'lucide-react';
 import { registrationSchema, type RegistrationInput } from '@/lib/validators';
 import { SimilarToolsCheck } from '@/components/similar-tools-check';
+import { TristateField } from '@/components/fields/tristate-field';
+import {
+  LAYER_OPTIONS, TARGET_OPTIONS, TRISTATE_OPTIONS,
+  type Layer, type TargetUsers, type Tristate,
+} from '@/lib/field-options';
 
 interface RegistrationFormProps {
   onSubmit: (data: RegistrationInput) => Promise<void> | void;
 }
-
-type Layer = 'L1' | 'L2' | 'L3';
-type TargetUsers = 'my_team' | 'department' | 'org_wide';
-type Tristate = 'yes' | 'no' | 'unsure';
 
 const STEPS = [
   { title: 'What are you building?', subtitle: 'Tell us about your idea', icon: Rocket },
@@ -25,24 +25,6 @@ const STEPS = [
   { title: 'Data & Security', subtitle: 'Quick safety check', icon: Shield },
   { title: 'Almost done!', subtitle: "Let's launch this", icon: Sparkles },
 ] as const;
-
-const LAYER_OPTIONS: { value: Layer; label: string; description: string; icon: typeof Code }[] = [
-  { value: 'L1', label: 'Engineering', description: 'Core systems, production, strategic Rocks', icon: Code },
-  { value: 'L2', label: 'Product & Design', description: 'Internal tools, CRO experiments, prototypes', icon: Palette },
-  { value: 'L3', label: 'Makers Programme', description: 'Team tools, workflow improvements, automations', icon: Lightbulb },
-];
-
-const TARGET_OPTIONS: { value: TargetUsers; label: string }[] = [
-  { value: 'my_team', label: 'My Team' },
-  { value: 'department', label: 'Department' },
-  { value: 'org_wide', label: 'Organisation-wide' },
-];
-
-const TRISTATE_OPTIONS: { value: Tristate; label: string }[] = [
-  { value: 'yes', label: 'Yes' },
-  { value: 'no', label: 'No' },
-  { value: 'unsure', label: 'Unsure' },
-];
 
 export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -528,51 +510,6 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 }
 
 // ── Sub-components ────────────────────────────────────────────
-
-function TristateField({
-  icon: Icon,
-  label,
-  value,
-  onChange,
-  alert,
-}: {
-  icon: typeof Database;
-  label: string;
-  value: Tristate;
-  onChange: (v: Tristate) => void;
-  alert?: string;
-}) {
-  return (
-    <fieldset className="space-y-3">
-      <legend className="text-[15px] font-medium flex items-center gap-2">
-        <Icon className="h-4 w-4 text-mvf-purple" />
-        {label}
-      </legend>
-      <div className="flex gap-2">
-        {TRISTATE_OPTIONS.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            onClick={() => onChange(opt.value)}
-            className={`flex-1 rounded border px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
-              value === opt.value
-                ? 'border-mvf-purple bg-mvf-purple text-white'
-                : 'border-input bg-background hover:border-mvf-purple/40'
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-      {alert && (
-        <p className="text-[13px] text-amber-600 bg-amber-50 rounded px-3 py-2 flex items-center gap-2">
-          <Scale className="h-4 w-4 shrink-0" />
-          {alert}
-        </p>
-      )}
-    </fieldset>
-  );
-}
 
 function SummaryItem({
   label,

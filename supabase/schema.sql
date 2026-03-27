@@ -16,7 +16,7 @@ CREATE TYPE target_users AS ENUM ('my_team', 'department', 'org_wide');
 CREATE TYPE tristate AS ENUM ('yes', 'no', 'unsure');
 CREATE TYPE owner_role AS ENUM ('primary', 'backup');
 CREATE TYPE flag_type AS ENUM (
-  'no_backup', 'stale_owner', 'pii_undisclosed', 'unsure_pii',
+  'no_backup', 'stale_owner', 'pii_undisclosed', 'pii_confirmed', 'unsure_pii',
   'unsure_business_data', 'unsure_api_keys', 'high_wau_red_tier',
   'capacity_exceeded', 'manual'
 );
@@ -208,10 +208,13 @@ CREATE POLICY "app_owners_delete" ON app_owners FOR DELETE TO authenticated
     OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
--- Risk flags: all authenticated can read, admins can manage
+-- Risk flags: all authenticated can read, admins can manage, owners can insert for their apps
 CREATE POLICY "risk_flags_select" ON risk_flags FOR SELECT TO authenticated USING (true);
 CREATE POLICY "risk_flags_insert" ON risk_flags FOR INSERT TO authenticated
-  WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+  WITH CHECK (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+    OR EXISTS (SELECT 1 FROM app_owners WHERE app_id = risk_flags.app_id AND user_id = auth.uid())
+  );
 CREATE POLICY "risk_flags_update" ON risk_flags FOR UPDATE TO authenticated
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
