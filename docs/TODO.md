@@ -1,6 +1,6 @@
 # MVF Launchpad — TODO
 
-Last updated: 2026-03-27
+Last updated: 2026-03-27 (session 2)
 
 ---
 
@@ -41,8 +41,23 @@ Last updated: 2026-03-27
 
 - [x] **Run `migration-pii-confirmed-flag.sql`** against production Supabase (adds `pii_confirmed` to flag_type enum) — done 2026-03-27
 
+### Shipped (session 2, 2026-03-27)
+
+- [x] **Login page content** — two-panel layout (dark gradient + auth), audience cards, tier blocks
+- [x] **Light/dark theme toggle** — Sun/Moon button in sidebar, `next-themes` integration
+- [x] **Sidebar pinned bottom** — sticky positioning for Action Required, Capacity, user section
+- [x] **Light mode card fix** — CSS variable approach, eliminated all `dark:` utility classes from content areas
+- [x] **Animations** — Framer Motion: PageTransition (enter + exit), stagger on app cards, AnimatePresence on browse grid, PulseBadge on action-required count
+- [x] **Code review fixes** (PR #1 code review follow-up):
+  - Logo dark mode via CSS var `--logo-filter` (avoids Tailwind v4 media-query conflict)
+  - `PulseBadge` respects `prefers-reduced-motion` via `useReducedMotion()`
+  - `PageTransition` exit animation: `AnimatePresence` moved inside component, keyed by `usePathname()`
+  - `ThemeToggle` layout shift: fixed-size placeholder on mount instead of `null`
+  - Dev script: `next dev --port 3004`
+
 ### Next up
 
+- [ ] **Merge PR** — `feat/login-page-light-mode-animations` into `main`
 - [ ] **Deploy to Vercel** — stakeholders need to access it for demo
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app
 - [ ] **Automated risk flags** — stale owner detection, high-WAU Red-tier alerts, capacity exceeded
