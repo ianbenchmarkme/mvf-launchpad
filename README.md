@@ -81,7 +81,10 @@ NEXT_PUBLIC_SITE_URL          # http://localhost:3004
 | Role-based deletion (admin deletes, makers request) | Done |
 | Governance dashboard (landscape grid, flags, all-apps) | Done |
 | Sign out | Done |
-| 78 passing tests (TDD) | Done |
+| Progressive registration (inline editing on app profile) | Done |
+| PATCH/DELETE endpoint hardening (auth + validation) | Done |
+| `pii_confirmed` risk flag on PII confirmation | Done |
+| 137 passing tests (TDD), 11 suites | Done |
 
 ## Design
 
@@ -94,6 +97,8 @@ Linear-inspired UI with MVF brand colours:
 
 ## Status
 
-**Phase 1 complete** with Phase 2 consumer browse view shipped early.
+**Phase 1 complete.** Phase 2 in progress — consumer browse and progressive registration shipped.
 
-Next: progressive registration, Amplitude usage tracking, automated risk flags, dormancy attestation, Slack notifications.
+Next: deploy to Vercel, Amplitude usage tracking, automated risk flags, dormancy attestation, Slack notifications.
+
+See `docs/TODO.md` for full tracker.
