@@ -45,8 +45,8 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {apps.map((app: App) => (
-              <AppCard key={app.id} app={app} />
+            {apps.map((app: App, index: number) => (
+              <AppCard key={app.id} app={app} index={index} />
             ))}
           </div>
         )}
