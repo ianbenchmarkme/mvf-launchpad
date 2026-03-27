@@ -23,7 +23,7 @@ export default async function DashboardPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-lg font-semibold tracking-tight">Dashboard</h1>
+          <h1 className="text-lg font-semibold tracking-tight">My Apps</h1>
           <p className="text-[13px] text-muted-foreground mt-0.5">Your registered apps and capacity at a glance.</p>
         </div>
         <Link
@@ -35,9 +35,7 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      {/* My Apps */}
       <div>
-        <h2 className="text-[13px] font-semibold text-muted-foreground mb-3">My Apps</h2>
         {apps.length === 0 ? (
           <div className="rounded-[8px] border border-dashed py-12 text-center">
             <p className="text-[13px] text-muted-foreground">No apps registered yet.</p>

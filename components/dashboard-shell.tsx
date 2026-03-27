@@ -21,7 +21,7 @@ interface DashboardShellProps {
 }
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/', label: 'My Apps', icon: LayoutDashboard },
   { href: '/browse', label: 'App Library', icon: Search },
   { href: '/register', label: 'Register App', icon: PlusCircle },
   { href: '/governance', label: 'Governance', icon: Shield, adminOnly: true },
