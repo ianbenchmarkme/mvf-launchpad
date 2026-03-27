@@ -33,7 +33,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
     <div className="flex">
       {/* Sidebar */}
       <aside className="w-60 border-r border-sidebar-border bg-sidebar flex flex-col sticky top-0 h-screen overflow-y-auto">
-        <div className="px-4 pt-5 pb-6">
+        <div className="px-4 pt-[25px] pb-6">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/mvf-logo-white.svg" alt="MVF" width={56} height={19} />
             <span className="text-[13px] font-semibold text-sidebar-foreground tracking-tight">Launchpad</span>
