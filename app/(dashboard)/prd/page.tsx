@@ -62,7 +62,7 @@ export default async function PRDPage() {
         </p>
 
         <div className="flex flex-wrap items-center gap-2 mb-8">
-          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border border-border bg-muted" style={{ color: 'var(--mvf-yellow)' }}>
             v1.0 Draft
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground border border-border">
@@ -71,7 +71,7 @@ export default async function PRDPage() {
           <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground border border-border">
             Ian Hitge · Author
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border border-border bg-muted" style={{ color: 'var(--mvf-purple)' }}>
             For Review
           </span>
         </div>
