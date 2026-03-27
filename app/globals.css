@@ -12,20 +12,29 @@
   --mvf-dark-grey: #64788C;
 }
 
+/* ── Logo filter: navy logo inverted to white in dark mode (CSS-var approach avoids
+   Tailwind v4's dark: media-query compilation, which overrides next-themes class toggle) ── */
+:root {
+  --logo-filter: none;
+}
+.dark {
+  --logo-filter: brightness(0) invert(1);
+}
+
 /* ── Light theme ─────────────────────────────────────────── */
 :root {
-  --background: #fafafa;
+  --background: #f0f0f5;
   --foreground: #1a1a2e;
-  --card: rgba(15, 15, 75, 0.03);
+  --card: #f8f8fb;
   --card-foreground: #1a1a2e;
   --popover: #ffffff;
   --popover-foreground: #1a1a2e;
   --primary: var(--mvf-pink);
   --primary-foreground: #ffffff;
-  --secondary: #f4f4f8;
+  --secondary: #ebebf2;
   --secondary-foreground: #1a1a2e;
-  --muted: #f4f4f8;
-  --muted-foreground: #6b6b80;
+  --muted: #ebebf2;
+  --muted-foreground: #52526b;
   --accent: #f4f4f8;
   --accent-foreground: var(--mvf-purple);
   --border: rgba(0, 0, 0, 0.08);
@@ -52,7 +61,7 @@
 .dark {
   --background: #0F0F4B;
   --foreground: #f0f0f5;
-  --card: rgba(255, 255, 255, 0.04);
+  --card: #16165a;
   --card-foreground: #f0f0f5;
   --popover: #1a1a5e;
   --popover-foreground: #f0f0f5;
@@ -64,7 +73,7 @@
   --muted-foreground: rgba(255, 255, 255, 0.55);
   --accent: rgba(255, 255, 255, 0.06);
   --accent-foreground: #f0f0f5;
-  --border: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.10);
   --input: rgba(255, 255, 255, 0.08);
   --ring: var(--mvf-purple);
   --destructive: #ef4444;
@@ -198,4 +207,13 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
   .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+  /* Respect reduced-motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }

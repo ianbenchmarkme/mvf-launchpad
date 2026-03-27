@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import {
   Rocket, Users, Shield, Sparkles,
   ArrowLeft, ArrowRight, Check,
   Database, KeyRound, Scale,
   Replace,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { registrationSchema, type RegistrationInput } from '@/lib/validators';
 import { SimilarToolsCheck } from '@/components/similar-tools-check';
 import { TristateField } from '@/components/fields/tristate-field';
@@ -14,6 +15,8 @@ import {
   LAYER_OPTIONS, TARGET_OPTIONS, TRISTATE_OPTIONS,
   type Layer, type TargetUsers, type Tristate,
 } from '@/lib/field-options';
+
+const STEP_EASE = [0.25, 0.1, 0.25, 1] as const;
 
 interface RegistrationFormProps {
   onSubmit: (data: RegistrationInput) => Promise<void> | void;
@@ -28,9 +31,8 @@ const STEPS = [
 
 export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [direction, setDirection] = useState<'forward' | 'back'>('forward');
+  const [direction, setDirection] = useState<1 | -1>(1);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
 
   // Form state
   const [name, setName] = useState('');
@@ -48,14 +50,6 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Trigger entrance animation on step change
-  useEffect(() => {
-    setMounted(false);
-    const frame = requestAnimationFrame(() => setMounted(true));
-    contentRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
-    return () => cancelAnimationFrame(frame);
-  }, [currentStep]);
 
   function validateCurrentStep(): boolean {
     const stepErrors: Record<string, string> = {};
@@ -82,19 +76,21 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
   function goNext() {
     if (!validateCurrentStep()) return;
-    setDirection('forward');
+    setDirection(1);
     setCurrentStep((s) => Math.min(s + 1, STEPS.length - 1));
+    contentRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
   }
 
   function goBack() {
-    setDirection('back');
+    setDirection(-1);
     setErrors({});
     setCurrentStep((s) => Math.max(s - 1, 0));
+    contentRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
   }
 
   function goToStep(step: number) {
     if (step < currentStep) {
-      setDirection('back');
+      setDirection(-1);
       setErrors({});
       setCurrentStep(step);
     }
@@ -141,13 +137,6 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
   const isLastStep = currentStep === STEPS.length - 1;
 
-  // Animation classes — mounted toggles from false→true on each step change
-  const slideClass = mounted
-    ? 'opacity-100 translate-x-0'
-    : direction === 'forward'
-      ? 'opacity-0 translate-x-8'
-      : 'opacity-0 -translate-x-8';
-
   return (
     <div ref={contentRef} className="w-full">
       {/* ── Progress Indicator ──────────────────────────────── */}
@@ -178,24 +167,35 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
         ))}
       </div>
 
-      {/* ── Step Header ─────────────────────────────────────── */}
-      <div className={`mb-5 transition-all duration-200 ${slideClass}`}>
-        <div className="flex items-center gap-2 mb-0.5">
-          {(() => {
-            const Icon = STEPS[currentStep].icon;
-            return <Icon className="h-4 w-4 text-mvf-purple" />;
-          })()}
-          <h2 className="text-[18px] font-semibold tracking-tight">{STEPS[currentStep].title}</h2>
-        </div>
-        <p className="text-[14px] text-muted-foreground ml-6">{STEPS[currentStep].subtitle}</p>
-      </div>
-
-      {/* ── Step Content ────────────────────────────────────── */}
-      <div className="overflow-hidden">
-        <form
-          onSubmit={(e) => { e.preventDefault(); isLastStep ? handleSubmit() : goNext(); }}
-          className={`transition-all duration-300 ease-in-out ${slideClass}`}
+      {/* ── Step Header + Content ───────────────────────────── */}
+      <AnimatePresence mode="wait" custom={direction}>
+        <motion.div
+          key={currentStep}
+          custom={direction}
+          variants={{
+            enter: (d: number) => ({ opacity: 0, x: d * 24 }),
+            center: { opacity: 1, x: 0 },
+            exit: (d: number) => ({ opacity: 0, x: d * -24 }),
+          }}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.25, ease: STEP_EASE }}
         >
+          <div className="mb-5">
+            <div className="flex items-center gap-2 mb-0.5">
+              {(() => {
+                const Icon = STEPS[currentStep].icon;
+                return <Icon className="h-4 w-4 text-mvf-purple" />;
+              })()}
+              <h2 className="text-[18px] font-semibold tracking-tight">{STEPS[currentStep].title}</h2>
+            </div>
+            <p className="text-[14px] text-muted-foreground ml-6">{STEPS[currentStep].subtitle}</p>
+          </div>
+
+          <form
+            onSubmit={(e) => { e.preventDefault(); isLastStep ? handleSubmit() : goNext(); }}
+          >
           {/* Step 1: Identity */}
           {currentStep === 0 && (
             <div className="space-y-4">
@@ -348,7 +348,12 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   ))}
                 </div>
                 {usesApiKeys === 'yes' && (
-                  <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, ease: STEP_EASE }}
+                    className="space-y-1"
+                  >
                     <label htmlFor="api-services" className="block text-[15px] font-medium">
                       Which services?
                     </label>
@@ -364,7 +369,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                     {errors.api_key_services && (
                       <p className="text-[14px] text-red-500">{errors.api_key_services}</p>
                     )}
-                  </div>
+                  </motion.div>
                 )}
               </fieldset>
             </div>
@@ -503,8 +508,9 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
               </button>
             )}
           </div>
-        </form>
-      </div>
+          </form>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

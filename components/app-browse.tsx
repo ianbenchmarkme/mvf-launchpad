@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Search, Filter } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 import { AppCard } from '@/components/app-card';
 import { LAYER_LABELS, TIER_LABELS } from '@/lib/constants';
 import type { App, AppTier, AppLayer } from '@/lib/supabase/types';
@@ -108,9 +109,11 @@ export function AppBrowse({ apps }: AppBrowseProps) {
         </div>
       ) : (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((app) => (
-            <AppCard key={app.id} app={app} />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {filtered.map((app, index) => (
+              <AppCard key={app.id} app={app} index={index} />
+            ))}
+          </AnimatePresence>
         </div>
       )}
     </div>

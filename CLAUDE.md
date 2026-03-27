@@ -4,7 +4,7 @@
 
 MVF Launchpad is an internal app registry and governance platform. Makers (employees who build internal tools with Lovable, Claude Code, etc.) register their tools here. Leadership gets governance visibility via dashboards. The platform uses a traffic-light tier system (Red/Amber/Green) and progressive registration.
 
-**Status (2026-03-27):** Phase 1 complete + Phase 2 progressive registration merged. 137 tests, 11 suites, zero TS errors.
+**Status (2026-03-27):** Phase 1 complete + Phase 2 progressive registration merged. Login page, theme toggle, animations, and light mode fixes merged and deployed to Vercel. 137 tests, 11 suites, zero TS errors.
 
 ## Documentation
 
@@ -154,6 +154,20 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY # Supabase anon key
 SUPABASE_SERVICE_ROLE_KEY     # Supabase service role (server only)
 NEXT_PUBLIC_SITE_URL          # http://localhost:3004
 ```
+
+## Development Workflow
+
+All pieces of work follow this mandatory sequence:
+
+1. **Plan** — Claude drafts an implementation plan before writing any code
+2. **Plan approval** — User reviews and explicitly approves the plan before work begins
+3. **Execute** — Claude implements the approved plan
+4. **Create PR** — Claude opens a pull request for review (never merges directly to main)
+5. **PR reviewed** — User reviews the PR
+6. **Approval** — User approves the PR
+7. **Merge** — User merges (or Claude merges on explicit instruction)
+
+> No code is written without an approved plan. No code lands on main without a reviewed PR.
 
 ## Testing
 
