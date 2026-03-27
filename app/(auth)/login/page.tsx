@@ -55,19 +55,15 @@ export default function LoginPage() {
         <div className="w-full max-w-xs space-y-6 text-center flex flex-col items-center">
           <div className="space-y-2">
             <div className="flex items-center justify-center gap-2">
+              {/* Use a single logo that works on both light and dark auth panel backgrounds.
+                  Avoid dark: utilities — Tailwind v4 compiles them as @media (prefers-color-scheme)
+                  which overrides next-themes class-based toggling. */}
               <Image
                 src="/mvf-logo-navy.svg"
                 alt="MVF"
                 width={72}
                 height={24}
-                className="dark:hidden"
-              />
-              <Image
-                src="/mvf-logo-white.svg"
-                alt="MVF"
-                width={72}
-                height={24}
-                className="hidden dark:block"
+                style={{ filter: 'var(--logo-filter)' }}
               />
               <span className="text-lg font-semibold tracking-tight">Launchpad</span>
             </div>

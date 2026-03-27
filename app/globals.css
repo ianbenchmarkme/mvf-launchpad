@@ -12,6 +12,15 @@
   --mvf-dark-grey: #64788C;
 }
 
+/* ── Logo filter: navy logo inverted to white in dark mode (CSS-var approach avoids
+   Tailwind v4's dark: media-query compilation, which overrides next-themes class toggle) ── */
+:root {
+  --logo-filter: none;
+}
+.dark {
+  --logo-filter: brightness(0) invert(1);
+}
+
 /* ── Light theme ─────────────────────────────────────────── */
 :root {
   --background: #f0f0f5;

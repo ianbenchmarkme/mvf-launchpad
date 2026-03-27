@@ -8,9 +8,12 @@ export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Avoid hydration mismatch
+  // Avoid hydration mismatch — render a same-size placeholder until mounted
+  // (returning null causes layout shift as the sidebar reflows)
   useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
+  if (!mounted) {
+    return <div className="h-8 w-8 shrink-0" aria-hidden />;
+  }
 
   const isDark = resolvedTheme === 'dark';
 

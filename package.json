@@ -4,7 +4,7 @@
   "description": "MVF Launchpad - Next.js application with React, Tailwind, and shadcn/ui",
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3004",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
