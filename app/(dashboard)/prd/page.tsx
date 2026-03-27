@@ -62,7 +62,7 @@ export default async function PRDPage() {
         </p>
 
         <div className="flex flex-wrap items-center gap-2 mb-8">
-          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border border-border bg-muted" style={{ color: 'var(--mvf-yellow)' }}>
+          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground border border-border">
             v1.0 Draft
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground border border-border">
