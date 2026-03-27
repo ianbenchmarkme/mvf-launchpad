@@ -161,6 +161,10 @@ SUPABASE_SERVICE_ROLE_KEY     # Supabase service role (server only)
 NEXT_PUBLIC_SITE_URL          # http://localhost:3004 (local) | https://mvf-launchpad.vercel.app (production)
 ```
 
+## Cardinal Rules
+
+- **Never guess or make assumptions.** It burns tokens needlessly, costs time, and damages trust. Always verify first — read the file, check the logs, look at the data — then speak.
+
 ## Development Workflow
 
 All pieces of work follow this mandatory sequence:
