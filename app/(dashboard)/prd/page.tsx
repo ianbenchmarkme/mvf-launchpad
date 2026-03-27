@@ -872,12 +872,16 @@ export default async function PRDPage() {
                     { text: 'Auto-create risk flags when PII or data fields are marked Unsure or Yes', done: true },
                     { text: 'PATCH and DELETE endpoints hardened with Zod validation and auth checks', done: true },
                     { text: '137 tests across 11 suites', done: true },
+                    { text: 'Login page — two-panel layout with audience cards and tier blocks', done: true },
+                    { text: 'Light/dark theme toggle in sidebar', done: true },
+                    { text: 'Framer Motion animations — page transitions, card stagger, browse grid', done: true },
+                    { text: 'Deploy to Vercel — live at mvf-launchpad.vercel.app with Google OAuth', done: true },
+                    { text: 'UI polish — tooltips, consistent page headers, card alignment, sidebar improvements', done: true },
                   ],
                 },
                 {
                   label: 'Up next',
                   items: [
-                    { text: 'Deploy to Vercel — stakeholder access for demo', done: false },
                     { text: 'Amplitude integration — usage analytics and WAU tracking per app', done: false },
                     { text: 'Automated risk flags — stale owner, high-WAU Red-tier, capacity exceeded', done: false },
                     { text: 'Dormancy attestation — flag inactive apps, require owner confirmation', done: false },
