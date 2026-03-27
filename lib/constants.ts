@@ -12,6 +12,26 @@ export const TIER_LABELS = {
   green: 'Supported',
 } as const;
 
+export const TIER_TOOLTIPS = {
+  red: 'Maker-built, not formally reviewed. Use with caution.',
+  amber: 'Reviewed and verified. Suitable for team use.',
+  green: 'Fully supported by a product team. Production-grade.',
+} as const;
+
+export const STATUS_TOOLTIPS = {
+  intent: 'Idea registered — not yet built.',
+  developing: 'Currently being built.',
+  testing: 'Built and being tested before going live.',
+  active: 'Live and in use.',
+  archived: 'Retired and no longer available.',
+} as const;
+
+export const LAYER_TOOLTIPS = {
+  L1: 'Built by or for the Engineering team.',
+  L2: 'Built by or for Product & Design.',
+  L3: 'Built through the Makers Programme.',
+} as const;
+
 export const LAYER_LABELS = {
   L1: 'Engineering',
   L2: 'Product & Design',

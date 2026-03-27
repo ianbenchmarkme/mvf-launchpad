@@ -1,5 +1,6 @@
 import { FlaskConical, ShieldCheck, BadgeCheck } from 'lucide-react';
-import { TIER_LABELS } from '@/lib/constants';
+import { TIER_LABELS, TIER_TOOLTIPS } from '@/lib/constants';
+import { Tooltip } from '@/components/tooltip';
 import type { AppTier } from '@/lib/supabase/types';
 
 const tierConfig: Record<AppTier, {
@@ -32,11 +33,13 @@ interface TierBadgeProps {
 export function TierBadge({ tier, className = '' }: TierBadgeProps) {
   const { styles, Icon } = tierConfig[tier];
   return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-[5px] border px-1.5 py-0.5 text-[11px] font-medium leading-none ${styles} ${className}`}
-    >
-      <Icon className="h-3 w-3" />
-      {TIER_LABELS[tier]}
-    </span>
+    <Tooltip text={TIER_TOOLTIPS[tier]}>
+      <span
+        className={`inline-flex items-center gap-1 rounded-[5px] border px-1.5 py-0.5 text-[11px] font-medium leading-none ${styles} ${className}`}
+      >
+        <Icon className="h-3 w-3" />
+        {TIER_LABELS[tier]}
+      </span>
+    </Tooltip>
   );
 }

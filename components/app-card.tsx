@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { TierBadge } from '@/components/tier-badge';
-import { LAYER_LABELS, STATUS_LABELS } from '@/lib/constants';
+import { Tooltip } from '@/components/tooltip';
+import { LAYER_LABELS, LAYER_TOOLTIPS, STATUS_LABELS, STATUS_TOOLTIPS } from '@/lib/constants';
 import type { App, AppTier } from '@/lib/supabase/types';
 
 const EASE = [0.25, 0.1, 0.25, 1] as const;
@@ -45,9 +46,13 @@ export function AppCard({ app, index = 0 }: AppCardProps) {
           {app.problem_statement}
         </p>
         <div className="mt-3 pt-3 border-t border-border flex items-center gap-2 text-[11px] text-muted-foreground/80">
-          <span>{LAYER_LABELS[app.layer]}</span>
+          <Tooltip text={LAYER_TOOLTIPS[app.layer]} position="bottom">
+            <span>{LAYER_LABELS[app.layer]}</span>
+          </Tooltip>
           <span className="opacity-40">·</span>
-          <span>Stage: {STATUS_LABELS[app.status]}</span>
+          <Tooltip text={STATUS_TOOLTIPS[app.status]} position="bottom">
+            <span>Stage: {STATUS_LABELS[app.status]}</span>
+          </Tooltip>
         </div>
       </Link>
     </motion.div>
