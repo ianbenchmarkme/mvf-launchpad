@@ -40,7 +40,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
           </Link>
         </div>
 
-        <nav className="flex-1 px-2 space-y-0.5">
+        <nav className="flex-1 px-2 space-y-0.5 pt-[10px]">
           {navItems.map((item) => {
             if ('adminOnly' in item && item.adminOnly && user.role !== 'admin') {
               return null;
