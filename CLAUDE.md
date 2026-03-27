@@ -152,7 +152,7 @@ Defined as CSS variables in `globals.css`, mapped to Tailwind via `@theme inline
 NEXT_PUBLIC_SUPABASE_URL     # Supabase project URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY # Supabase anon key
 SUPABASE_SERVICE_ROLE_KEY     # Supabase service role (server only)
-NEXT_PUBLIC_SITE_URL          # http://localhost:3004
+NEXT_PUBLIC_SITE_URL          # http://localhost:3004 (local) | https://mvf-launchpad.vercel.app (production)
 ```
 
 ## Development Workflow
