@@ -19,7 +19,7 @@ MVF Launchpad is an internal app registry and governance platform. Makers (emplo
 ## Key People
 
 - **Ian** — PRD author and builder (admin user, ian@benchmarkme.com)
-- **Stakeholders** — Michael Johnson, Tim Kitching
+- **Stakeholders** — Michael Johnson
 
 ## Tech Stack
 

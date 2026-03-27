@@ -1053,7 +1053,7 @@ export default async function PRDPage() {
           MVF Launchpad PRD · v1.0 · 25 March 2026 · Ian Hitge
         </p>
         <p className="text-[11px] text-muted-foreground">
-          Stakeholders: Michael Johnson, Tim Kitching
+          Stakeholders: Michael Johnson
         </p>
       </footer>
     </div>

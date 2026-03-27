@@ -10,7 +10,7 @@ I h# MVF Launchpad
 | **Date** | 25 March 2026 |
 | **Author** | Ian Hitge |
 | **Status** | For Review |
-| **Stakeholders** | Michael Johnson, Tim Kitching |
+| **Stakeholders** | Michael Johnson |
 
 ---
 
@@ -682,7 +682,7 @@ Full browse experience with categories, ratings, reviews, "similar tools" recomm
 |----------|-----------------|
 | What hours/days should Green-tier tools have support coverage? | Business hours + critical escalation. Full 24/7 only for revenue-critical tools. |
 | When a Green-tier tool has issues, who gets paged? | The team that owns it. Launchpad surfaces the owner, it does not provide on-call. |
-| Makers Programme assessment process? | Proposal-based: submit problem statement and approach. Looking for clarity of thought, not technical skill. Tim Kitching to define criteria. |
+| Makers Programme assessment process? | Proposal-based: submit problem statement and approach. Looking for clarity of thought, not technical skill. Criteria to be defined. |
 | How do we handle a maker who is rejected from the Makers Programme? | Must have a development path to reapply. Never make rejection feel final or punitive. |
 | Is the 5-point weighted capacity the right limit? | Start at 5 points (Red=0.5, Amber=1, Green=0), review after 3 months based on actual usage patterns. May need adjustment if builders consistently hit the cap with legitimate tools. |
 
@@ -706,7 +706,7 @@ As of March 2026, three tools are registered in the amnesty spreadsheet:
 
 | Tool | Purpose | Status | Owner | Tech | Repo |
 |------|---------|--------|-------|------|------|
-| ArtyFish | AI-generated paid marketing wins | Active (users depend on it) | Tim Kitching | Lovable | mvf-tech/artyfish |
+| ArtyFish | AI-generated paid marketing wins | Active (users depend on it) | — | Lovable | mvf-tech/artyfish |
 | Allegros | Internal portal for Legal | Active (users depend on it) | Alex Mandel | Lovable | mvf-tech/mvflgr |
 | Partner Portal | Partner portal | Active (users depend on it) | Alex Mandel | Lovable | mvf-tech/inboxguide |
 
