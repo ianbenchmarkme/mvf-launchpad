@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { LayoutDashboard, PlusCircle, Search, Shield, LogOut, AlertTriangle } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Search, Shield, LogOut, AlertTriangle, FileText } from 'lucide-react';
 import { CapacityIndicator } from '@/components/capacity-indicator';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { CAPACITY_LIMIT } from '@/lib/constants';
 import type { Profile } from '@/lib/supabase/types';
 
@@ -23,13 +24,14 @@ const navItems = [
   { href: '/browse', label: 'App Library', icon: Search },
   { href: '/register', label: 'Register App', icon: PlusCircle },
   { href: '/governance', label: 'Governance', icon: Shield, adminOnly: true },
+  { href: '/prd', label: 'PRD [temp]', icon: FileText, adminOnly: true },
 ];
 
 export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }: DashboardShellProps) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex">
       {/* Sidebar */}
-      <aside className="w-60 border-r border-sidebar-border bg-sidebar flex flex-col">
+      <aside className="w-60 border-r border-sidebar-border bg-sidebar flex flex-col sticky top-0 h-screen overflow-y-auto">
         <div className="px-4 pt-5 pb-6">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/mvf-logo-white.svg" alt="MVF" width={56} height={19} />
@@ -39,7 +41,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
 
         <nav className="flex-1 px-2 space-y-0.5">
           {navItems.map((item) => {
-            if ('adminOnly' in item && item.adminOnly && user.role === 'maker') {
+            if ('adminOnly' in item && item.adminOnly && user.role !== 'admin') {
               return null;
             }
             return (
@@ -57,7 +59,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
 
         {/* Action Required */}
         {unresolvedFlags.length > 0 && (
-          <div className="border-t border-sidebar-border px-3 py-3">
+          <div className="shrink-0 border-t border-sidebar-border px-3 py-3">
             <div className="flex items-center gap-1.5 mb-2">
               <AlertTriangle className="h-3 w-3 text-amber-400" />
               <p className="text-[11px] font-medium text-amber-400">
@@ -85,13 +87,13 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
         )}
 
         {/* Capacity */}
-        <div className="border-t border-sidebar-border px-4 py-3">
+        <div className="shrink-0 border-t border-sidebar-border px-4 py-3">
           <p className="text-[11px] font-medium text-sidebar-foreground/40 mb-1.5">Capacity</p>
           <CapacityIndicator used={capacityUsed} limit={CAPACITY_LIMIT} variant="sidebar" />
         </div>
 
         {/* User */}
-        <div className="border-t border-sidebar-border px-3 py-3">
+        <div className="shrink-0 border-t border-sidebar-border px-3 py-3">
           <div className="flex items-center gap-2.5 px-1">
             {user.avatar_url && (
               <img
@@ -109,15 +111,18 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
               </p>
             </div>
           </div>
-          <form action="/api/auth/signout" method="POST" className="mt-2">
-            <button
-              type="submit"
-              className="flex w-full items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] text-sidebar-foreground/40 hover:text-sidebar-foreground/75 hover:bg-sidebar-accent transition-colors duration-150"
-            >
-              <LogOut className="h-[15px] w-[15px]" />
-              Sign out
-            </button>
-          </form>
+          <div className="mt-2 flex items-center gap-1">
+            <form action="/api/auth/signout" method="POST" className="flex-1">
+              <button
+                type="submit"
+                className="flex w-full items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] text-sidebar-foreground/40 hover:text-sidebar-foreground/75 hover:bg-sidebar-accent transition-colors duration-150"
+              >
+                <LogOut className="h-[15px] w-[15px]" />
+                Sign out
+              </button>
+            </form>
+            <ThemeToggle />
+          </div>
         </div>
       </aside>
 
