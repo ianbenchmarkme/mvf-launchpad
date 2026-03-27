@@ -30,7 +30,7 @@ export function AppCard({ app, index = 0 }: AppCardProps) {
     >
       <Link
         href={`/apps/${app.id}`}
-        className="group relative flex flex-col rounded-[8px] border border-border bg-card py-5 px-6 min-h-[140px] card-shadow hover:border-mvf-purple/20 transition-colors duration-150"
+        className="group relative flex flex-col rounded-[8px] border border-border bg-card py-5 px-6 min-h-[180px] card-shadow hover:border-mvf-purple/20 transition-colors duration-150"
       >
         {/* Left accent stripe */}
         <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${accentColor[app.tier]} opacity-60 group-hover:opacity-100 transition-opacity duration-150`} />
