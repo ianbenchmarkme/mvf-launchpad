@@ -21,8 +21,11 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold tracking-tight">Dashboard</h1>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-lg font-semibold tracking-tight">My Apps</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">Your registered apps and capacity at a glance.</p>
+        </div>
         <Link
           href="/register"
           className="flex items-center gap-1.5 rounded-[6px] bg-mvf-pink px-3 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150"
@@ -32,9 +35,7 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      {/* My Apps */}
       <div>
-        <h2 className="text-[13px] font-semibold text-muted-foreground mb-3">My Apps</h2>
         {apps.length === 0 ? (
           <div className="rounded-[8px] border border-dashed py-12 text-center">
             <p className="text-[13px] text-muted-foreground">No apps registered yet.</p>
@@ -44,8 +45,8 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {apps.map((app: App) => (
-              <AppCard key={app.id} app={app} />
+            {apps.map((app: App, index: number) => (
+              <AppCard key={app.id} app={app} index={index} />
             ))}
           </div>
         )}

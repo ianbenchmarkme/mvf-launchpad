@@ -14,7 +14,9 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AnimatePresence mode="wait">
+    // mode="popLayout" (not "wait") — "wait" held opacity:0 until exit finished,
+    // causing blank pages when navigating within a persistent layout.
+    <AnimatePresence mode="popLayout">
       <motion.div
         key={pathname}
         initial={{ opacity: 0, y: 8 }}

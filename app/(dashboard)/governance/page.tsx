@@ -43,9 +43,9 @@ export default async function GovernancePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">Governance Dashboard</h1>
-        <p className="mt-1 text-muted-foreground">
-          {typedApps.length} registered apps across all layers
+        <h1 className="text-lg font-semibold tracking-tight">Governance</h1>
+        <p className="text-[13px] text-muted-foreground mt-0.5">
+          {typedApps.length} registered apps across all layers.
         </p>
       </div>
 

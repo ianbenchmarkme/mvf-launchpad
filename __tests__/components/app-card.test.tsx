@@ -38,7 +38,7 @@ describe('AppCard', () => {
 
   it('renders the status', () => {
     render(<AppCard app={mockApp} />);
-    expect(screen.getByText('Active')).toBeInTheDocument();
+    expect(screen.getByText('Stage: Active')).toBeInTheDocument();
   });
 
   it('renders the layer label', () => {

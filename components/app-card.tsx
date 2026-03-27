@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { TierBadge } from '@/components/tier-badge';
-import { LAYER_LABELS, STATUS_LABELS } from '@/lib/constants';
+import { Tooltip } from '@/components/tooltip';
+import { LAYER_LABELS, LAYER_TOOLTIPS, STATUS_LABELS, STATUS_TOOLTIPS } from '@/lib/constants';
 import type { App, AppTier } from '@/lib/supabase/types';
 
 const EASE = [0.25, 0.1, 0.25, 1] as const;
@@ -20,13 +21,15 @@ interface AppCardProps {
 }
 
 export function AppCard({ app, index = 0 }: AppCardProps) {
+  const reducedMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 8, scale: 0.97 }}
-      transition={{ duration: 0.3, delay: index * 0.05, ease: EASE }}
-      whileHover={{ y: -2, transition: { duration: 0.15, ease: EASE } }}
+      initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+      animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+      exit={reducedMotion ? undefined : { opacity: 0, y: 8, scale: 0.97 }}
+      transition={{ duration: 0.3, delay: reducedMotion ? 0 : index * 0.05, ease: EASE }}
+      whileHover={reducedMotion ? undefined : { y: -4, transition: { duration: 0.2, ease: 'easeInOut' } }}
     >
       <Link
         href={`/apps/${app.id}`}
@@ -45,9 +48,13 @@ export function AppCard({ app, index = 0 }: AppCardProps) {
           {app.problem_statement}
         </p>
         <div className="mt-3 pt-3 border-t border-border flex items-center gap-2 text-[11px] text-muted-foreground/80">
-          <span>{LAYER_LABELS[app.layer]}</span>
+          <Tooltip text={LAYER_TOOLTIPS[app.layer]} position="bottom">
+            <span>{LAYER_LABELS[app.layer]}</span>
+          </Tooltip>
           <span className="opacity-40">·</span>
-          <span>{STATUS_LABELS[app.status]}</span>
+          <Tooltip text={STATUS_TOOLTIPS[app.status]} position="bottom">
+            <span>Stage: {STATUS_LABELS[app.status]}</span>
+          </Tooltip>
         </div>
       </Link>
     </motion.div>
