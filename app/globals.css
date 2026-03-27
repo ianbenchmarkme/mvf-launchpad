@@ -42,7 +42,7 @@
   --ring: var(--mvf-purple);
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --sidebar: #0F0F4B;
+  --sidebar: #08082A;
   --sidebar-foreground: rgba(255, 255, 255, 0.92);
   --sidebar-primary: var(--mvf-purple);
   --sidebar-primary-foreground: #ffffff;
@@ -78,7 +78,7 @@
   --ring: var(--mvf-purple);
   --destructive: #ef4444;
   --destructive-foreground: #f0f0f5;
-  --sidebar: #0F0F4B;
+  --sidebar: #08082A;
   --sidebar-foreground: rgba(255, 255, 255, 0.92);
   --sidebar-primary: var(--mvf-purple);
   --sidebar-primary-foreground: #ffffff;
