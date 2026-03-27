@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createAuthServerClient } from '@/lib/supabase/auth-server';
 import { DashboardShell } from '@/components/dashboard-shell';
+import { PageTransition } from '@/components/page-transition';
 import { TIER_WEIGHTS } from '@/lib/constants';
 import type { Profile } from '@/lib/supabase/types';
 
@@ -57,7 +58,7 @@ export default async function DashboardLayout({
       capacityUsed={capacityUsed}
       unresolvedFlags={(flags || []) as { id: string; app_id: string; flag_type: string }[]}
     >
-      {children}
+      <PageTransition>{children}</PageTransition>
     </DashboardShell>
   );
 }

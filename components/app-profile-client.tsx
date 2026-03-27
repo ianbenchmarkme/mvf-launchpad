@@ -525,7 +525,7 @@ export function AppProfileClient({
 function DetailItem({ label, value, span2 }: { label: string; value: string; span2?: boolean }) {
   return (
     <div className={`space-y-0.5 ${span2 ? 'sm:col-span-2' : ''}`}>
-      <dt className="text-[11px] font-medium text-muted-foreground/70 uppercase tracking-wider">
+      <dt className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
         {label}
       </dt>
       <dd className="text-[13px] capitalize">{value}</dd>

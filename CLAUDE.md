@@ -155,6 +155,20 @@ SUPABASE_SERVICE_ROLE_KEY     # Supabase service role (server only)
 NEXT_PUBLIC_SITE_URL          # http://localhost:3004
 ```
 
+## Development Workflow
+
+All pieces of work follow this mandatory sequence:
+
+1. **Plan** — Claude drafts an implementation plan before writing any code
+2. **Plan approval** — User reviews and explicitly approves the plan before work begins
+3. **Execute** — Claude implements the approved plan
+4. **Create PR** — Claude opens a pull request for review (never merges directly to main)
+5. **PR reviewed** — User reviews the PR
+6. **Approval** — User approves the PR
+7. **Merge** — User merges (or Claude merges on explicit instruction)
+
+> No code is written without an approved plan. No code lands on main without a reviewed PR.
+
 ## Testing
 
 137 tests across 11 suites. TDD approach — tests written before implementation.

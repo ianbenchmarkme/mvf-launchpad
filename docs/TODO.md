@@ -39,7 +39,7 @@ Last updated: 2026-03-27
 
 ### Pending migration
 
-- [ ] **Run `migration-pii-confirmed-flag.sql`** against production Supabase (adds `pii_confirmed` to flag_type enum)
+- [x] **Run `migration-pii-confirmed-flag.sql`** against production Supabase (adds `pii_confirmed` to flag_type enum) — done 2026-03-27
 
 ### Next up
 

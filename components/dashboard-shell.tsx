@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { LayoutDashboard, PlusCircle, Search, Shield, LogOut, AlertTriangle, FileText } from 'lucide-react';
 import { CapacityIndicator } from '@/components/capacity-indicator';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { PulseBadge } from '@/components/pulse-badge';
 import { CAPACITY_LIMIT } from '@/lib/constants';
 import type { Profile } from '@/lib/supabase/types';
 
@@ -63,7 +64,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
             <div className="flex items-center gap-1.5 mb-2">
               <AlertTriangle className="h-3 w-3 text-amber-400" />
               <p className="text-[11px] font-medium text-amber-400">
-                Action Required ({unresolvedFlags.length})
+                Action Required <PulseBadge count={unresolvedFlags.length} />
               </p>
             </div>
             <ul className="space-y-0.5">
