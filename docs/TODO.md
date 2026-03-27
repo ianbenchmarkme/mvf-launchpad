@@ -57,8 +57,8 @@ Last updated: 2026-03-27 (session 2)
 
 ### Next up
 
-- [ ] **Merge PR** — `feat/login-page-light-mode-animations` into `main`
-- [ ] **Deploy to Vercel** — stakeholders need to access it for demo
+- [ ] **Merge PR** — `feat/login-page-light-mode-animations` into `main` (Vercel auto-deploys on merge)
+- [ ] **Demo to stakeholders** — share Vercel URL post-merge
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app
 - [ ] **Automated risk flags** — stale owner detection, high-WAU Red-tier alerts, capacity exceeded
 - [ ] **Dormancy attestation** — auto-flag apps with no activity for 60 days, require owner confirmation
