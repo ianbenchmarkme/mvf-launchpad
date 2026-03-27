@@ -21,8 +21,11 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold tracking-tight">Dashboard</h1>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-lg font-semibold tracking-tight">Dashboard</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">Your registered apps and capacity at a glance.</p>
+        </div>
         <Link
           href="/register"
           className="flex items-center gap-1.5 rounded-[6px] bg-mvf-pink px-3 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150"
