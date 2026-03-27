@@ -47,7 +47,7 @@ export function AppCard({ app, index = 0 }: AppCardProps) {
         <div className="mt-3 pt-3 border-t border-border flex items-center gap-2 text-[11px] text-muted-foreground/80">
           <span>{LAYER_LABELS[app.layer]}</span>
           <span className="opacity-40">·</span>
-          <span>{STATUS_LABELS[app.status]}</span>
+          <span>Stage: {STATUS_LABELS[app.status]}</span>
         </div>
       </Link>
     </motion.div>
