@@ -13,7 +13,7 @@ export function Tooltip({ text, children, position = 'top' }: TooltipProps) {
     <span className="relative group/tooltip inline-flex">
       {children}
       <span
-        className={`pointer-events-none absolute ${positionClass} left-1/2 -translate-x-1/2 whitespace-nowrap rounded-[5px] bg-foreground px-2 py-1 text-[11px] font-medium text-background opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-150 z-50`}
+        className={`pointer-events-none absolute ${positionClass} left-1/2 -translate-x-1/2 whitespace-nowrap rounded-[5px] bg-foreground px-2 py-1 text-[11px] font-medium text-background opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-150 z-[9999]`}
       >
         {text}
       </span>
