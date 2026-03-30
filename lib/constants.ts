@@ -5,6 +5,8 @@ export const TIER_WEIGHTS = {
 } as const;
 
 export const CAPACITY_LIMIT = 5;
+export const STALE_OWNER_DAYS = 90;
+export const DORMANCY_DAYS = 60;
 
 export const TIER_LABELS = {
   red: 'Experimental',
