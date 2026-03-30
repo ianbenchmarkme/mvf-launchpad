@@ -4,8 +4,8 @@ import { useState, useMemo } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { AppCard } from '@/components/app-card';
-import { LAYER_LABELS, TIER_LABELS } from '@/lib/constants';
-import type { App, AppTier, AppLayer } from '@/lib/supabase/types';
+import { TIER_LABELS } from '@/lib/constants';
+import type { App, AppTier, AppCategory } from '@/lib/supabase/types';
 
 interface AppBrowseProps {
   apps: App[];
@@ -18,17 +18,21 @@ const TIER_FILTERS: { value: AppTier | 'all'; label: string }[] = [
   { value: 'red', label: TIER_LABELS.red },
 ];
 
-const LAYER_FILTERS: { value: AppLayer | 'all'; label: string }[] = [
-  { value: 'all', label: 'All Layers' },
-  { value: 'L1', label: LAYER_LABELS.L1 },
-  { value: 'L2', label: LAYER_LABELS.L2 },
-  { value: 'L3', label: LAYER_LABELS.L3 },
+const CATEGORY_FILTERS: { value: AppCategory | 'all'; label: string }[] = [
+  { value: 'all', label: 'All Categories' },
+  { value: 'Marketing', label: 'Marketing' },
+  { value: 'Sales', label: 'Sales' },
+  { value: 'Legal', label: 'Legal' },
+  { value: 'Tech', label: 'Tech' },
+  { value: 'Data', label: 'Data' },
+  { value: 'Productivity', label: 'Productivity' },
+  { value: 'AI', label: 'AI' },
 ];
 
 export function AppBrowse({ apps }: AppBrowseProps) {
   const [search, setSearch] = useState('');
   const [tierFilter, setTierFilter] = useState<AppTier | 'all'>('all');
-  const [layerFilter, setLayerFilter] = useState<AppLayer | 'all'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<AppCategory | 'all'>('all');
 
   const filtered = useMemo(() => {
     return apps.filter((app) => {
@@ -36,10 +40,10 @@ export function AppBrowse({ apps }: AppBrowseProps) {
         app.name.toLowerCase().includes(search.toLowerCase()) ||
         app.problem_statement.toLowerCase().includes(search.toLowerCase());
       const matchesTier = tierFilter === 'all' || app.tier === tierFilter;
-      const matchesLayer = layerFilter === 'all' || app.layer === layerFilter;
-      return matchesSearch && matchesTier && matchesLayer;
+      const matchesCategory = categoryFilter === 'all' || app.category === categoryFilter;
+      return matchesSearch && matchesTier && matchesCategory;
     });
-  }, [apps, search, tierFilter, layerFilter]);
+  }, [apps, search, tierFilter, categoryFilter]);
 
   return (
     <div className="space-y-5">
@@ -84,14 +88,14 @@ export function AppBrowse({ apps }: AppBrowseProps) {
 
         <div className="h-3 w-px bg-border" />
 
-        <div className="flex gap-0.5">
-          {LAYER_FILTERS.map((f) => (
+        <div className="flex flex-wrap gap-0.5">
+          {CATEGORY_FILTERS.map((f) => (
             <button
               key={f.value}
               type="button"
-              onClick={() => setLayerFilter(f.value)}
+              onClick={() => setCategoryFilter(f.value)}
               className={`rounded-[5px] px-2 h-6 text-[11px] font-medium transition-all duration-150 ${
-                layerFilter === f.value
+                categoryFilter === f.value
                   ? 'bg-mvf-purple text-white'
                   : 'text-muted-foreground hover:text-foreground hover:bg-accent'
               }`}

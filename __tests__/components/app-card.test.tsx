@@ -8,6 +8,7 @@ const mockApp: App = {
   name: 'ArtyFish',
   problem_statement: 'Generate paid marketing wins using AI',
   layer: 'L2',
+  category: 'Marketing',
   target_users: 'department',
   potential_roi: 'Saves 10h/week',
   needs_business_data: 'no',
@@ -41,9 +42,14 @@ describe('AppCard', () => {
     expect(screen.getByText('Stage: Active')).toBeInTheDocument();
   });
 
-  it('renders the layer label', () => {
+  it('renders the category', () => {
     render(<AppCard app={mockApp} />);
-    expect(screen.getByText('Product & Design')).toBeInTheDocument();
+    expect(screen.getByText('Marketing')).toBeInTheDocument();
+  });
+
+  it('renders — when category is null', () => {
+    render(<AppCard app={{ ...mockApp, category: null }} />);
+    expect(screen.getByText('—')).toBeInTheDocument();
   });
 
   it('links to the app profile page', () => {

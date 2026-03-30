@@ -95,16 +95,6 @@ describe('RegistrationForm', () => {
       await user.click(screen.getByRole('button', { name: /next/i }));
     }
 
-    it('renders layer selection as cards', async () => {
-      const user = userEvent.setup();
-      render(<RegistrationForm onSubmit={mockOnSubmit} />);
-      await goToStep2(user);
-
-      expect(screen.getByText(/engineering/i)).toBeInTheDocument();
-      expect(screen.getByText(/product.*design/i)).toBeInTheDocument();
-      expect(screen.getByText(/makers/i)).toBeInTheDocument();
-    });
-
     it('renders target users selection', async () => {
       const user = userEvent.setup();
       render(<RegistrationForm onSubmit={mockOnSubmit} />);
@@ -123,7 +113,7 @@ describe('RegistrationForm', () => {
       expect(screen.getByLabelText(/roi/i)).toBeInTheDocument();
     });
 
-    it('requires layer and target users to advance', async () => {
+    it('requires target users to advance', async () => {
       const user = userEvent.setup();
       render(<RegistrationForm onSubmit={mockOnSubmit} />);
       await goToStep2(user);
@@ -141,8 +131,7 @@ describe('RegistrationForm', () => {
       await user.type(screen.getByLabelText(/app name/i), 'Test Tool');
       await user.type(screen.getByLabelText(/problem/i), 'This is a test problem statement that is long enough');
       await user.click(screen.getByRole('button', { name: /next/i }));
-      // Step 2: select layer and target
-      await user.click(screen.getByText(/product.*design/i));
+      // Step 2: select target users only (no layer)
       await user.click(screen.getByText(/department/i));
       await user.click(screen.getByRole('button', { name: /next/i }));
     }
@@ -193,7 +182,7 @@ describe('RegistrationForm', () => {
       await user.type(screen.getByLabelText(/app name/i), 'Test Tool');
       await user.type(screen.getByLabelText(/problem/i), 'This is a test problem statement that is long enough');
       await user.click(screen.getByRole('button', { name: /next/i }));
-      await user.click(screen.getByText(/product.*design/i));
+      // Step 2: select target users only (no layer)
       await user.click(screen.getByText(/department/i));
       await user.click(screen.getByRole('button', { name: /next/i }));
       await user.click(screen.getByRole('button', { name: /next/i }));
@@ -250,7 +239,7 @@ describe('RegistrationForm', () => {
       expect(mockOnSubmit).toHaveBeenCalledTimes(1);
       const payload = mockOnSubmit.mock.calls[0][0];
       expect(payload.name).toBe('Test Tool');
-      expect(payload.layer).toBe('L2');
+      expect(payload.layer).toBe('L3'); // default layer
       expect(payload.target_users).toBe('department');
     });
 

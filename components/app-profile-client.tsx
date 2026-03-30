@@ -12,8 +12,8 @@ import { TristateField } from '@/components/fields/tristate-field';
 import { SimilarToolsCheck } from '@/components/similar-tools-check';
 import { LAYER_LABELS, STATUS_LABELS, TARGET_USERS_LABELS } from '@/lib/constants';
 import {
-  LAYER_OPTIONS, TARGET_OPTIONS, TRISTATE_OPTIONS,
-  type Layer, type TargetUsers, type Tristate,
+  CATEGORY_OPTIONS, TARGET_OPTIONS, TRISTATE_OPTIONS,
+  type AppCategory, type TargetUsers, type Tristate,
 } from '@/lib/field-options';
 import type { App, AppOwner, Profile, RiskFlag } from '@/lib/supabase/types';
 
@@ -43,7 +43,7 @@ export function AppProfileClient({
   // ── Form state (initialized from app data) ────────────────
   const [name, setName] = useState(app.name);
   const [problemStatement, setProblemStatement] = useState(app.problem_statement);
-  const [layer, setLayer] = useState<Layer>(app.layer);
+  const [category, setCategory] = useState<AppCategory | null>(app.category ?? null);
   const [targetUsers, setTargetUsers] = useState<TargetUsers>(app.target_users);
   const [potentialRoi, setPotentialRoi] = useState(app.potential_roi || '');
   const [needsBusinessData, setNeedsBusinessData] = useState<Tristate>(app.needs_business_data);
@@ -62,7 +62,7 @@ export function AppProfileClient({
       setName(app.name);
       setProblemStatement(app.problem_statement);
     } else if (section === 'context') {
-      setLayer(app.layer);
+      setCategory(app.category ?? null);
       setTargetUsers(app.target_users);
       setPotentialRoi(app.potential_roi || '');
     } else if (section === 'security') {
@@ -87,7 +87,7 @@ export function AppProfileClient({
       case 'identity':
         return { name, problem_statement: problemStatement };
       case 'context':
-        return { layer, target_users: targetUsers, potential_roi: potentialRoi || null };
+        return { category: category || null, target_users: targetUsers, potential_roi: potentialRoi || null };
       case 'security':
         return {
           needs_business_data: needsBusinessData,
@@ -113,7 +113,6 @@ export function AppProfileClient({
       if (!name || name.length < 2) sectionErrors.name = 'App name must be at least 2 characters';
       if (!problemStatement || problemStatement.length < 10) sectionErrors.problem_statement = 'Problem statement must be at least 10 characters';
     } else if (section === 'context') {
-      if (!layer) sectionErrors.layer = 'Please select a layer';
       if (!targetUsers) sectionErrors.target_users = 'Please select target users';
     } else if (section === 'security') {
       if (usesApiKeys === 'yes' && !apiKeyServices.trim()) {
@@ -244,42 +243,33 @@ export function AppProfileClient({
         readContent={
           <div className="grid gap-3 sm:grid-cols-2">
             <DetailItem label="Layer" value={LAYER_LABELS[app.layer]} />
+            <DetailItem label="Category" value={app.category || '—'} />
             <DetailItem label="Target Users" value={TARGET_USERS_LABELS[app.target_users]} />
             {app.potential_roi && <DetailItem label="Potential ROI" value={app.potential_roi} />}
           </div>
         }
       >
         <div className="space-y-4">
-          <fieldset className="space-y-3">
-            <legend className="text-[13px] font-medium">Layer</legend>
-            <div className="grid gap-2">
-              {LAYER_OPTIONS.map((opt) => {
-                const Icon = opt.icon;
-                return (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => setLayer(opt.value)}
-                    className={`flex items-start gap-3 rounded border p-3 text-left transition-all duration-200 ${
-                      layer === opt.value
-                        ? 'border-mvf-purple bg-mvf-purple/10 ring-2 ring-mvf-purple/20'
-                        : 'border-input bg-background hover:border-mvf-purple/40 hover:bg-mvf-purple/5'
-                    }`}
-                  >
-                    <div className={`mt-0.5 rounded p-1.5 ${
-                      layer === opt.value ? 'bg-mvf-purple text-white' : 'bg-muted text-muted-foreground'
-                    }`}>
-                      <Icon className="h-3.5 w-3.5" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-[13px]">{opt.label}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">{opt.description}</div>
-                    </div>
-                  </button>
-                );
-              })}
+          <fieldset className="space-y-2">
+            <legend className="text-[13px] font-medium">
+              Category <span className="text-muted-foreground font-normal">(optional)</span>
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORY_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setCategory(category === opt.value ? null : opt.value)}
+                  className={`rounded-[5px] px-3 py-1.5 text-[13px] font-medium border transition-all duration-150 ${
+                    category === opt.value
+                      ? 'border-mvf-purple bg-mvf-purple text-white'
+                      : 'border-input bg-background text-foreground hover:border-mvf-purple/40'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
-            {errors.layer && <p className="text-[13px] text-red-500">{errors.layer}</p>}
           </fieldset>
 
           <fieldset className="space-y-3">

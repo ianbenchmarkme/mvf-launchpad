@@ -35,6 +35,7 @@ const mockApp: App = {
   name: 'ArtyFish',
   problem_statement: 'AI-powered marketing creative tools',
   layer: 'L2',
+  category: null,
   target_users: 'department',
   potential_roi: 'Saves 10h/week',
   needs_business_data: 'no',
@@ -273,6 +274,30 @@ describe('AppProfileClient', () => {
     await waitFor(() => {
       const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
       expect(callBody.potential_roi).toBeNull();
+    });
+  });
+
+  it('renders category in Context read view', () => {
+    const appWithCategory = { ...mockApp, category: 'Marketing' as const };
+    render(<AppProfileClient {...defaultProps} app={appWithCategory} />);
+    expect(screen.getByText('Marketing')).toBeInTheDocument();
+  });
+
+  it('Context save payload includes category, not layer', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockApp),
+    });
+    global.fetch = mockFetch;
+
+    render(<AppProfileClient {...defaultProps} />);
+    fireEvent.click(screen.getAllByText('Edit')[1]); // Context section
+    fireEvent.click(screen.getByText('Save'));
+
+    await waitFor(() => {
+      const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+      expect(callBody).toHaveProperty('category');
+      expect(callBody).not.toHaveProperty('layer');
     });
   });
 

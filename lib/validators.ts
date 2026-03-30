@@ -2,13 +2,15 @@ import { z } from 'zod';
 
 const tristate = z.enum(['yes', 'no', 'unsure']);
 const layer = z.enum(['L1', 'L2', 'L3']);
+const category = z.enum(['Marketing', 'Sales', 'Legal', 'Tech', 'Data', 'Productivity', 'AI']);
 const targetUsers = z.enum(['my_team', 'department', 'org_wide']);
 
 // Base field definitions shared by registration and update schemas
 const baseAppFields = z.object({
   name: z.string().min(2).max(100),
   problem_statement: z.string().min(10).max(2000),
-  layer: layer,
+  layer: layer.optional().default('L3'),
+  category: category.nullable().optional(),
   target_users: targetUsers,
   potential_roi: z.string().optional().default(''),
   needs_business_data: tristate.optional().default('unsure'),

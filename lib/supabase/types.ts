@@ -2,6 +2,7 @@
 // Replace with `supabase gen types typescript` output when available
 
 export type AppLayer = 'L1' | 'L2' | 'L3';
+export type AppCategory = 'Marketing' | 'Sales' | 'Legal' | 'Tech' | 'Data' | 'Productivity' | 'AI';
 export type AppTier = 'red' | 'amber' | 'green';
 export type AppStatus = 'intent' | 'developing' | 'testing' | 'active' | 'archived';
 export type UserRole = 'maker' | 'admin' | 'viewer';
@@ -36,6 +37,7 @@ export interface App {
   name: string;
   problem_statement: string;
   layer: AppLayer;
+  category: AppCategory | null;
   target_users: TargetUsers;
   potential_roi: string | null;
   needs_business_data: Tristate;

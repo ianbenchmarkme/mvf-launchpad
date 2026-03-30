@@ -7,6 +7,7 @@ import type { App } from '@/lib/supabase/types';
 const mockApps: App[] = [
   {
     id: '1', name: 'ArtyFish', problem_statement: 'AI-powered marketing creative', layer: 'L2',
+    category: 'Marketing',
     target_users: 'department', potential_roi: 'Saves 10h/week', needs_business_data: 'unsure',
     handles_pii: 'no', uses_api_keys: 'yes', api_key_services: 'OpenAI',
     replaces_third_party: false, replaced_tool_name: null, replaced_tool_cost: null,
@@ -15,6 +16,7 @@ const mockApps: App[] = [
   },
   {
     id: '2', name: 'Allegros', problem_statement: 'Internal portal for Legal', layer: 'L2',
+    category: 'Legal',
     target_users: 'department', potential_roi: null, needs_business_data: 'unsure',
     handles_pii: 'yes', uses_api_keys: 'unsure', api_key_services: null,
     replaces_third_party: false, replaced_tool_name: null, replaced_tool_cost: null,
@@ -23,6 +25,7 @@ const mockApps: App[] = [
   },
   {
     id: '3', name: 'Partner Portal', problem_statement: 'External partner management', layer: 'L2',
+    category: null,
     target_users: 'org_wide', potential_roi: null, needs_business_data: 'yes',
     handles_pii: 'unsure', uses_api_keys: 'unsure', api_key_services: null,
     replaces_third_party: false, replaced_tool_name: null, replaced_tool_cost: null,
@@ -80,13 +83,28 @@ describe('AppBrowse', () => {
     expect(screen.queryByText('Allegros')).not.toBeInTheDocument();
   });
 
-  it('renders layer filter buttons', () => {
+  it('renders category filter buttons', () => {
     render(<AppBrowse apps={mockApps} />);
     const buttons = screen.getAllByRole('button');
     const buttonTexts = buttons.map(b => b.textContent);
-    expect(buttonTexts).toContain('Engineering');
-    expect(buttonTexts.some(t => t && /product/i.test(t))).toBe(true);
-    expect(buttonTexts.some(t => t && /makers/i.test(t))).toBe(true);
+    expect(buttonTexts).toContain('Marketing');
+    expect(buttonTexts).toContain('Sales');
+    expect(buttonTexts).toContain('Legal');
+    expect(buttonTexts).toContain('Tech');
+    expect(buttonTexts).toContain('AI');
+  });
+
+  it('filters apps by category', async () => {
+    const user = userEvent.setup();
+    render(<AppBrowse apps={mockApps} />);
+
+    const filterButtons = screen.getAllByRole('button');
+    const marketingFilter = filterButtons.find(b => b.textContent === 'Marketing');
+    expect(marketingFilter).toBeDefined();
+    await user.click(marketingFilter!);
+
+    expect(screen.getByText('ArtyFish')).toBeInTheDocument();
+    expect(screen.queryByText('Allegros')).not.toBeInTheDocument();
   });
 
   it('shows app count', () => {

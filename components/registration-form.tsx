@@ -12,8 +12,8 @@ import { registrationSchema, type RegistrationInput } from '@/lib/validators';
 import { SimilarToolsCheck } from '@/components/similar-tools-check';
 import { TristateField } from '@/components/fields/tristate-field';
 import {
-  LAYER_OPTIONS, TARGET_OPTIONS, TRISTATE_OPTIONS,
-  type Layer, type TargetUsers, type Tristate,
+  TARGET_OPTIONS, TRISTATE_OPTIONS,
+  type TargetUsers, type Tristate,
 } from '@/lib/field-options';
 
 const STEP_EASE = [0.25, 0.1, 0.25, 1] as const;
@@ -37,7 +37,6 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
   // Form state
   const [name, setName] = useState('');
   const [problemStatement, setProblemStatement] = useState('');
-  const [layer, setLayer] = useState<Layer | ''>('');
   const [targetUsers, setTargetUsers] = useState<TargetUsers | ''>('');
   const [potentialRoi, setPotentialRoi] = useState('');
   const [needsBusinessData, setNeedsBusinessData] = useState<Tristate>('unsure');
@@ -58,7 +57,6 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
       if (!name || name.length < 2) stepErrors.name = 'App name must be at least 2 characters';
       if (!problemStatement || problemStatement.length < 10) stepErrors.problem_statement = 'Problem statement must be at least 10 characters';
     } else if (currentStep === 1) {
-      if (!layer) stepErrors.layer = 'Please select a layer';
       if (!targetUsers) stepErrors.target_users = 'Please select target users';
     } else if (currentStep === 2) {
       if (usesApiKeys === 'yes' && !apiKeyServices.trim()) {
@@ -102,7 +100,6 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
     const formData = {
       name,
       problem_statement: problemStatement,
-      layer: layer || undefined,
       target_users: targetUsers || undefined,
       potential_roi: potentialRoi,
       needs_business_data: needsBusinessData,
@@ -239,38 +236,6 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
           {/* Step 2: Context */}
           {currentStep === 1 && (
             <div className="space-y-4">
-              <fieldset className="space-y-3">
-                <legend className="text-[15px] font-medium">Layer</legend>
-                <div className="grid gap-3">
-                  {LAYER_OPTIONS.map((opt) => {
-                    const Icon = opt.icon;
-                    return (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => setLayer(opt.value)}
-                        className={`flex items-start gap-4 rounded border p-4 text-left transition-all duration-200 ${
-                          layer === opt.value
-                            ? 'border-mvf-purple bg-mvf-purple/10 ring-2 ring-mvf-purple/20'
-                            : 'border-input bg-background hover:border-mvf-purple/40 hover:bg-mvf-purple/5'
-                        }`}
-                      >
-                        <div className={`mt-0.5 rounded p-2 ${
-                          layer === opt.value ? 'bg-mvf-purple text-white' : 'bg-muted text-muted-foreground'
-                        }`}>
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-[13px]">{opt.label}</div>
-                          <div className="text-xs text-muted-foreground mt-0.5">{opt.description}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-                {errors.layer && <p className="text-[14px] text-red-500">{errors.layer}</p>}
-              </fieldset>
-
               <fieldset className="space-y-3">
                 <legend className="text-[15px] font-medium">Target Users</legend>
                 <div className="flex gap-2">
@@ -451,9 +416,6 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                 </h3>
                 <div className="grid grid-cols-2 gap-3 text-[13px]">
                   <SummaryItem label="App Name" value={name} onEdit={() => goToStep(0)} />
-                  <SummaryItem label="Layer" value={
-                    LAYER_OPTIONS.find(o => o.value === layer)?.label || '—'
-                  } onEdit={() => goToStep(1)} />
                   <SummaryItem label="Target Users" value={
                     TARGET_OPTIONS.find(o => o.value === targetUsers)?.label || '—'
                   } onEdit={() => goToStep(1)} />
