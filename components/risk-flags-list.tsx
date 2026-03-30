@@ -8,11 +8,14 @@ import type { RiskFlag } from '@/lib/supabase/types';
 interface RiskFlagsListProps {
   flags: RiskFlag[];
   isAdmin: boolean;
+  appId?: string;
+  isOwner?: boolean;
 }
 
-export function RiskFlagsList({ flags, isAdmin }: RiskFlagsListProps) {
+export function RiskFlagsList({ flags, isAdmin, appId = '', isOwner = false }: RiskFlagsListProps) {
   const router = useRouter();
   const [resolvingId, setResolvingId] = useState<string | null>(null);
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   async function resolveFlag(flagId: string) {
     setResolvingId(flagId);
@@ -23,6 +26,18 @@ export function RiskFlagsList({ flags, isAdmin }: RiskFlagsListProps) {
       }
     } finally {
       setResolvingId(null);
+    }
+  }
+
+  async function confirmActive(flagId: string) {
+    setConfirmingId(flagId);
+    try {
+      const res = await fetch(`/api/apps/${appId}/confirm-active`, { method: 'POST' });
+      if (res.ok) {
+        router.refresh();
+      }
+    } finally {
+      setConfirmingId(null);
     }
   }
 
@@ -58,6 +73,17 @@ export function RiskFlagsList({ flags, isAdmin }: RiskFlagsListProps) {
               >
                 <CheckCircle className="h-3 w-3" />
                 {resolvingId === flag.id ? 'Resolving...' : 'Resolve'}
+              </button>
+            )}
+            {isOwner && flag.flag_type === 'dormancy_attestation' && (
+              <button
+                type="button"
+                disabled={confirmingId === flag.id}
+                onClick={() => confirmActive(flag.id)}
+                className="flex items-center gap-1 rounded-[6px] border border-blue-200 px-2 py-1 text-xs text-blue-700 hover:bg-blue-50 active:scale-[0.98] transition-all duration-150 disabled:opacity-50 shrink-0"
+              >
+                <CheckCircle className="h-3 w-3" />
+                {confirmingId === flag.id ? 'Confirming...' : 'Confirm active'}
               </button>
             )}
           </li>

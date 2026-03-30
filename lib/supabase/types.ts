@@ -19,6 +19,7 @@ export type FlagType =
   | 'unsure_api_keys'
   | 'high_wau_red_tier'
   | 'capacity_exceeded'
+  | 'dormancy_attestation'
   | 'manual';
 export type FlagSeverity = 'info' | 'warning' | 'critical';
 

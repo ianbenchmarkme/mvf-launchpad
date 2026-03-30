@@ -491,7 +491,7 @@ export function AppProfileClient({
       </section>
 
       {/* Risk Flags */}
-      <RiskFlagsList flags={flags} isAdmin={isAdmin} />
+      <RiskFlagsList flags={flags} isAdmin={isAdmin} isOwner={isOwner} appId={app.id} />
 
       {/* Admin Controls */}
       {isAdmin && (
