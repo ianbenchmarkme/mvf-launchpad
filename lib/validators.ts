@@ -10,7 +10,7 @@ const baseAppFields = z.object({
   name: z.string().min(2).max(100),
   problem_statement: z.string().min(10).max(2000),
   layer: layer.optional().default('L3'),
-  category: category.optional(),
+  category: category.nullable().optional(),
   target_users: targetUsers,
   potential_roi: z.string().optional().default(''),
   needs_business_data: tristate.optional().default('unsure'),
