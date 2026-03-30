@@ -32,6 +32,16 @@ export const LAYER_TOOLTIPS = {
   L3: 'Built through the Makers Programme.',
 } as const;
 
+export const CATEGORY_LABELS = {
+  Marketing: 'Marketing',
+  Sales: 'Sales',
+  Legal: 'Legal',
+  Tech: 'Tech',
+  Data: 'Data',
+  Productivity: 'Productivity',
+  AI: 'AI',
+} as const;
+
 export const LAYER_LABELS = {
   L1: 'Engineering',
   L2: 'Product & Design',

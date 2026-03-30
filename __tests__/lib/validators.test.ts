@@ -4,7 +4,6 @@ import { registrationSchema, updateAppSchema, sanitizeUpdatePayload } from '@/li
 const validRegistration = {
   name: 'ArtyFish',
   problem_statement: 'Generate paid marketing wins using AI creative tools',
-  layer: 'L2' as const,
   target_users: 'department' as const,
   potential_roi: 'Saves 10h/week for the creative team',
   needs_business_data: 'no' as const,
@@ -45,8 +44,31 @@ describe('registrationSchema', () => {
     expect(result.success).toBe(false);
   });
 
+  it('layer is optional and defaults to L3', () => {
+    const result = registrationSchema.safeParse(validRegistration);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.layer).toBe('L3');
+    }
+  });
+
   it('rejects invalid layer', () => {
     const result = registrationSchema.safeParse({ ...validRegistration, layer: 'L4' });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts valid category', () => {
+    const result = registrationSchema.safeParse({ ...validRegistration, category: 'Marketing' });
+    expect(result.success).toBe(true);
+  });
+
+  it('category is optional — missing is ok', () => {
+    const result = registrationSchema.safeParse(validRegistration);
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects invalid category', () => {
+    const result = registrationSchema.safeParse({ ...validRegistration, category: 'Finance' });
     expect(result.success).toBe(false);
   });
 
