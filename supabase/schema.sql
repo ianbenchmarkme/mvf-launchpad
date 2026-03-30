@@ -18,7 +18,7 @@ CREATE TYPE owner_role AS ENUM ('primary', 'backup');
 CREATE TYPE flag_type AS ENUM (
   'no_backup', 'stale_owner', 'pii_undisclosed', 'pii_confirmed', 'unsure_pii',
   'unsure_business_data', 'unsure_api_keys', 'high_wau_red_tier',
-  'capacity_exceeded', 'manual'
+  'capacity_exceeded', 'dormancy_attestation', 'manual'
 );
 CREATE TYPE flag_severity AS ENUM ('info', 'warning', 'critical');
 

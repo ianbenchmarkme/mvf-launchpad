@@ -77,6 +77,15 @@ vi.mock('@/lib/supabase/auth-server', () => ({
   createAuthServerClient: () => Promise.resolve(buildMockSupabase()),
 }));
 
+// Mock @supabase/supabase-js so the service-role client inside the route
+// uses the same mock (which tracks flagUpdateCalled / appUpdateCalled)
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: () => buildMockSupabase(),
+}));
+
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'http://localhost';
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-key';
+
 const { POST } = await import('@/app/api/apps/[id]/confirm-active/route');
 
 const routeContext = { params: Promise.resolve({ id: 'app-1' }) };

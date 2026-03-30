@@ -68,6 +68,10 @@ async function runStaleOwnerCheck(
   for (const { app_id, user_id } of ownerships) {
     if (!activeAppIds.has(app_id)) continue;
 
+    // Skip owners not in Supabase Auth (e.g. seeded via SQL without OAuth sign-in).
+    // These are not real active users and should not be treated as stale.
+    if (!lastSignInByUserId.has(user_id)) continue;
+
     const lastSignIn = lastSignInByUserId.get(user_id);
     const isStale = !lastSignIn || new Date(lastSignIn) < cutoff;
 
