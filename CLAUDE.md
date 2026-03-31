@@ -4,7 +4,7 @@
 
 MVF Launchpad is an internal app registry and governance platform. Makers (employees who build internal tools with Lovable, Claude Code, etc.) register their tools here. Leadership gets governance visibility via dashboards. The platform uses a traffic-light tier system (Red/Amber/Green) and progressive registration.
 
-**Status (2026-03-31):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, and automated risk flags (stale owner, capacity exceeded, dormancy attestation via daily Vercel cron) shipped. 168 tests, 14 suites, zero TS errors.
+**Status (2026-03-31):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, automated risk flags, and support & feedback form shipped. 251 tests, 18 suites, zero TS errors.
 
 ## Documentation
 
@@ -181,11 +181,11 @@ All pieces of work follow this mandatory sequence:
 
 ## Testing
 
-137 tests across 11 suites. TDD approach — tests written before implementation.
+251 tests across 18 suites. TDD approach — tests written before implementation.
 
 - `__tests__/lib/` — constants, validators (Zod schema validation + update schema + sanitizer)
-- `__tests__/components/` — tier badge, capacity indicator, app card, registration form, auth button, app browse, editable section, app profile client
-- `__tests__/api/` — PATCH/DELETE endpoint auth, validation, risk flag creation
+- `__tests__/components/` — tier badge, capacity indicator, app card, registration form, auth button, app browse, editable section, app profile client, support form, support admin client
+- `__tests__/api/` — PATCH/DELETE endpoint auth, validation, risk flag creation, support POST/PATCH
 
 Run: `npm run test:run`
 
@@ -199,3 +199,4 @@ Run in Supabase SQL Editor in this order:
 5. `supabase/migration-deletion-requests.sql` — RLS update for deletion requests
 6. `supabase/migration-pii-confirmed-flag.sql` — Add `pii_confirmed` flag type
 7. `supabase/migration-dormancy-attestation.sql` — Add `dormancy_attestation` flag type
+8. `supabase/migration-support-requests.sql` — Add `support_requests` table, enums, RLS

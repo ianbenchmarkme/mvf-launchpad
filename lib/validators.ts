@@ -93,6 +93,37 @@ export function sanitizeUpdatePayload(
   return stripped;
 }
 
+// ── Support Request Schemas ───────────────────────────────────
+
+export const supportRequestSchema = z.object({
+  request_type: z.enum(['bug_report', 'feature_request', 'feedback', 'question']),
+  subject: z.string().min(5, 'Subject must be at least 5 characters'),
+  description: z.string().min(20, 'Description must be at least 20 characters'),
+  related_app_id: z.string().uuid().optional().nullable(),
+  priority: z.enum(['low', 'medium', 'high']),
+  wants_reply: z.boolean(),
+});
+
+export const supportUpdateSchema = z.object({
+  status: z.enum(['open', 'in_progress', 'completed', 'wont_do']),
+  resolution_note: z.string().min(10, 'Resolution note must be at least 10 characters').optional(),
+}).check((ctx) => {
+  const { status, resolution_note } = ctx.value;
+  if ((status === 'completed' || status === 'wont_do') && !resolution_note?.trim()) {
+    ctx.issues.push({
+      code: 'custom',
+      message: "Resolution note is required when marking Completed or Won't Do",
+      path: ['resolution_note'],
+      input: resolution_note,
+    });
+  }
+});
+
+export type SupportRequestInput = z.input<typeof supportRequestSchema>;
+export type SupportRequestData = z.output<typeof supportRequestSchema>;
+export type SupportUpdateInput = z.input<typeof supportUpdateSchema>;
+export type SupportUpdateData = z.output<typeof supportUpdateSchema>;
+
 export type RegistrationInput = z.input<typeof registrationSchema>;
 export type RegistrationData = z.output<typeof registrationSchema>;
 export type UpdateAppInput = z.input<typeof updateAppSchema>;

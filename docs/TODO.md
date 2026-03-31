@@ -56,6 +56,18 @@ Last updated: 2026-03-31 (session 4)
   - 168 tests, 14 suites, zero TS errors
   - **Run `migration-dormancy-attestation.sql`** against production Supabase — done 2026-03-31
 
+- [x] **Support & feedback form** (PR #7, merged 2026-03-31)
+  - 2-step animated wizard (same pattern as registration form) — Bug Report / Feature Request / Feedback / Question
+  - Related app dropdown, priority selector, contact-me-back toggle
+  - Admin inbox at `/support/admin` — table with type/status/priority/submitter/app/date columns
+  - Filter bar: status × type × priority (all client-side)
+  - Status management: Open → In Progress → Completed / Won't Do
+  - Resolution modal for Completed / Won't Do — requires resolution note (min 10 chars)
+  - Resend email sent to submitter on resolution (when `wants_reply = true`)
+  - `support_requests` table with full RLS
+  - Sidebar nav: "Support" (all users) + "Support Inbox" (admin only)
+  - 64 new tests — 251 total, zero TS errors
+
 ### Next up
 
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app (unblocks `high_wau_red_tier` cron check)

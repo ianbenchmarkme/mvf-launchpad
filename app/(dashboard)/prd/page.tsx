@@ -887,7 +887,8 @@ export default async function PRDPage() {
                     { text: 'Deploy to Vercel — live at mvf-launchpad.vercel.app with Google OAuth', done: true },
                     { text: 'Automated risk flags — stale owner (90 days), capacity exceeded, dormancy attestation (60 days) — daily Vercel cron', done: true },
                     { text: 'Dormancy attestation — owners self-resolve via "Confirm active" button on app profile', done: true },
-                    { text: '168 tests across 14 suites — zero TypeScript errors', done: true },
+                    { text: 'Support & feedback form — 2-step wizard, admin inbox with filters and status management, Resend email on resolution', done: true },
+                    { text: '251 tests across 18 suites — zero TypeScript errors', done: true },
                   ],
                 },
                 {
