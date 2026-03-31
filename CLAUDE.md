@@ -4,7 +4,7 @@
 
 MVF Launchpad is an internal app registry and governance platform. Makers (employees who build internal tools with Lovable, Claude Code, etc.) register their tools here. Leadership gets governance visibility via dashboards. The platform uses a traffic-light tier system (Red/Amber/Green) and progressive registration.
 
-**Status (2026-03-31):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, automated risk flags (daily cron), governance flags UX, support & feedback form, backup owner management, and UX/UI improvements shipped. 281 tests, 20 suites, zero TS errors.
+**Status (2026-03-31):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, automated risk flags (daily cron), governance flags UX, support & feedback form, backup owner management, UX/UI improvements, and app URL field shipped. 286 tests, 20 suites, zero TS errors.
 
 ## Documentation
 
@@ -181,7 +181,7 @@ All pieces of work follow this mandatory sequence:
 
 ## Testing
 
-281 tests across 20 suites. TDD approach — tests written before implementation.
+286 tests across 20 suites. TDD approach — tests written before implementation.
 
 - `__tests__/lib/` — constants, validators (Zod schema validation + update schema + sanitizer)
 - `__tests__/components/` — tier badge, capacity indicator, app card, registration form, auth button, app browse, editable section, app profile client, support form, support admin client
@@ -200,3 +200,4 @@ Run in Supabase SQL Editor in this order:
 6. `supabase/migration-pii-confirmed-flag.sql` — Add `pii_confirmed` flag type
 7. `supabase/migration-dormancy-attestation.sql` — Add `dormancy_attestation` flag type
 8. `supabase/migration-support-requests.sql` — Add `support_requests` table, enums, RLS
+9. `supabase/migration-app-url.sql` — Add `app_url` column to `apps` table

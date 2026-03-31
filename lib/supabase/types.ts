@@ -45,6 +45,7 @@ export interface App {
   handles_pii: Tristate;
   uses_api_keys: Tristate;
   api_key_services: string | null;
+  app_url: string | null;
   replaces_third_party: boolean;
   replaced_tool_name: string | null;
   replaced_tool_cost: string | null;

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil } from 'lucide-react';
+import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
 import { AdminActions } from '@/components/admin-actions';
@@ -54,6 +54,7 @@ export function AppProfileClient({
   // ── Form state (initialized from app data) ────────────────
   const [name, setName] = useState(app.name);
   const [problemStatement, setProblemStatement] = useState(app.problem_statement);
+  const [appUrl, setAppUrl] = useState(app.app_url || '');
   const [category, setCategory] = useState<AppCategory | null>(app.category ?? null);
   const [targetUsers, setTargetUsers] = useState<TargetUsers>(app.target_users);
   const [potentialRoi, setPotentialRoi] = useState(app.potential_roi || '');
@@ -122,6 +123,7 @@ export function AppProfileClient({
     if (section === 'identity') {
       setName(app.name);
       setProblemStatement(app.problem_statement);
+      setAppUrl(app.app_url || '');
     } else if (section === 'context') {
       setCategory(app.category ?? null);
       setTargetUsers(app.target_users);
@@ -146,7 +148,7 @@ export function AppProfileClient({
   function getSectionPayload(section: EditingSection): Record<string, unknown> {
     switch (section) {
       case 'identity':
-        return { name, problem_statement: problemStatement };
+        return { name, problem_statement: problemStatement, app_url: appUrl || null };
       case 'context':
         return { category: category || null, target_users: targetUsers, potential_roi: potentialRoi || null };
       case 'security':
@@ -260,6 +262,23 @@ export function AppProfileClient({
           <div className="grid gap-3 sm:grid-cols-2">
             <DetailItem label="App Name" value={app.name} />
             <DetailItem label="Problem Statement" value={app.problem_statement} span2 />
+            {app.app_url && (
+              <div className="space-y-0.5 sm:col-span-2">
+                <dt className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Access</dt>
+                <dd>
+                  <a
+                    href={/^https?:\/\//.test(app.app_url) ? app.app_url : '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[13px] text-mvf-purple hover:underline"
+                  >
+                    <Link2 className="h-3.5 w-3.5" />
+                    {app.app_url}
+                    <ExternalLink className="h-3 w-3 opacity-60" />
+                  </a>
+                </dd>
+              </div>
+            )}
           </div>
         }
       >
@@ -285,6 +304,19 @@ export function AppProfileClient({
               className={textareaClass}
             />
             {errors.problem_statement && <p className="text-[13px] text-red-500">{errors.problem_statement}</p>}
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="edit-app-url" className="block text-[13px] font-medium">
+              Where can people access it? <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <input
+              id="edit-app-url"
+              type="text"
+              value={appUrl}
+              onChange={(e) => setAppUrl(e.target.value)}
+              placeholder="https://..."
+              className={inputClass}
+            />
           </div>
           {name !== app.name && name.length >= 2 && (
             <SimilarToolsCheck query={name} />
