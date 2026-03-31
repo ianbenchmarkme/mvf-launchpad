@@ -56,17 +56,12 @@ Last updated: 2026-03-31 (session 4)
   - 168 tests, 14 suites, zero TS errors
   - **Run `migration-dormancy-attestation.sql`** against production Supabase — done 2026-03-31
 
-- [x] **Support & feedback form** (PR #7, merged 2026-03-31)
-  - 2-step animated wizard (same pattern as registration form) — Bug Report / Feature Request / Feedback / Question
-  - Related app dropdown, priority selector, contact-me-back toggle
-  - Admin inbox at `/support/admin` — table with type/status/priority/submitter/app/date columns
-  - Filter bar: status × type × priority (all client-side)
-  - Status management: Open → In Progress → Completed / Won't Do
-  - Resolution modal for Completed / Won't Do — requires resolution note (min 10 chars)
-  - Resend email sent to submitter on resolution (when `wants_reply = true`)
-  - `support_requests` table with full RLS
-  - Sidebar nav: "Support" (all users) + "Support Inbox" (admin only)
-  - 64 new tests — 251 total, zero TS errors
+- [x] **Governance flags UX** (PR #7, merged 2026-03-31)
+  - Two-line flag rows: metadata on row 1, description on row 2
+  - `SourceBadge` component — System (Bot icon, mvf-light-blue) vs Admin (User icon, mvf-purple), discriminated by `created_by === null`
+  - `isAdmin` gate on Resolve button (viewers no longer see it)
+  - `dormancy_attestation` resolved via `confirm-active` endpoint (not generic PATCH), so `last_activity_at` updates and cron won't immediately re-raise
+  - 14 new tests — 170 total, 15 suites, zero TS errors
 
 ### Next up
 
