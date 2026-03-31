@@ -56,6 +56,13 @@ Last updated: 2026-03-31 (session 4)
   - 168 tests, 14 suites, zero TS errors
   - **Run `migration-dormancy-attestation.sql`** against production Supabase — done 2026-03-31
 
+- [x] **Governance flags UX** (PR #7, merged 2026-03-31)
+  - Two-line flag rows: metadata on row 1, description on row 2
+  - `SourceBadge` component — System (Bot icon, mvf-light-blue) vs Admin (User icon, mvf-purple), discriminated by `created_by === null`
+  - `isAdmin` gate on Resolve button (viewers no longer see it)
+  - `dormancy_attestation` resolved via `confirm-active` endpoint (not generic PATCH), so `last_activity_at` updates and cron won't immediately re-raise
+  - 14 new tests — 170 total, 15 suites, zero TS errors
+
 ### Next up
 
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app (unblocks `high_wau_red_tier` cron check)
