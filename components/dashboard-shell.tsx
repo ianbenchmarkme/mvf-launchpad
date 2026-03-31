@@ -100,7 +100,6 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
 
         {/* Capacity */}
         <div className="shrink-0 border-t border-sidebar-border px-4 py-3">
-          <p className="text-[11px] font-medium text-sidebar-foreground/40 mb-1.5">Capacity</p>
           <CapacityIndicator used={capacityUsed} limit={CAPACITY_LIMIT} variant="sidebar" />
         </div>
 
