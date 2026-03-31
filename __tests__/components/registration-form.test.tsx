@@ -188,6 +188,26 @@ describe('RegistrationForm', () => {
       await user.click(screen.getByRole('button', { name: /next/i }));
     }
 
+    it('renders the access URL field on step 4', async () => {
+      const user = userEvent.setup();
+      render(<RegistrationForm onSubmit={mockOnSubmit} />);
+      await goToStep4(user);
+
+      expect(screen.getByLabelText(/where can people access/i)).toBeInTheDocument();
+    });
+
+    it('includes app_url in submitted payload when filled', async () => {
+      const user = userEvent.setup();
+      render(<RegistrationForm onSubmit={mockOnSubmit} />);
+      await goToStep4(user);
+
+      await user.type(screen.getByLabelText(/where can people access/i), 'https://my-tool.vercel.app');
+      await user.click(screen.getByRole('button', { name: /register/i }));
+
+      const payload = mockOnSubmit.mock.calls[0][0];
+      expect(payload.app_url).toBe('https://my-tool.vercel.app');
+    });
+
     it('renders third-party replacement question', async () => {
       const user = userEvent.setup();
       render(<RegistrationForm onSubmit={mockOnSubmit} />);

@@ -15,6 +15,7 @@ const mockApp: App = {
   handles_pii: 'no',
   uses_api_keys: 'yes',
   api_key_services: 'OpenAI',
+  app_url: null,
   replaces_third_party: false,
   replaced_tool_name: null,
   replaced_tool_cost: null,

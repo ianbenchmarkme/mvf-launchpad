@@ -5,7 +5,7 @@ import {
   Rocket, Users, Shield, Sparkles,
   ArrowLeft, ArrowRight, Check,
   Database, KeyRound, Scale,
-  Replace,
+  Replace, Link2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { registrationSchema, type RegistrationInput } from '@/lib/validators';
@@ -43,6 +43,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
   const [handlesPii, setHandlesPii] = useState<Tristate>('unsure');
   const [usesApiKeys, setUsesApiKeys] = useState<Tristate>('unsure');
   const [apiKeyServices, setApiKeyServices] = useState('');
+  const [appUrl, setAppUrl] = useState('');
   const [replacesThirdParty, setReplacesThirdParty] = useState(false);
   const [replacedToolName, setReplacedToolName] = useState('');
   const [replacedToolCost, setReplacedToolCost] = useState('');
@@ -106,6 +107,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
       handles_pii: handlesPii,
       uses_api_keys: usesApiKeys,
       api_key_services: apiKeyServices,
+      app_url: appUrl,
       replaces_third_party: replacesThirdParty,
       replaced_tool_name: replacedToolName,
       replaced_tool_cost: replacedToolCost,
@@ -343,6 +345,21 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
           {/* Step 4: Final Details */}
           {currentStep === 3 && (
             <div className="space-y-4">
+              <div className="space-y-1">
+                <label htmlFor="app-url" className="block text-[15px] font-medium flex items-center gap-2">
+                  <Link2 className="h-4 w-4 text-mvf-purple inline-block" />
+                  Where can people access it? <span className="text-muted-foreground font-normal">(optional)</span>
+                </label>
+                <input
+                  id="app-url"
+                  type="text"
+                  value={appUrl}
+                  onChange={(e) => setAppUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full rounded-[6px] border bg-background px-4 h-[52px] text-[15px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
+                />
+              </div>
+
               <fieldset className="space-y-3">
                 <legend className="text-[15px] font-medium flex items-center gap-2">
                   <Replace className="h-4 w-4 text-mvf-purple" />
