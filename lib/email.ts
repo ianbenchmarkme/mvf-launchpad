@@ -1,7 +1,5 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const STATUS_LABELS: Record<'completed' | 'wont_do', string> = {
   completed: 'Completed',
   wont_do: "Won't Do",
@@ -20,6 +18,7 @@ export async function sendResolutionEmail(opts: {
     return;
   }
 
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const { to, name, requestSubject, status, resolutionNote, resolvedBy } = opts;
   const greeting = name ? `Hi ${name},` : 'Hi there,';
   const statusLabel = STATUS_LABELS[status];

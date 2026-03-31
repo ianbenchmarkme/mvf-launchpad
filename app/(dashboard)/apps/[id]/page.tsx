@@ -46,6 +46,7 @@ export default async function AppProfilePage({ params }: PageProps) {
   const typedOwners = (owners || []) as (AppOwner & { profiles: Profile })[];
   const typedFlags = (flags || []) as RiskFlag[];
   const isOwner = typedOwners.some((o) => o.user_id === user!.id);
+  const isCreator = typedApp.created_by === user!.id;
 
   return (
     <AppProfileClient
@@ -55,6 +56,7 @@ export default async function AppProfilePage({ params }: PageProps) {
       flags={typedFlags}
       isAdmin={isAdmin}
       isOwner={isOwner}
+      isCreator={isCreator}
     />
   );
 }

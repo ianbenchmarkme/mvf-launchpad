@@ -76,6 +76,7 @@ const defaultProps = {
   flags: [] as RiskFlag[],
   isAdmin: false,
   isOwner: true,
+  isCreator: true,
 };
 
 beforeEach(() => {
@@ -305,5 +306,155 @@ describe('AppProfileClient', () => {
     render(<AppProfileClient {...defaultProps} />);
     expect(screen.getByText('Test Maker')).toBeInTheDocument();
     expect(screen.getByText('primary')).toBeInTheDocument();
+  });
+});
+
+// ── Owner management ──────────────────────────────────────────
+
+const mockBackupOwner: AppOwner & { profiles: Profile } = {
+  id: 'owner-2',
+  app_id: 'app-1',
+  user_id: 'user-2',
+  owner_role: 'backup',
+  created_at: '2026-03-10T00:00:00Z',
+  profiles: {
+    id: 'user-2',
+    email: 'backup@mvf.com',
+    full_name: 'Backup User',
+    avatar_url: null,
+    role: 'maker',
+    created_at: '2026-03-10T00:00:00Z',
+    updated_at: '2026-03-10T00:00:00Z',
+  },
+};
+
+describe('Owner management', () => {
+  it('shows Manage button for creator', () => {
+    render(<AppProfileClient {...defaultProps} isCreator={true} />);
+    expect(screen.getByText('Manage')).toBeInTheDocument();
+  });
+
+  it('shows Manage button for admin even if not creator', () => {
+    render(<AppProfileClient {...defaultProps} isCreator={false} isAdmin={true} />);
+    expect(screen.getByText('Manage')).toBeInTheDocument();
+  });
+
+  it('hides Manage button for non-creator non-admin', () => {
+    render(<AppProfileClient {...defaultProps} isCreator={false} isAdmin={false} />);
+    expect(screen.queryByText('Manage')).not.toBeInTheDocument();
+  });
+
+  it('shows add owner form when Manage is clicked', () => {
+    render(<AppProfileClient {...defaultProps} isCreator={true} />);
+    fireEvent.click(screen.getByText('Manage'));
+    expect(screen.getByPlaceholderText('colleague@example.com')).toBeInTheDocument();
+    expect(screen.getByText('Add backup owner')).toBeInTheDocument();
+  });
+
+  it('shows Done button when editing owners', () => {
+    render(<AppProfileClient {...defaultProps} isCreator={true} />);
+    fireEvent.click(screen.getByText('Manage'));
+    expect(screen.getByText('Done')).toBeInTheDocument();
+  });
+
+  it('hides form when Done is clicked', () => {
+    render(<AppProfileClient {...defaultProps} isCreator={true} />);
+    fireEvent.click(screen.getByText('Manage'));
+    fireEvent.click(screen.getByText('Done'));
+    expect(screen.queryByPlaceholderText('colleague@example.com')).not.toBeInTheDocument();
+  });
+
+  it('does not show remove button on primary owner row', () => {
+    render(<AppProfileClient {...defaultProps} isCreator={true} />);
+    fireEvent.click(screen.getByText('Manage'));
+    // Primary owner — no remove button
+    expect(screen.queryByLabelText('Remove Test Maker')).not.toBeInTheDocument();
+  });
+
+  it('shows remove button on backup owner row', () => {
+    render(
+      <AppProfileClient
+        {...defaultProps}
+        owners={[mockOwner, mockBackupOwner]}
+        isCreator={true}
+      />
+    );
+    fireEvent.click(screen.getByText('Manage'));
+    expect(screen.getByLabelText('Remove Backup User')).toBeInTheDocument();
+  });
+
+  it('calls DELETE endpoint and removes owner from list on remove click', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({ ok: true });
+    global.fetch = mockFetch;
+
+    render(
+      <AppProfileClient
+        {...defaultProps}
+        owners={[mockOwner, mockBackupOwner]}
+        isCreator={true}
+      />
+    );
+    fireEvent.click(screen.getByText('Manage'));
+    fireEvent.click(screen.getByLabelText('Remove Backup User'));
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/apps/app-1/owners',
+        expect.objectContaining({ method: 'DELETE' })
+      );
+    });
+    await waitFor(() => {
+      expect(screen.queryByText('Backup User')).not.toBeInTheDocument();
+    });
+  });
+
+  it('calls POST endpoint and clears email input on successful add', async () => {
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ id: 'owner-2', owner_role: 'backup' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ app_owners: [mockOwner, mockBackupOwner] }),
+      });
+    global.fetch = mockFetch;
+
+    render(<AppProfileClient {...defaultProps} isCreator={true} />);
+    fireEvent.click(screen.getByText('Manage'));
+
+    const input = screen.getByPlaceholderText('colleague@example.com');
+    fireEvent.change(input, { target: { value: 'backup@mvf.com' } });
+    fireEvent.click(screen.getByText('Add'));
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/apps/app-1/owners',
+        expect.objectContaining({ method: 'POST' })
+      );
+    });
+    await waitFor(() => {
+      expect((input as HTMLInputElement).value).toBe('');
+    });
+  });
+
+  it('shows inline error when add fails', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      json: () => Promise.resolve({ error: 'No Launchpad account found for that email.' }),
+    });
+    global.fetch = mockFetch;
+
+    render(<AppProfileClient {...defaultProps} isCreator={true} />);
+    fireEvent.click(screen.getByText('Manage'));
+
+    fireEvent.change(screen.getByPlaceholderText('colleague@example.com'), {
+      target: { value: 'nobody@example.com' },
+    });
+    fireEvent.click(screen.getByText('Add'));
+
+    await waitFor(() => {
+      expect(screen.getByText('No Launchpad account found for that email.')).toBeInTheDocument();
+    });
   });
 });

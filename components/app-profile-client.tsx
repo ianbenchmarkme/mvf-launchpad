@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Database, KeyRound, Scale, Replace } from 'lucide-react';
+import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
 import { AdminActions } from '@/components/admin-actions';
@@ -25,20 +25,31 @@ interface AppProfileClientProps {
   flags: RiskFlag[];
   isAdmin: boolean;
   isOwner: boolean;
+  isCreator: boolean;
 }
 
 export function AppProfileClient({
   app,
-  owners,
+  owners: initialOwners,
   flags,
   isAdmin,
   isOwner,
+  isCreator,
 }: AppProfileClientProps) {
   const router = useRouter();
   const canEdit = isOwner || isAdmin;
+  const canManageOwners = isCreator || isAdmin;
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+
+  // ── Owner management state ─────────────────────────────────
+  const [owners, setOwners] = useState(initialOwners);
+  const [isEditingOwners, setIsEditingOwners] = useState(false);
+  const [ownerEmail, setOwnerEmail] = useState('');
+  const [ownerAddError, setOwnerAddError] = useState<string | null>(null);
+  const [isAddingOwner, setIsAddingOwner] = useState(false);
+  const [removingOwnerId, setRemovingOwnerId] = useState<string | null>(null);
 
   // ── Form state (initialized from app data) ────────────────
   const [name, setName] = useState(app.name);
@@ -54,6 +65,56 @@ export function AppProfileClient({
   const [replacedToolName, setReplacedToolName] = useState(app.replaced_tool_name || '');
   const [replacedToolCost, setReplacedToolCost] = useState(app.replaced_tool_cost || '');
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  async function handleAddOwner() {
+    if (!ownerEmail.trim()) return;
+    setIsAddingOwner(true);
+    setOwnerAddError(null);
+    try {
+      const res = await fetch(`/api/apps/${app.id}/owners`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: ownerEmail.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setOwnerAddError(data.error || 'Failed to add owner');
+        return;
+      }
+      // Optimistic: fetch fresh owners list to get full profile join
+      const refreshed = await fetch(`/api/apps/${app.id}`);
+      if (refreshed.ok) {
+        const appData = await refreshed.json();
+        setOwners(appData.app_owners ?? []);
+      }
+      setOwnerEmail('');
+    } catch {
+      setOwnerAddError('Network error. Please try again.');
+    } finally {
+      setIsAddingOwner(false);
+    }
+  }
+
+  async function handleRemoveOwner(ownerRowId: string) {
+    setRemovingOwnerId(ownerRowId);
+    try {
+      const res = await fetch(`/api/apps/${app.id}/owners`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ owner_id: ownerRowId }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setOwnerAddError(data.error || 'Failed to remove owner');
+        return;
+      }
+      setOwners((prev) => prev.filter((o) => o.id !== ownerRowId));
+    } catch {
+      setOwnerAddError('Network error. Please try again.');
+    } finally {
+      setRemovingOwnerId(null);
+    }
+  }
 
   function resetSection(section: EditingSection) {
     setErrors({});
@@ -468,25 +529,85 @@ export function AppProfileClient({
         </div>
       </EditableSection>
 
-      {/* ── Owners (read-only) ─────────────────────────────── */}
+      {/* ── Owners ─────────────────────────────────────────── */}
       <section className="rounded-lg border bg-card p-5 card-shadow">
-        <h3 className="text-[15px] font-semibold tracking-tight mb-4">Owners</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-[15px] font-semibold tracking-tight">Owners</h3>
+          {canManageOwners && !isEditingOwners && (
+            <button
+              onClick={() => { setIsEditingOwners(true); setOwnerAddError(null); }}
+              className="flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors duration-150"
+            >
+              <Pencil className="h-3 w-3" />
+              Manage
+            </button>
+          )}
+          {isEditingOwners && (
+            <button
+              onClick={() => { setIsEditingOwners(false); setOwnerEmail(''); setOwnerAddError(null); }}
+              className="text-[12px] text-muted-foreground hover:text-foreground transition-colors duration-150"
+            >
+              Done
+            </button>
+          )}
+        </div>
+
         {owners.length === 0 ? (
           <p className="text-[13px] text-muted-foreground">No owners assigned</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-2 mb-4">
             {owners.map((owner) => (
               <li key={owner.id} className="flex items-center gap-3">
                 {owner.profiles.avatar_url && (
                   <img src={owner.profiles.avatar_url} alt="" className="h-6 w-6 rounded-full" />
                 )}
-                <span className="text-[13px]">{owner.profiles.full_name || owner.profiles.email}</span>
+                <span className="text-[13px] flex-1">{owner.profiles.full_name || owner.profiles.email}</span>
                 <span className="rounded-full bg-muted px-2 py-0.5 text-xs capitalize">
                   {owner.owner_role}
                 </span>
+                {isEditingOwners && owner.owner_role === 'backup' && (
+                  <button
+                    onClick={() => handleRemoveOwner(owner.id)}
+                    disabled={removingOwnerId === owner.id}
+                    aria-label={`Remove ${owner.profiles.full_name || owner.profiles.email}`}
+                    className="ml-1 rounded p-0.5 text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors duration-150 disabled:opacity-40"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
               </li>
             ))}
           </ul>
+        )}
+
+        {isEditingOwners && (
+          <div className="border-t pt-4 space-y-2">
+            <p className="text-[12px] text-muted-foreground font-medium">Add backup owner</p>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={ownerEmail}
+                onChange={(e) => { setOwnerEmail(e.target.value); setOwnerAddError(null); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleAddOwner(); }}
+                placeholder="colleague@example.com"
+                className="flex-1 rounded-[6px] border bg-background px-3 h-[36px] text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
+              />
+              <button
+                onClick={handleAddOwner}
+                disabled={isAddingOwner || !ownerEmail.trim()}
+                className="flex items-center gap-1.5 rounded-[6px] bg-mvf-pink px-3 h-[36px] text-[13px] font-medium text-white hover:opacity-90 transition-opacity duration-150 disabled:opacity-40"
+              >
+                <UserPlus className="h-3.5 w-3.5" />
+                {isAddingOwner ? 'Adding…' : 'Add'}
+              </button>
+            </div>
+            {ownerAddError && (
+              <p className="text-[12px] text-red-500">{ownerAddError}</p>
+            )}
+            <p className="text-[11px] text-muted-foreground/70">
+              The person must have signed in to Launchpad at least once.
+            </p>
+          </div>
         )}
       </section>
 

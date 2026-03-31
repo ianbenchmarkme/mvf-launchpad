@@ -93,6 +93,19 @@ export function sanitizeUpdatePayload(
   return stripped;
 }
 
+// ── Owner Management Schemas ──────────────────────────────────
+
+export const addOwnerSchema = z.object({
+  email: z.string().email('Must be a valid email address'),
+});
+
+export const removeOwnerSchema = z.object({
+  owner_id: z.string().uuid('owner_id must be a valid UUID'),
+});
+
+export type AddOwnerInput = z.input<typeof addOwnerSchema>;
+export type RemoveOwnerInput = z.input<typeof removeOwnerSchema>;
+
 // ── Support Request Schemas ───────────────────────────────────
 
 export const supportRequestSchema = z.object({
