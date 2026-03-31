@@ -63,7 +63,7 @@ Last updated: 2026-03-31 (session 4)
   - `dormancy_attestation` resolved via `confirm-active` endpoint (not generic PATCH), so `last_activity_at` updates and cron won't immediately re-raise
   - 14 new tests — 170 total, 15 suites, zero TS errors
 
-- [x] **Support & Feedback form** (PR #8, in review 2026-03-31)
+- [x] **Support & Feedback form** (PR #8, merged 2026-03-31)
   - `/support` — 2-step animated wizard (request type, subject, description, app link, priority, wants-reply)
   - `/support/admin` — admin-only inbox with filter bar (status/type/priority), status dropdown, resolution modal
   - Status lifecycle: Open → In Progress → Completed / Won't Do; terminal statuses require a resolution note
