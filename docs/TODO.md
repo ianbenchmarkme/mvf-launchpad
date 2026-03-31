@@ -63,6 +63,16 @@ Last updated: 2026-03-31 (session 4)
   - `dormancy_attestation` resolved via `confirm-active` endpoint (not generic PATCH), so `last_activity_at` updates and cron won't immediately re-raise
   - 14 new tests — 170 total, 15 suites, zero TS errors
 
+- [x] **Support & Feedback form** (PR #8, merged 2026-03-31)
+  - `/support` — 2-step animated wizard (request type, subject, description, app link, priority, wants-reply)
+  - `/support/admin` — admin-only inbox with filter bar (status/type/priority), status dropdown, resolution modal
+  - Status lifecycle: Open → In Progress → Completed / Won't Do; terminal statuses require a resolution note
+  - Email notification to submitter via Resend when status set to Completed or Won't Do (graceful degradation if key missing)
+  - `support_requests` table, enums, RLS — `migration-support-requests.sql`
+  - Server component scopes app dropdown to current user's owned apps only
+  - Silent-failure fix: `updateStatus` throws on `!res.ok`; modal stays open with `toast.error` on failure
+  - 254 tests, 19 suites, zero TS errors
+
 ### Next up
 
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app (unblocks `high_wau_red_tier` cron check)

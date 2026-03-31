@@ -314,6 +314,23 @@ Not all applications require the same level of human oversight. When registering
 
 Applications that start as human-on-the-loop may need to move to human-in-the-loop as they graduate or as their scope expands. The oversight model is reviewed as part of the graduation process.
 
+### 5.5 Support & Feedback
+
+Launchpad includes a built-in support and feedback channel so all users can contact the platform team without leaving the tool.
+
+**User-facing form** (`/support`) — available to all authenticated users:
+- Request types: Bug Report, Feature Request, Feedback, Question
+- Optional: link to a specific registered app, priority indication, opt-in to receive a reply
+- Toast confirmation on submit; no page reload
+
+**Admin inbox** (`/support/admin`) — admin-only:
+- Full request log with filters by status, type, and priority
+- Status lifecycle: Open → In Progress → Completed / Won't Do
+- Completed and Won't Do transitions require a resolution note; email is sent to the submitter via Resend if they opted in to a reply
+- Resolved by field records which admin closed the ticket
+
+**Email notifications**: Sent via Resend from a verified sender domain. Requires `RESEND_API_KEY` and `RESEND_FROM_EMAIL` environment variables. Gracefully degrades (logs a warning, does not error) if the API key is not set.
+
 ---
 
 ## 6. User Personas
@@ -509,6 +526,8 @@ All non-Layer-1 applications should use MVF-managed infrastructure:
 | Animated UI, light/dark theme, login page | P0 | ✅ Shipped (2026-03-27) |
 | Automated risk flags — stale owner, capacity exceeded, dormancy | P0 | ✅ Shipped PR #6 (2026-03-31) |
 | Dormancy attestation — owner self-resolve via "Confirm active" | P1 | ✅ Shipped PR #6 (2026-03-31) |
+| Governance flags UX — source badge, isAdmin gate, two-line rows | P1 | ✅ Shipped PR #7 (2026-03-31) |
+| Support & Feedback form — user form + admin inbox + Resend email | P1 | ✅ Shipped PR #8 (2026-03-31) |
 | Amplitude usage tracking integration | P0 | ⬜ Next — unblocks WAU flag |
 | Slack notifications for risk flags and registration prompts | P2 | ⬜ Planned |
 | Status changes by makers (intent → developing → testing → active) | P1 | ⬜ Planned |

@@ -100,3 +100,35 @@ export interface ProfileWithCapacity extends Profile {
   capacity_used: number;
   capacity_limit: number;
 }
+
+// ── Support Requests ──────────────────────────────────────────
+
+export type SupportRequestType = 'bug_report' | 'feature_request' | 'feedback' | 'question';
+export type SupportRequestStatus = 'open' | 'in_progress' | 'completed' | 'wont_do';
+export type SupportRequestPriority = 'low' | 'medium' | 'high';
+
+export interface SupportRequest {
+  id: string;
+  request_type: SupportRequestType;
+  subject: string;
+  description: string;
+  related_app_id: string | null;
+  priority: SupportRequestPriority;
+  wants_reply: boolean;
+  status: SupportRequestStatus;
+  resolution_note: string | null;
+  resolved_by: string | null;
+  resolved_at: string | null;
+  submitted_by: string;
+  submitted_email: string;
+  submitted_name: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// For admin inbox — includes FK-joined profile + app data
+// Use alias keys (submitter/related_app) to avoid collision if resolved_by join is added later
+export interface SupportRequestWithDetails extends SupportRequest {
+  submitter: Pick<Profile, 'full_name' | 'email'> | null;  // profiles!submitted_by join
+  apps: Pick<App, 'id' | 'name'> | null;                   // related_app_id join
+}
