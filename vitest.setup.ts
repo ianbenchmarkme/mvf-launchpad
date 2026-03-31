@@ -1,6 +1,10 @@
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 
+// jsdom does not implement scrollIntoView — stub globally so any component
+// that calls it (e.g. registration form step transitions) doesn't throw.
+window.HTMLElement.prototype.scrollIntoView = vi.fn();
+
 // Mock Framer Motion globally so animations resolve immediately in jsdom.
 // AnimatePresence renders children without waiting for exit animations,
 // and motion.* components render as plain divs/spans with no transition delay.

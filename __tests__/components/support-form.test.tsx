@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SupportForm } from '@/components/support-form';
 
@@ -9,15 +9,6 @@ vi.mock('sonner', () => ({
     success: vi.fn(),
     error: vi.fn(),
   },
-}));
-
-// Mock framer-motion to avoid animation issues in tests
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }) => <div {...props}>{children}</div>,
-  },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useReducedMotion: () => false,
 }));
 
 const mockUserApps = [
@@ -105,103 +96,99 @@ describe('SupportForm', () => {
 
   // ── Step navigation ───────────────────────────────────────
   describe('Step navigation', () => {
-    async function fillStep1(user: ReturnType<typeof userEvent.setup>) {
-      await user.click(screen.getByRole('button', { name: /bug report/i }));
-      await user.type(screen.getByLabelText(/subject/i), 'Button not working correctly');
-      await user.type(screen.getByLabelText(/description/i), 'The submit button on the registration form does nothing when clicked.');
+    // fireEvent is used deliberately here instead of userEvent.type.
+    // The global Framer Motion mock renders motion.div as a Fragment, which changes
+    // the React reconciliation tree in a way that breaks userEvent's pointer-based
+    // input simulation. fireEvent.change dispatches the synthetic event directly
+    // and reliably updates controlled input state.
+    function fillStep1() {
+      fireEvent.click(screen.getByRole('button', { name: /bug report/i }));
+      fireEvent.change(screen.getByLabelText(/subject/i), { target: { value: 'Button not working correctly' } });
+      fireEvent.change(screen.getByLabelText(/description/i), { target: { value: 'The submit button on the registration form does nothing when clicked.' } });
     }
 
-    it('advances to step 2 after valid step 1', async () => {
-      const user = userEvent.setup();
+    it('advances to step 2 after valid step 1', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await fillStep1(user);
-      await user.click(screen.getByRole('button', { name: /next/i }));
+      fillStep1();
+      fireEvent.click(screen.getByRole('button', { name: /next/i }));
       expect(screen.getByText(/a bit more detail/i)).toBeInTheDocument();
     });
 
-    it('shows Back button on step 2', async () => {
-      const user = userEvent.setup();
+    it('shows Back button on step 2', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await fillStep1(user);
-      await user.click(screen.getByRole('button', { name: /next/i }));
+      fillStep1();
+      fireEvent.click(screen.getByRole('button', { name: /next/i }));
       expect(screen.getByTestId('back-button')).toBeInTheDocument();
     });
 
-    it('returns to step 1 when clicking Back on step 2', async () => {
-      const user = userEvent.setup();
+    it('returns to step 1 when clicking Back on step 2', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await fillStep1(user);
-      await user.click(screen.getByRole('button', { name: /next/i }));
-      await user.click(screen.getByTestId('back-button'));
+      fillStep1();
+      fireEvent.click(screen.getByRole('button', { name: /next/i }));
+      fireEvent.click(screen.getByTestId('back-button'));
       expect(screen.getByText(/what.s the issue/i)).toBeInTheDocument();
     });
   });
 
   // ── Step 2 rendering ─────────────────────────────────────
   describe('Step 2: A bit more detail', () => {
-    async function goToStep2(user: ReturnType<typeof userEvent.setup>) {
-      await user.click(screen.getByRole('button', { name: /bug report/i }));
-      await user.type(screen.getByLabelText(/subject/i), 'Button not working correctly');
-      await user.type(screen.getByLabelText(/description/i), 'The submit button on the registration form does nothing when clicked.');
-      await user.click(screen.getByRole('button', { name: /next/i }));
+    function goToStep2() {
+      fireEvent.click(screen.getByRole('button', { name: /bug report/i }));
+      fireEvent.change(screen.getByLabelText(/subject/i), { target: { value: 'Button not working correctly' } });
+      fireEvent.change(screen.getByLabelText(/description/i), { target: { value: 'The submit button on the registration form does nothing when clicked.' } });
+      fireEvent.click(screen.getByRole('button', { name: /next/i }));
     }
 
-    it('renders related app dropdown', async () => {
-      const user = userEvent.setup();
+    it('renders related app dropdown', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await goToStep2(user);
+      goToStep2();
       expect(screen.getByLabelText(/related app/i)).toBeInTheDocument();
     });
 
-    it('renders priority buttons', async () => {
-      const user = userEvent.setup();
+    it('renders priority buttons', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await goToStep2(user);
+      goToStep2();
       expect(screen.getByRole('button', { name: /low/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /medium/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /high/i })).toBeInTheDocument();
     });
 
-    it('renders contact me back buttons', async () => {
-      const user = userEvent.setup();
+    it('renders contact me back buttons', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await goToStep2(user);
+      goToStep2();
       expect(screen.getByRole('button', { name: /^yes$/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /^no$/i })).toBeInTheDocument();
     });
 
-    it('shows user apps in dropdown', async () => {
-      const user = userEvent.setup();
+    it('shows user apps in dropdown', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await goToStep2(user);
+      goToStep2();
       expect(screen.getByText('ArtyFish')).toBeInTheDocument();
       expect(screen.getByText('Allegros')).toBeInTheDocument();
     });
 
-    it('shows Submit button on step 2', async () => {
-      const user = userEvent.setup();
+    it('shows Submit button on step 2', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await goToStep2(user);
+      goToStep2();
       expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument();
     });
   });
 
   // ── Submission ────────────────────────────────────────────
   describe('Submission', () => {
-    async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
+    function fillAndSubmit() {
       // Step 1
-      await user.click(screen.getByRole('button', { name: /feature request/i }));
-      await user.type(screen.getByLabelText(/subject/i), 'Add dark mode toggle');
-      await user.type(screen.getByLabelText(/description/i), 'It would be great to have a dark mode toggle in the settings page for better usability.');
-      await user.click(screen.getByRole('button', { name: /next/i }));
+      fireEvent.click(screen.getByRole('button', { name: /feature request/i }));
+      fireEvent.change(screen.getByLabelText(/subject/i), { target: { value: 'Add dark mode toggle' } });
+      fireEvent.change(screen.getByLabelText(/description/i), { target: { value: 'It would be great to have a dark mode toggle in the settings page for better usability.' } });
+      fireEvent.click(screen.getByRole('button', { name: /next/i }));
       // Step 2 — defaults are fine (medium priority, yes to contact)
-      await user.click(screen.getByRole('button', { name: /submit/i }));
+      fireEvent.click(screen.getByRole('button', { name: /submit/i }));
     }
 
-    it('calls onSubmit with correct data', async () => {
-      const user = userEvent.setup();
+    it('calls onSubmit with correct data', () => {
       render(<SupportForm userApps={mockUserApps} onSubmit={mockOnSubmit} />);
-      await fillAndSubmit(user);
+      fillAndSubmit();
       expect(mockOnSubmit).toHaveBeenCalledOnce();
       const submitted = mockOnSubmit.mock.calls[0][0];
       expect(submitted.request_type).toBe('feature_request');
