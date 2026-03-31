@@ -1,6 +1,6 @@
 # MVF Launchpad — TODO
 
-Last updated: 2026-03-31 (session 4)
+Last updated: 2026-03-31 (session 5)
 
 ---
 
@@ -72,6 +72,17 @@ Last updated: 2026-03-31 (session 4)
   - Server component scopes app dropdown to current user's owned apps only
   - Silent-failure fix: `updateStatus` throws on `!res.ok`; modal stays open with `toast.error` on failure
   - 254 tests, 19 suites, zero TS errors
+
+- [x] **UX & UI improvements** (PR #10, merged 2026-03-31)
+  - Active sidebar nav highlight using `usePathname()` — correct highlight including `/support` vs `/support/admin`
+  - App cards: footer shows `LAYER_LABELS[app.layer]` instead of raw category code
+  - Grid gap tightened: `gap-8` → `gap-4` for denser layout
+  - My Apps dashboard: search bar, improved empty state (icon + CTA), "Also backing" section for backup-owned apps
+  - App Library: Register App nudge banner at bottom of results
+  - Sidebar: "PRD [temp]" renamed to "Roadmap [Admin]"
+  - Capacity indicator: 5 discrete dashes (one per point), inline "Capacity 4 / 5 points" label
+  - `MyAppsList` extracted as client component — server page stays pure data-fetching
+  - 281 tests, 20 suites, zero TS errors (no regressions)
 
 - [x] **Backup owner management** (PR #9, merged 2026-03-31)
   - `POST /api/apps/[id]/owners` — add backup owner by email (creator + admin only)

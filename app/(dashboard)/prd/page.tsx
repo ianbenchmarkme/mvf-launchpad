@@ -890,6 +890,7 @@ export default async function PRDPage() {
                     { text: 'Governance flags UX — description rows, System/Admin source badge, isAdmin gate, dormancy resolved via confirm-active', done: true },
                     { text: 'Support & Feedback form — 2-step wizard for all users, admin inbox with filters and status lifecycle, Resend email on resolution', done: true },
                     { text: 'Backup owner management — add/remove backup owners on app profile (creator + admin only, existing-user lookup, optimistic UI)', done: true },
+                    { text: 'UX & UI improvements — active nav highlight, layer labels on cards, tighter grid, My Apps search + Also backing section, App Library register nudge, capacity indicator redesign (5 dashes, inline label)', done: true },
                     { text: '281 tests across 20 suites — zero TypeScript errors', done: true },
                   ],
                 },
