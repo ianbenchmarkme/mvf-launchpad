@@ -19,23 +19,37 @@ export function CapacityIndicator({ used, limit, variant = 'default' }: Capacity
   if (isFull) stateClass = 'text-red-500';
   else if (isWarning) stateClass = 'text-amber-500 warning';
 
+  const emptyBg = isSidebar ? 'bg-sidebar-foreground/10' : 'bg-muted';
+
   return (
     <div className={`space-y-1.5 ${stateClass}`}>
-      <div className={`flex items-baseline justify-between ${isSidebar ? 'text-[12px]' : 'text-[13px]'}`}>
-        <span className={`font-semibold tabular-nums ${isSidebar ? 'text-sidebar-foreground' : ''}`}>{used}</span>
-        <span className={isSidebar ? 'text-sidebar-foreground/40 text-[11px]' : 'text-muted-foreground text-[12px]'}>/ {limit} points</span>
+      {/* Header row: "Capacity  4 / 5 points" (sidebar) or "4  / 5 points" (default) */}
+      <div className="flex items-baseline justify-between">
+        {isSidebar && (
+          <span className="text-[11px] font-medium text-sidebar-foreground/40">Capacity</span>
+        )}
+        <span className={`tabular-nums ${isSidebar ? 'text-[11px] text-sidebar-foreground/40' : 'text-[13px] text-muted-foreground'}`}>
+          <span className={`font-semibold ${isSidebar ? 'text-sidebar-foreground' : ''}`}>{used}</span>
+          {' / '}{limit} points
+        </span>
       </div>
+
+      {/* 5 discrete dashes */}
       <div
         role="progressbar"
         aria-valuenow={percentage}
         aria-valuemin={0}
         aria-valuemax={100}
-        className={`h-1.5 w-full rounded-full overflow-hidden ${isSidebar ? 'bg-sidebar-foreground/10' : 'bg-muted'}`}
+        className="flex gap-1"
       >
-        <div
-          className={`h-full rounded-full transition-all duration-300 ${barColor}`}
-          style={{ width: `${percentage}%` }}
-        />
+        {Array.from({ length: limit }, (_, i) => (
+          <div key={i} className={`flex-1 h-1.5 rounded-full overflow-hidden ${emptyBg}`}>
+            <div
+              className={`h-full rounded-full transition-all duration-300 ${used > i ? barColor : ''}`}
+              style={{ width: used > i ? '100%' : '0%' }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

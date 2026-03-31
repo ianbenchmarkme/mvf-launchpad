@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
 import { createAuthServerClient } from '@/lib/supabase/auth-server';
-import { AppCard } from '@/components/app-card';
+import { MyAppsList } from '@/components/my-apps-list';
 import type { App } from '@/lib/supabase/types';
 
 export default async function DashboardPage() {
@@ -14,7 +14,17 @@ export default async function DashboardPage() {
     .eq('user_id', user!.id)
     .eq('owner_role', 'primary');
 
-  const apps: App[] = (ownedApps || [])
+  const primaryApps: App[] = (ownedApps || [])
+    .map((o: Record<string, unknown>) => o.apps as App)
+    .filter((a: App | null): a is App => a !== null && a.status !== 'archived');
+
+  const { data: backupOwnerships } = await supabase
+    .from('app_owners')
+    .select('app_id, apps(*)')
+    .eq('user_id', user!.id)
+    .eq('owner_role', 'backup');
+
+  const backupApps: App[] = (backupOwnerships || [])
     .map((o: Record<string, unknown>) => o.apps as App)
     .filter((a: App | null): a is App => a !== null && a.status !== 'archived');
 
@@ -35,22 +45,7 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      <div>
-        {apps.length === 0 ? (
-          <div className="rounded-[8px] border border-dashed py-12 text-center">
-            <p className="text-[13px] text-muted-foreground">No apps registered yet.</p>
-            <Link href="/register" className="text-[13px] text-mvf-purple hover:underline mt-1 inline-block">
-              Register your first app
-            </Link>
-          </div>
-        ) : (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {apps.map((app: App, index: number) => (
-              <AppCard key={app.id} app={app} index={index} />
-            ))}
-          </div>
-        )}
-      </div>
+      <MyAppsList primaryApps={primaryApps} backupApps={backupApps} />
     </div>
   );
 }
