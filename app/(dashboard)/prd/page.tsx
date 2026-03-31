@@ -63,16 +63,16 @@ export default async function PRDPage() {
 
         <div className="flex flex-wrap items-center gap-2 mb-8">
           <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground border border-border">
-            v1.0 Draft
+            v1.1
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground border border-border">
-            25 March 2026
+            31 March 2026
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground border border-border">
             Ian Hitge · Author
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border border-border bg-muted" style={{ color: 'var(--mvf-purple)' }}>
-            For Review
+          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border border-border" style={{ color: '#22c55e', borderColor: '#22c55e', backgroundColor: '#22c55e18' }}>
+            Live · Phase 2 in progress
           </span>
         </div>
 
@@ -406,16 +406,17 @@ export default async function PRDPage() {
                 <th className="px-4 py-2.5 text-left font-semibold text-foreground">Flag</th>
                 <th className="px-4 py-2.5 text-left font-semibold text-foreground">Trigger</th>
                 <th className="px-4 py-2.5 text-left font-semibold text-foreground">Action</th>
+                <th className="px-4 py-2.5 text-left font-semibold text-foreground">Status</th>
               </tr>
             </thead>
             <tbody>
               {[
-                { flag: 'Adoption threshold', trigger: '25+ weekly active users', action: 'Prompt tier upgrade', icon: BarChart3, color: 'var(--mvf-light-blue)' },
-                { flag: 'Data risk', trigger: 'Confidential data + Red tier', action: 'Mandatory security review', icon: Database, color: '#ef4444' },
-                { flag: 'Support risk', trigger: 'Maker inactive 30+ days', action: 'Flag to governance dashboard', icon: Clock, color: '#f59e0b' },
-                { flag: 'Security risk', trigger: 'Known dependency vulnerabilities', action: 'Flag to governance dashboard', icon: Lock, color: '#f59e0b' },
-                { flag: 'Capacity risk', trigger: '5-point limit reached', action: 'Must retire or graduate an app', icon: AlertTriangle, color: 'var(--mvf-orange)' },
-              ].map(({ flag, trigger, action, icon: Icon, color }) => (
+                { flag: 'Adoption threshold', trigger: '25+ weekly active users', action: 'Prompt tier upgrade', icon: BarChart3, color: 'var(--mvf-light-blue)', live: false, liveLabel: 'Needs Amplitude' },
+                { flag: 'Data risk', trigger: 'Confidential data + Red tier', action: 'Mandatory security review', icon: Database, color: '#ef4444', live: false, liveLabel: 'Manual' },
+                { flag: 'Stale owner', trigger: 'Primary owner no sign-in for 90+ days', action: 'Flag to governance dashboard', icon: Clock, color: '#f59e0b', live: true, liveLabel: 'Live · daily cron' },
+                { flag: 'Capacity exceeded', trigger: 'Maker weighted load > 5 points', action: 'Flag newest app; maker must archive or graduate', icon: AlertTriangle, color: 'var(--mvf-orange)', live: true, liveLabel: 'Live · daily cron' },
+                { flag: 'Dormancy', trigger: 'Active/testing app — no activity for 60+ days', action: 'Owner confirms still active or archives', icon: Rocket, color: 'var(--mvf-purple)', live: true, liveLabel: 'Live · daily cron' },
+              ].map(({ flag, trigger, action, icon: Icon, color, live, liveLabel }) => (
                 <tr key={flag} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                   <td className="px-4 py-3">
                     <span className="flex items-center gap-2">
@@ -425,6 +426,15 @@ export default async function PRDPage() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{trigger}</td>
                   <td className="px-4 py-3 text-foreground">{action}</td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium"
+                      style={live
+                        ? { color: '#22c55e', backgroundColor: '#22c55e18', border: '1px solid #22c55e40' }
+                        : { color: 'var(--muted-foreground)', backgroundColor: 'var(--muted)', border: '1px solid var(--border)' }
+                      }>
+                      {liveLabel}
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -871,34 +881,22 @@ export default async function PRDPage() {
                     { text: 'Progressive registration — fields grow with tool maturity', done: true },
                     { text: 'Auto-create risk flags when PII or data fields are marked Unsure or Yes', done: true },
                     { text: 'PATCH and DELETE endpoints hardened with Zod validation and auth checks', done: true },
-                    { text: '137 tests across 11 suites', done: true },
                     { text: 'Login page — two-panel layout with audience cards and tier blocks', done: true },
                     { text: 'Light/dark theme toggle in sidebar', done: true },
                     { text: 'Framer Motion animations — page transitions, card stagger, browse grid', done: true },
                     { text: 'Deploy to Vercel — live at mvf-launchpad.vercel.app with Google OAuth', done: true },
-                    { text: 'UI polish — tooltips, consistent page headers, card alignment, sidebar improvements', done: true },
+                    { text: 'Automated risk flags — stale owner (90 days), capacity exceeded, dormancy attestation (60 days) — daily Vercel cron', done: true },
+                    { text: 'Dormancy attestation — owners self-resolve via "Confirm active" button on app profile', done: true },
+                    { text: '168 tests across 14 suites — zero TypeScript errors', done: true },
                   ],
                 },
                 {
                   label: 'Up next',
                   items: [
-                    { text: 'Amplitude integration — usage analytics and WAU tracking per app', done: false },
-                    { text: 'Automated risk flags — stale owner, high-WAU Red-tier, capacity exceeded', done: false },
-                    { text: 'Dormancy attestation — flag inactive apps, require owner confirmation', done: false },
+                    { text: 'Amplitude integration — usage analytics and WAU tracking per app (also unblocks high-WAU Red-tier flag)', done: false },
+                    { text: 'Slack notifications — admin alerts for new registrations, flag escalations, tier change requests', done: false },
                     { text: 'Maker status changes — move apps through intent → developing → testing → active', done: false },
                     { text: 'Backup owner management — add and remove backup owners on app profile', done: false },
-                  ],
-                },
-                {
-                  label: 'Slack integration',
-                  items: [
-                    { text: 'Admin channel alerts — new app registrations with maker name, tier, and layer', done: false },
-                    { text: 'Admin channel alerts — risk flag escalations (data risk, security risk, support gaps)', done: false },
-                    { text: 'Admin channel alerts — tier change requests from makers', done: false },
-                    { text: 'Maker DMs — notify owner when their app is flagged or requires action', done: false },
-                    { text: 'Maker DMs — capacity limit warning before registration is blocked', done: false },
-                    { text: 'Maker DMs — dormancy prompt when app has been inactive for 30 days', done: false },
-                    { text: 'Maker DMs — reminder when backup owner has not been assigned on a growing tool', done: false },
                   ],
                 },
               ],
@@ -1050,7 +1048,7 @@ export default async function PRDPage() {
       {/* Footer */}
       <footer className="border-t border-border pt-6 flex items-center justify-between">
         <p className="text-[11px] text-muted-foreground">
-          MVF Launchpad PRD · v1.0 · 25 March 2026 · Ian Hitge
+          MVF Launchpad PRD · v1.1 · 31 March 2026 · Ian Hitge
         </p>
         <p className="text-[11px] text-muted-foreground">
           Stakeholders: Michael Johnson
