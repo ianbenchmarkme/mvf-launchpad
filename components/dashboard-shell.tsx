@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { LayoutDashboard, PlusCircle, Search, Shield, LogOut, AlertTriangle, FileText, MessageSquare, Inbox } from 'lucide-react';
 import { CapacityIndicator } from '@/components/capacity-indicator';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -27,10 +30,11 @@ const navItems = [
   { href: '/governance', label: 'Governance', icon: Shield, adminOnly: true },
   { href: '/support', label: 'Support', icon: MessageSquare },
   { href: '/support/admin', label: 'Support Inbox', icon: Inbox, adminOnly: true },
-  { href: '/prd', label: 'PRD [temp]', icon: FileText, adminOnly: true },
+  { href: '/prd', label: 'Roadmap [Admin]', icon: FileText, adminOnly: true },
 ];
 
 export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }: DashboardShellProps) {
+  const pathname = usePathname();
   return (
     <div className="flex">
       {/* Sidebar */}
@@ -47,13 +51,18 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
             if ('adminOnly' in item && item.adminOnly && user.role !== 'admin') {
               return null;
             }
+            const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-150"
+                className={`flex items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] transition-colors duration-150 ${
+                  isActive
+                    ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
+                    : 'text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent'
+                }`}
               >
-                <item.icon className="h-[15px] w-[15px] opacity-60" />
+                <item.icon className={`h-[15px] w-[15px] ${isActive ? 'opacity-100' : 'opacity-60'}`} />
                 {item.label}
               </Link>
             );

@@ -42,14 +42,15 @@ describe('AppCard', () => {
     expect(screen.getByText('Stage: Active')).toBeInTheDocument();
   });
 
-  it('renders the category', () => {
+  it('renders the layer label', () => {
     render(<AppCard app={mockApp} />);
-    expect(screen.getByText('Marketing')).toBeInTheDocument();
+    // mockApp.layer = 'L2' → 'Product & Design'
+    expect(screen.getByText('Product & Design')).toBeInTheDocument();
   });
 
-  it('renders — when category is null', () => {
-    render(<AppCard app={{ ...mockApp, category: null }} />);
-    expect(screen.getByText('—')).toBeInTheDocument();
+  it('renders the correct label for L1 layer', () => {
+    render(<AppCard app={{ ...mockApp, layer: 'L1' }} />);
+    expect(screen.getByText('Engineering')).toBeInTheDocument();
   });
 
   it('links to the app profile page', () => {
