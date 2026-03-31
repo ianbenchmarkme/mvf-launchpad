@@ -12,13 +12,14 @@ describe('RegistrationForm', () => {
 
   beforeEach(() => {
     mockOnSubmit.mockClear();
-    // jsdom does not implement scrollIntoView
-    window.HTMLElement.prototype.scrollIntoView = vi.fn();
   });
 
   // ── Helpers ───────────────────────────────────────────────
-  // userEvent.type does not update React controlled inputs when motion.* components
-  // are mocked as Fragments. Use fireEvent.change instead for navigation helpers.
+  // fireEvent is used deliberately here instead of userEvent.type.
+  // Framer Motion's motion.div wrappers are mocked as Fragments, which changes
+  // the React reconciliation tree in a way that breaks userEvent's pointer-based
+  // input simulation. fireEvent.change dispatches the synthetic event directly
+  // and reliably updates controlled input state.
 
   function fillStep1() {
     fireEvent.change(screen.getByLabelText(/app name/i), { target: { value: 'Test Tool' } });

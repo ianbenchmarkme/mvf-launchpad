@@ -4,14 +4,6 @@ import userEvent from '@testing-library/user-event';
 import { SupportAdminClient } from '@/components/support-admin-client';
 import type { SupportRequestWithDetails } from '@/lib/supabase/types';
 
-// Mock framer-motion
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }) => <div {...props}>{children}</div>,
-  },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-
 // Mock sonner toast — must use vi.hoisted so the ref is available at mock factory time
 const { mockToastError } = vi.hoisted(() => ({ mockToastError: vi.fn() }));
 vi.mock('sonner', () => ({
