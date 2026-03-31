@@ -73,12 +73,23 @@ Last updated: 2026-03-31 (session 4)
   - Silent-failure fix: `updateStatus` throws on `!res.ok`; modal stays open with `toast.error` on failure
   - 254 tests, 19 suites, zero TS errors
 
+- [x] **Backup owner management** (PR #9, merged 2026-03-31)
+  - `POST /api/apps/[id]/owners` — add backup owner by email (creator + admin only)
+  - `DELETE /api/apps/[id]/owners` — remove backup owner by row id (creator + admin only)
+  - Guards: 401, 403, 404 (no Launchpad account), 409 (already an owner), 400 (removing primary)
+  - Owners section gains inline Manage/Done toggle; remove buttons on backup rows; email add form
+  - Optimistic re-fetch after add — no page reload required
+  - `isCreator` prop added to `AppProfileClient` (derived server-side)
+  - `addOwnerSchema` + `removeOwnerSchema` in `lib/validators.ts`
+  - No DB migration needed — schema already had `app_owners` + `owner_role` enum + RLS
+  - Fix: lazy-init Resend client in `lib/email.ts` to prevent build crash when `RESEND_API_KEY` absent
+  - 281 tests, 20 suites, zero TS errors
+
 ### Next up
 
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app (unblocks `high_wau_red_tier` cron check)
 - [ ] **Slack notifications** — alert admins on new registrations, flag escalations, tier change requests
 - [ ] **Status changes by makers** — allow owners to move apps through intent → developing → testing → active
-- [ ] **Backup owner management** — add/remove backup owners on app profile
 
 ## Phase 3: Ingestion & Scale — PLANNED
 

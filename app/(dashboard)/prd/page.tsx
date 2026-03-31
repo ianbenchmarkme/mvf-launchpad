@@ -889,7 +889,8 @@ export default async function PRDPage() {
                     { text: 'Dormancy attestation — owners self-resolve via "Confirm active" button on app profile', done: true },
                     { text: 'Governance flags UX — description rows, System/Admin source badge, isAdmin gate, dormancy resolved via confirm-active', done: true },
                     { text: 'Support & Feedback form — 2-step wizard for all users, admin inbox with filters and status lifecycle, Resend email on resolution', done: true },
-                    { text: '254 tests across 19 suites — zero TypeScript errors', done: true },
+                    { text: 'Backup owner management — add/remove backup owners on app profile (creator + admin only, existing-user lookup, optimistic UI)', done: true },
+                    { text: '281 tests across 20 suites — zero TypeScript errors', done: true },
                   ],
                 },
                 {
@@ -898,7 +899,6 @@ export default async function PRDPage() {
                     { text: 'Amplitude integration — usage analytics and WAU tracking per app (also unblocks high-WAU Red-tier flag)', done: false },
                     { text: 'Slack notifications — admin alerts for new registrations, flag escalations, tier change requests', done: false },
                     { text: 'Maker status changes — move apps through intent → developing → testing → active', done: false },
-                    { text: 'Backup owner management — add and remove backup owners on app profile', done: false },
                   ],
                 },
               ],

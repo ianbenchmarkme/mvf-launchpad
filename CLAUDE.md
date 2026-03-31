@@ -4,7 +4,7 @@
 
 MVF Launchpad is an internal app registry and governance platform. Makers (employees who build internal tools with Lovable, Claude Code, etc.) register their tools here. Leadership gets governance visibility via dashboards. The platform uses a traffic-light tier system (Red/Amber/Green) and progressive registration.
 
-**Status (2026-03-31):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, automated risk flags (daily cron), governance flags UX, and support & feedback form shipped. 254 tests, 19 suites, zero TS errors.
+**Status (2026-03-31):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, automated risk flags (daily cron), governance flags UX, support & feedback form, and backup owner management shipped. 281 tests, 20 suites, zero TS errors.
 
 ## Documentation
 
@@ -181,11 +181,11 @@ All pieces of work follow this mandatory sequence:
 
 ## Testing
 
-254 tests across 19 suites. TDD approach — tests written before implementation.
+281 tests across 20 suites. TDD approach — tests written before implementation.
 
 - `__tests__/lib/` — constants, validators (Zod schema validation + update schema + sanitizer)
 - `__tests__/components/` — tier badge, capacity indicator, app card, registration form, auth button, app browse, editable section, app profile client, support form, support admin client
-- `__tests__/api/` — PATCH/DELETE endpoint auth, validation, risk flag creation, support POST/PATCH
+- `__tests__/api/` — PATCH/DELETE endpoint auth, validation, risk flag creation, support POST/PATCH, owners POST/DELETE
 
 Run: `npm run test:run`
 
