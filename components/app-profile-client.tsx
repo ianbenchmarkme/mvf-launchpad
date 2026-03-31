@@ -267,7 +267,7 @@ export function AppProfileClient({
                 <dt className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Access</dt>
                 <dd>
                   <a
-                    href={app.app_url}
+                    href={/^https?:\/\//.test(app.app_url) ? app.app_url : '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-[13px] text-mvf-purple hover:underline"

@@ -5,7 +5,7 @@ import {
   Rocket, Users, Shield, Sparkles,
   ArrowLeft, ArrowRight, Check,
   Database, KeyRound, Scale,
-  Replace, Link2,
+  Replace,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { registrationSchema, type RegistrationInput } from '@/lib/validators';
@@ -346,8 +346,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
           {currentStep === 3 && (
             <div className="space-y-4">
               <div className="space-y-1">
-                <label htmlFor="app-url" className="block text-[15px] font-medium flex items-center gap-2">
-                  <Link2 className="h-4 w-4 text-mvf-purple inline-block" />
+                <label htmlFor="app-url" className="block text-[15px] font-medium">
                   Where can people access it? <span className="text-muted-foreground font-normal">(optional)</span>
                 </label>
                 <input
@@ -439,6 +438,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
                   <SummaryItem label="Business Data" value={needsBusinessData} onEdit={() => goToStep(2)} />
                   <SummaryItem label="PII" value={handlesPii} onEdit={() => goToStep(2)} />
                   <SummaryItem label="API Keys" value={usesApiKeys} onEdit={() => goToStep(2)} />
+                  {appUrl && <SummaryItem label="Access URL" value={appUrl} onEdit={() => {}} />}
                 </div>
               </div>
             </div>

@@ -77,19 +77,22 @@ describe('registrationSchema', () => {
     expect(result.success).toBe(false);
   });
 
-  it('app_url is optional — missing is ok', () => {
+  it('app_url is optional — missing normalises to null', () => {
     const result = registrationSchema.safeParse(validRegistration);
     expect(result.success).toBe(true);
+    if (result.success) expect(result.data.app_url).toBeNull();
   });
 
-  it('app_url accepts a valid URL', () => {
+  it('app_url accepts a valid URL and preserves it', () => {
     const result = registrationSchema.safeParse({ ...validRegistration, app_url: 'https://my-tool.vercel.app' });
     expect(result.success).toBe(true);
+    if (result.success) expect(result.data.app_url).toBe('https://my-tool.vercel.app');
   });
 
-  it('app_url accepts an empty string', () => {
+  it('app_url empty string normalises to null', () => {
     const result = registrationSchema.safeParse({ ...validRegistration, app_url: '' });
     expect(result.success).toBe(true);
+    if (result.success) expect(result.data.app_url).toBeNull();
   });
 
   it('requires api_key_services when uses_api_keys is yes', () => {
