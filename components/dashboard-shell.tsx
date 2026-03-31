@@ -51,7 +51,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
             if ('adminOnly' in item && item.adminOnly && user.role !== 'admin') {
               return null;
             }
-            const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
               <Link
                 key={item.href}

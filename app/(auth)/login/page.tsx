@@ -51,7 +51,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right panel: auth ────────────────────────────────── */}
-      <div className="lg:w-[420px] flex items-center justify-center p-10 bg-white min-h-[50vh] lg:min-h-screen">
+      <div className="lg:w-[420px] flex items-center justify-center p-10 bg-background min-h-[50vh] lg:min-h-screen">
         <div className="w-full max-w-xs space-y-6 text-center flex flex-col items-center">
           <div className="space-y-2">
             <div className="flex items-center justify-center gap-2">
