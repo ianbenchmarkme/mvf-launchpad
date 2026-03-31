@@ -888,7 +888,8 @@ export default async function PRDPage() {
                     { text: 'Automated risk flags — stale owner (90 days), capacity exceeded, dormancy attestation (60 days) — daily Vercel cron', done: true },
                     { text: 'Dormancy attestation — owners self-resolve via "Confirm active" button on app profile', done: true },
                     { text: 'Governance flags UX — description rows, System/Admin source badge, isAdmin gate, dormancy resolved via confirm-active', done: true },
-                    { text: '170 tests across 15 suites — zero TypeScript errors', done: true },
+                    { text: 'Support & Feedback form — 2-step wizard for all users, admin inbox with filters and status lifecycle, Resend email on resolution', done: true },
+                    { text: '254 tests across 19 suites — zero TypeScript errors', done: true },
                   ],
                 },
                 {
