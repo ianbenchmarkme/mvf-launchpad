@@ -4,7 +4,7 @@
 
 MVF Launchpad is an internal app registry and governance platform. Makers (employees who build internal tools with Lovable, Claude Code, etc.) register their tools here. Leadership gets governance visibility via dashboards. The platform uses a traffic-light tier system (Red/Amber/Green) and progressive registration.
 
-**Status (2026-03-27):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Login page, theme toggle, light mode, and animations shipped. 137 tests, 11 suites, zero TS errors.
+**Status (2026-03-31):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, and automated risk flags (stale owner, capacity exceeded, dormancy attestation via daily Vercel cron) shipped. 168 tests, 14 suites, zero TS errors.
 
 ## Documentation
 
@@ -198,3 +198,4 @@ Run in Supabase SQL Editor in this order:
 4. `supabase/seed-demo.sql` — 8 demo Green-tier apps (optional)
 5. `supabase/migration-deletion-requests.sql` — RLS update for deletion requests
 6. `supabase/migration-pii-confirmed-flag.sql` — Add `pii_confirmed` flag type
+7. `supabase/migration-dormancy-attestation.sql` — Add `dormancy_attestation` flag type

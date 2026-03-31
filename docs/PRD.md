@@ -6,10 +6,10 @@ I h# MVF Launchpad
 
 | Field | Value |
 |-------|-------|
-| **Version** | 1.0 — Draft |
-| **Date** | 25 March 2026 |
+| **Version** | 1.1 — Updated |
+| **Date** | 31 March 2026 |
 | **Author** | Ian Hitge |
-| **Status** | For Review |
+| **Status** | Live — Phase 2 in progress |
 | **Stakeholders** | Michael Johnson |
 
 ---
@@ -240,23 +240,28 @@ Every registered tool is assigned a tier that communicates its support level, re
 
 The platform automatically flags tools for review when thresholds are crossed. Flags trigger conversations, not blocks.
 
-| Flag | Trigger | Action |
-|------|---------|--------|
-| Adoption threshold | Weekly active users exceeds 25 | Prompt maker to consider Amber tier promotion |
-| Data risk | App handles Confidential+ data while in Red tier | Mandatory security review triggered |
-| Support risk | Maker has not logged in for 30+ days | Flag to governance dashboard; notify backup if exists |
-| Security risk | Dependencies have known vulnerabilities | Flag to governance dashboard |
-| Capacity risk | Maker at 5-point capacity limit (weighted by tier) | Must retire or graduate an app before registering a new one |
+| Flag | Trigger | Action | Status |
+|------|---------|--------|--------|
+| Adoption threshold (`high_wau_red_tier`) | Weekly active users exceeds 25 | Prompt maker to consider Amber tier promotion | Deferred — requires Amplitude integration |
+| Data risk | App handles Confidential+ data while in Red tier | Mandatory security review triggered | Manual (admin-created) |
+| Stale owner (`stale_owner`) | Primary owner hasn't signed in for 90+ days | Flag to governance dashboard | **Live** — daily cron |
+| Capacity risk (`capacity_exceeded`) | Maker's weighted app load exceeds 5 points | Flag on newest app; maker must archive or graduate | **Live** — daily cron |
+| Dormancy (`dormancy_attestation`) | Active/testing app with no activity for 60+ days | Owner prompted to confirm still active or archive | **Live** — daily cron; owner self-resolves via "Confirm active" |
 
 #### Dormancy and Retirement
 
 Not all tools have interactive users — batch jobs, scheduled reports, and API-only services may have zero sign-ins while being business-critical. Launchpad uses a **dormancy attestation** model rather than auto-offlining based on sign-in data.
 
-- Applications with no detected activity for 30 days (sign-ins, API calls, or health check pings) trigger a **dormancy attestation** prompt to the owner: "Is this tool still active?" with options: *Yes, still in use* / *No, archive it*
-- If the owner confirms active use, the tool continues and the 30-day clock resets
-- If the owner selects archive, or does not respond within 14 days, the application is **archived**
-- For tools without Amplitude or health check integration, a quarterly **self-reported attestation** serves as the activity signal: owners confirm their tools are still in use
-- This prevents accumulation of zombie applications without killing headless or automated tools
+**Implemented (Phase 2):**
+- Applications with no detected activity for **60 days** trigger a `dormancy_attestation` risk flag (checked daily via cron)
+- Activity is tracked via `last_activity_at`; falls back to `updated_at` for apps that predate the feature
+- Owners see a **"Confirm active"** button on their app profile for any dormancy flag — clicking it resolves the flag and resets the clock without requiring admin involvement
+- The flag is idempotent — if an unresolved dormancy flag already exists, the cron skips re-flagging
+- Only `active` and `testing` apps are checked; `intent`, `developing`, and `archived` apps are excluded
+
+**Planned (Phase 3):**
+- Auto-archive if owner does not respond within 14 days of dormancy flag (not yet implemented)
+- Amplitude/health check integration for activity signals beyond `updated_at`
 - Sunsetting a tool with active users requires 30-day notice with migration guidance
 
 ### 5.3 Support Model
@@ -498,16 +503,17 @@ All non-Layer-1 applications should use MVF-managed infrastructure:
 
 #### Build
 
-| Feature | Priority |
-|---------|----------|
-| Progressive registration (Phase 2 and 3 fields) | P0 |
-| Amplitude usage tracking integration | P0 |
-| Automated risk flags (WAU > 25, stale owner, PII without approval) | P0 |
-| Dormancy attestation workflow (30-day inactivity → prompt → 14-day → archive) | P1 |
-| Support capacity tracking (5-point weighted limit per maker) | P1 |
-| Holiday/absence gap detection on support map | P1 |
-| Slack notifications for risk flags and registration prompts | P2 |
-| Consumer browse view (if 5+ apps registered) | P2 |
+| Feature | Priority | Status |
+|---------|----------|--------|
+| Progressive registration (section-based inline editing) | P0 | ✅ Shipped PR #1 (2026-03-27) |
+| Animated UI, light/dark theme, login page | P0 | ✅ Shipped (2026-03-27) |
+| Automated risk flags — stale owner, capacity exceeded, dormancy | P0 | ✅ Shipped PR #6 (2026-03-31) |
+| Dormancy attestation — owner self-resolve via "Confirm active" | P1 | ✅ Shipped PR #6 (2026-03-31) |
+| Amplitude usage tracking integration | P0 | ⬜ Next — unblocks WAU flag |
+| Slack notifications for risk flags and registration prompts | P2 | ⬜ Planned |
+| Status changes by makers (intent → developing → testing → active) | P1 | ⬜ Planned |
+| Backup owner management (add/remove on app profile) | P1 | ⬜ Planned |
+| Holiday/absence gap detection on support map | P2 | ⬜ Planned |
 
 #### Phase 2 Success Criteria
 

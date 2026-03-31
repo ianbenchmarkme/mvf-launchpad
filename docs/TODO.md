@@ -1,6 +1,6 @@
 # MVF Launchpad — TODO
 
-Last updated: 2026-03-27 (session 3)
+Last updated: 2026-03-31 (session 4)
 
 ---
 
@@ -36,40 +36,29 @@ Last updated: 2026-03-27 (session 3)
   - EditableSection generic view/edit toggle component
   - `key={updated_at}` remount pattern for stale state prevention
   - 137 tests, 11 suites
-
-### Pending migration
-
-- [x] **Run `migration-pii-confirmed-flag.sql`** against production Supabase (adds `pii_confirmed` to flag_type enum) — done 2026-03-27
-
-### Shipped (session 2, 2026-03-27)
-
-- [x] **Login page content** — two-panel layout (dark gradient + auth), audience cards, tier blocks
-- [x] **Light/dark theme toggle** — Sun/Moon button in sidebar, `next-themes` integration
-- [x] **Sidebar pinned bottom** — sticky positioning for Action Required, Capacity, user section
-- [x] **Light mode card fix** — CSS variable approach, eliminated all `dark:` utility classes from content areas
-- [x] **Animations** — Framer Motion: PageTransition (enter + exit), stagger on app cards, AnimatePresence on browse grid, PulseBadge on action-required count
-- [x] **Code review fixes** (PR #1 code review follow-up):
-  - Logo dark mode via CSS var `--logo-filter` (avoids Tailwind v4 media-query conflict)
-  - `PulseBadge` respects `prefers-reduced-motion` via `useReducedMotion()`
-  - `PageTransition` exit animation: `AnimatePresence` moved inside component, keyed by `usePathname()`
-  - `ThemeToggle` layout shift: fixed-size placeholder on mount instead of `null`
-  - Dev script: `next dev --port 3004`
-
-### Shipped (session 2+3, 2026-03-27)
-
 - [x] **Login page content** — two-panel layout (dark gradient + auth), audience cards, tier blocks
 - [x] **Light/dark theme toggle** — Sun/Moon button in sidebar, `next-themes` integration
 - [x] **Sidebar pinned bottom** — sticky positioning for Action Required, Capacity, user section
 - [x] **Light mode card fix** — semantic CSS tokens only, no `dark:` utilities (Tailwind v4 compatibility)
 - [x] **Animations** — Framer Motion: PageTransition (enter + exit), stagger on app cards, AnimatePresence on browse grid, PulseBadge
 - [x] **Production deploy** — live at https://mvf-launchpad.vercel.app, Google OAuth working, Vercel auto-deploys on merge to main
-- [x] **Vercel branch deploy** — preview deployments disabled, only `main` deploys to production
+- [x] **Run `migration-pii-confirmed-flag.sql`** against production Supabase — done 2026-03-27
+- [x] **Automated risk flags + dormancy attestation** (PR #6, merged 2026-03-31)
+  - Vercel cron job (`/api/cron/risk-flags`, daily at 00:00 UTC)
+  - `stale_owner` — flags apps where primary owner hasn't signed in for 90+ days (skips SQL-seeded users)
+  - `capacity_exceeded` — flags newest app when maker's weighted load exceeds 5 points
+  - `dormancy_attestation` — flags active/testing apps with no activity for 60+ days (uses `COALESCE(last_activity_at, updated_at)`)
+  - All checks idempotent — skip if unresolved flag of same type already exists
+  - `POST /api/apps/[id]/confirm-active` — owners self-resolve dormancy flags; updates `last_activity_at`
+  - "Confirm active" button on app profile for dormancy flags (owner-facing)
+  - `high_wau_red_tier` deferred — stub only until Amplitude integrated
+  - `dormancy_attestation` added to `flag_type` enum (migration + schema.sql)
+  - 168 tests, 14 suites, zero TS errors
+  - **Run `migration-dormancy-attestation.sql`** against production Supabase — done 2026-03-31
 
 ### Next up
 
-- [ ] **Amplitude integration** — usage analytics, WAU tracking per app
-- [ ] **Automated risk flags** — stale owner detection, high-WAU Red-tier alerts, capacity exceeded
-- [ ] **Dormancy attestation** — auto-flag apps with no activity for 60 days, require owner confirmation
+- [ ] **Amplitude integration** — usage analytics, WAU tracking per app (unblocks `high_wau_red_tier` cron check)
 - [ ] **Slack notifications** — alert admins on new registrations, flag escalations, tier change requests
 - [ ] **Status changes by makers** — allow owners to move apps through intent → developing → testing → active
 - [ ] **Backup owner management** — add/remove backup owners on app profile
@@ -91,7 +80,7 @@ Last updated: 2026-03-27 (session 3)
 2. What's the right capacity limit? (Currently 5 points)
 3. Should consumers see Red-tier apps in the App Library?
 4. How do we handle tools that span multiple layers?
-5. What triggers dormancy attestation? (Currently: 60 days no activity)
+5. ~~What triggers dormancy attestation?~~ Resolved: 60 days no activity (`COALESCE(last_activity_at, updated_at)`)
 6. Should there be a formal graduation ceremony for Green tier?
 7. How do we measure "business-critical" for the North Star metric?
 
@@ -100,3 +89,4 @@ Last updated: 2026-03-27 (session 3)
 - [ ] `middleware.ts` uses deprecated convention — Next.js 16 recommends `proxy` instead
 - [ ] Consider extracting `uses_api_keys` field in Security section to use TristateField (currently inline for conditional input handling)
 - [ ] Scale icon in TristateField is PII-specific — consider making it a prop for generic use
+- [ ] 29 pre-existing test failures in `app-profile-client`, `app-browse`, `registration-form` suites — unrelated to recent work, needs investigation
