@@ -86,7 +86,7 @@ export default async function GovernancePage() {
       </div>
 
       {/* Risk Flags */}
-      <GovernanceFlagsList flags={typedFlags as (RiskFlag & { apps: { name: string } | null })[]} />
+      <GovernanceFlagsList flags={typedFlags as (RiskFlag & { apps: { name: string } | null })[]} isAdmin={(profile as Profile).role === 'admin'} />
 
       {/* All Apps List */}
       <div>

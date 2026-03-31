@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { GovernanceFlagsList } from '@/components/governance-flags-list';
 import type { RiskFlag } from '@/lib/supabase/types';
@@ -27,35 +27,41 @@ const makeFlag = (overrides: Partial<GovernanceFlag> = {}): GovernanceFlag => ({
   ...overrides,
 });
 
+beforeEach(() => {
+  mockFetch.mockClear();
+  mockRefresh.mockClear();
+  mockFetch.mockResolvedValue({ ok: true });
+});
+
 describe('GovernanceFlagsList', () => {
   it('renders null when flags array is empty', () => {
-    const { container } = render(<GovernanceFlagsList flags={[]} />);
+    const { container } = render(<GovernanceFlagsList flags={[]} isAdmin={true} />);
     expect(container.firstChild).toBeNull();
   });
 
   it('renders app name as a link to the app profile', () => {
-    render(<GovernanceFlagsList flags={[makeFlag()]} />);
+    render(<GovernanceFlagsList flags={[makeFlag()]} isAdmin={true} />);
     const link = screen.getByRole('link', { name: 'Test App' });
     expect(link).toHaveAttribute('href', '/apps/app-1');
   });
 
   it('renders "Unknown app" when apps is null', () => {
-    render(<GovernanceFlagsList flags={[makeFlag({ apps: null })]} />);
+    render(<GovernanceFlagsList flags={[makeFlag({ apps: null })]} isAdmin={true} />);
     expect(screen.getByText('Unknown app')).toBeInTheDocument();
   });
 
   it('renders flag type label with underscores replaced by spaces', () => {
-    render(<GovernanceFlagsList flags={[makeFlag({ flag_type: 'stale_owner' })]} />);
+    render(<GovernanceFlagsList flags={[makeFlag({ flag_type: 'stale_owner' })]} isAdmin={true} />);
     expect(screen.getByText('stale owner')).toBeInTheDocument();
   });
 
   it('shows System badge when created_by is null', () => {
-    render(<GovernanceFlagsList flags={[makeFlag({ created_by: null })]} />);
+    render(<GovernanceFlagsList flags={[makeFlag({ created_by: null })]} isAdmin={true} />);
     expect(screen.getByText('System')).toBeInTheDocument();
   });
 
   it('shows Admin badge when created_by is a UUID', () => {
-    render(<GovernanceFlagsList flags={[makeFlag({ created_by: 'user-uuid-123' })]} />);
+    render(<GovernanceFlagsList flags={[makeFlag({ created_by: 'user-uuid-123' })]} isAdmin={true} />);
     expect(screen.getByText('Admin')).toBeInTheDocument();
   });
 
@@ -63,6 +69,7 @@ describe('GovernanceFlagsList', () => {
     render(
       <GovernanceFlagsList
         flags={[makeFlag({ description: 'No activity for 60+ days. Owner confirmation required.' })]}
+        isAdmin={true}
       />
     );
     expect(
@@ -71,23 +78,39 @@ describe('GovernanceFlagsList', () => {
   });
 
   it('does not render description paragraph when flag.description is null', () => {
-    render(<GovernanceFlagsList flags={[makeFlag({ description: null })]} />);
-    // No <p> with description content — check there is no second text node beyond the type label
+    render(<GovernanceFlagsList flags={[makeFlag({ description: null })]} isAdmin={true} />);
     expect(screen.queryByRole('paragraph')).toBeNull();
   });
 
-  it('renders the Resolve button', () => {
-    render(<GovernanceFlagsList flags={[makeFlag()]} />);
+  it('shows Resolve button when isAdmin=true', () => {
+    render(<GovernanceFlagsList flags={[makeFlag()]} isAdmin={true} />);
     expect(screen.getByRole('button', { name: /resolve/i })).toBeInTheDocument();
   });
 
-  it('calls PATCH /api/flags/[flagId] and refreshes on Resolve click', async () => {
-    mockFetch.mockResolvedValueOnce({ ok: true });
-    render(<GovernanceFlagsList flags={[makeFlag({ id: 'flag-abc' })]} />);
+  it('does not show Resolve button when isAdmin=false', () => {
+    render(<GovernanceFlagsList flags={[makeFlag()]} isAdmin={false} />);
+    expect(screen.queryByRole('button', { name: /resolve/i })).toBeNull();
+  });
+
+  it('calls PATCH /api/flags/[flagId] and refreshes for non-dormancy flags', async () => {
+    render(<GovernanceFlagsList flags={[makeFlag({ id: 'flag-abc', flag_type: 'stale_owner' })]} isAdmin={true} />);
     fireEvent.click(screen.getByRole('button', { name: /resolve/i }));
-    await screen.findByText('Resolve'); // wait for async to complete
+    await screen.findByText('Resolve');
     expect(mockFetch).toHaveBeenCalledWith('/api/flags/flag-abc', { method: 'PATCH' });
     expect(mockRefresh).toHaveBeenCalled();
+  });
+
+  it('calls POST confirm-active for dormancy_attestation flags instead of generic PATCH', async () => {
+    render(
+      <GovernanceFlagsList
+        flags={[makeFlag({ id: 'flag-abc', app_id: 'app-xyz', flag_type: 'dormancy_attestation' })]}
+        isAdmin={true}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: /resolve/i }));
+    await screen.findByText('Resolve');
+    expect(mockFetch).toHaveBeenCalledWith('/api/apps/app-xyz/confirm-active', { method: 'POST' });
+    expect(mockFetch).not.toHaveBeenCalledWith(expect.stringContaining('/api/flags/'), expect.anything());
   });
 
   it('shows "Resolving..." while request is in flight', async () => {
@@ -95,7 +118,7 @@ describe('GovernanceFlagsList', () => {
     mockFetch.mockImplementationOnce(
       () => new Promise((resolve) => { resolveRequest = () => resolve({ ok: true }); })
     );
-    render(<GovernanceFlagsList flags={[makeFlag()]} />);
+    render(<GovernanceFlagsList flags={[makeFlag()]} isAdmin={true} />);
     fireEvent.click(screen.getByRole('button', { name: /resolve/i }));
     expect(await screen.findByText('Resolving...')).toBeInTheDocument();
     resolveRequest!();
@@ -103,14 +126,16 @@ describe('GovernanceFlagsList', () => {
 
   it('applies correct severity dot colour for critical, warning, and info', () => {
     const { rerender } = render(
-      <GovernanceFlagsList flags={[makeFlag({ severity: 'critical' })]} />
+      <GovernanceFlagsList flags={[makeFlag({ severity: 'critical' })]} isAdmin={true} />
     );
     expect(document.querySelector('.bg-red-500')).not.toBeNull();
 
-    rerender(<GovernanceFlagsList flags={[makeFlag({ severity: 'warning' })]} />);
+    rerender(<GovernanceFlagsList flags={[makeFlag({ severity: 'warning' })]} isAdmin={true} />);
     expect(document.querySelector('.bg-amber-500')).not.toBeNull();
 
-    rerender(<GovernanceFlagsList flags={[makeFlag({ severity: 'info' })]} />);
-    expect(document.querySelector('.bg-blue-500')).not.toBeNull();
+    rerender(<GovernanceFlagsList flags={[makeFlag({ severity: 'info' })]} isAdmin={true} />);
+    // info uses bg-blue-500 on the dot (distinct from SourceBadge which uses mvf tokens)
+    const dots = document.querySelectorAll('.bg-blue-500');
+    expect(dots.length).toBeGreaterThan(0);
   });
 });

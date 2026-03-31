@@ -11,6 +11,7 @@ interface GovernanceFlag extends RiskFlag {
 
 interface GovernanceFlagsListProps {
   flags: GovernanceFlag[];
+  isAdmin: boolean;
 }
 
 function SourceBadge({ createdBy }: { createdBy: string | null }) {
@@ -19,7 +20,7 @@ function SourceBadge({ createdBy }: { createdBy: string | null }) {
     <span
       className={`inline-flex items-center gap-1 rounded-[5px] border px-1.5 py-0.5 text-[11px] font-medium leading-none shrink-0 ${
         isSystem
-          ? 'bg-blue-500/8 text-blue-600 border-blue-500/10'
+          ? 'bg-mvf-light-blue/8 text-mvf-light-blue border-mvf-light-blue/10'
           : 'bg-mvf-purple/8 text-mvf-purple border-mvf-purple/10'
       }`}
     >
@@ -29,14 +30,21 @@ function SourceBadge({ createdBy }: { createdBy: string | null }) {
   );
 }
 
-export function GovernanceFlagsList({ flags }: GovernanceFlagsListProps) {
+export function GovernanceFlagsList({ flags, isAdmin }: GovernanceFlagsListProps) {
   const router = useRouter();
   const [resolvingId, setResolvingId] = useState<string | null>(null);
 
-  async function resolveFlag(flagId: string) {
-    setResolvingId(flagId);
+  async function resolveFlag(flag: GovernanceFlag) {
+    setResolvingId(flag.id);
     try {
-      const res = await fetch(`/api/flags/${flagId}`, { method: 'PATCH' });
+      // dormancy_attestation must go through confirm-active to update last_activity_at,
+      // otherwise the cron will immediately re-raise the flag on the next run
+      const endpoint =
+        flag.flag_type === 'dormancy_attestation'
+          ? `/api/apps/${flag.app_id}/confirm-active`
+          : `/api/flags/${flag.id}`;
+      const method = flag.flag_type === 'dormancy_attestation' ? 'POST' : 'PATCH';
+      const res = await fetch(endpoint, { method });
       if (res.ok) router.refresh();
     } finally {
       setResolvingId(null);
@@ -91,16 +99,18 @@ export function GovernanceFlagsList({ flags }: GovernanceFlagsListProps) {
               )}
             </div>
 
-            {/* Resolve button — aligned to top of row */}
-            <button
-              type="button"
-              disabled={resolvingId === flag.id}
-              onClick={() => resolveFlag(flag.id)}
-              className="flex items-center gap-1 rounded-[6px] border border-emerald-200 px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50 active:scale-[0.98] transition-all duration-150 disabled:opacity-50 shrink-0"
-            >
-              <CheckCircle className="h-3 w-3" />
-              {resolvingId === flag.id ? 'Resolving...' : 'Resolve'}
-            </button>
+            {/* Resolve button — admin only, aligned to top of row */}
+            {isAdmin && (
+              <button
+                type="button"
+                disabled={resolvingId === flag.id}
+                onClick={() => resolveFlag(flag)}
+                className="flex items-center gap-1 rounded-[6px] border border-emerald-200 px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50 active:scale-[0.98] transition-all duration-150 disabled:opacity-50 shrink-0"
+              >
+                <CheckCircle className="h-3 w-3" />
+                {resolvingId === flag.id ? 'Resolving...' : 'Resolve'}
+              </button>
+            )}
           </li>
         ))}
       </ul>
