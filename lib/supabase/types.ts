@@ -127,7 +127,8 @@ export interface SupportRequest {
 }
 
 // For admin inbox — includes FK-joined profile + app data
+// Use alias keys (submitter/related_app) to avoid collision if resolved_by join is added later
 export interface SupportRequestWithDetails extends SupportRequest {
-  profiles: Pick<Profile, 'full_name' | 'email'> | null;  // submitted_by join
-  apps: Pick<App, 'id' | 'name'> | null;                  // related_app_id join
+  submitter: Pick<Profile, 'full_name' | 'email'> | null;  // profiles!submitted_by join
+  apps: Pick<App, 'id' | 'name'> | null;                   // related_app_id join
 }

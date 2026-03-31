@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { Bug, Lightbulb, MessageSquare, HelpCircle, ChevronDown } from 'lucide-react';
 import type { SupportRequestWithDetails, SupportRequestStatus, SupportRequestType, SupportRequestPriority } from '@/lib/supabase/types';
 
@@ -67,7 +68,10 @@ export function SupportAdminClient({ requests: initialRequests }: SupportAdminCl
         body: JSON.stringify(body),
       });
 
-      if (!res.ok) return;
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({})) as { message?: string };
+        throw new Error(error.message ?? 'Failed to update status');
+      }
 
       const updated = await res.json() as SupportRequestWithDetails;
       setRequests((prev) =>
@@ -85,7 +89,9 @@ export function SupportAdminClient({ requests: initialRequests }: SupportAdminCl
       setResolutionNote('');
       setNoteError('');
     } else {
-      void updateStatus(requestId, status);
+      updateStatus(requestId, status).catch((err: unknown) => {
+        toast.error(err instanceof Error ? err.message : 'Failed to update status');
+      });
     }
   }
 
@@ -95,10 +101,15 @@ export function SupportAdminClient({ requests: initialRequests }: SupportAdminCl
       setNoteError('Resolution note must be at least 10 characters');
       return;
     }
-    await updateStatus(modal.requestId, modal.status, resolutionNote.trim());
-    setModal(null);
-    setResolutionNote('');
-    setNoteError('');
+    try {
+      await updateStatus(modal.requestId, modal.status, resolutionNote.trim());
+      setModal(null);
+      setResolutionNote('');
+      setNoteError('');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to update status');
+      // modal stays open
+    }
   }
 
   function formatDate(iso: string) {
@@ -201,7 +212,7 @@ export function SupportAdminClient({ requests: initialRequests }: SupportAdminCl
 
                     {/* Submitter */}
                     <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
-                      {req.profiles?.full_name ?? req.submitted_email}
+                      {req.submitter?.full_name ?? req.submitted_email}
                     </td>
 
                     {/* App */}

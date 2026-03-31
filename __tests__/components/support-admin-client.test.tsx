@@ -12,6 +12,12 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+// Mock sonner toast — must use vi.hoisted so the ref is available at mock factory time
+const { mockToastError } = vi.hoisted(() => ({ mockToastError: vi.fn() }));
+vi.mock('sonner', () => ({
+  toast: { error: mockToastError },
+}));
+
 // Mock fetch for PATCH calls
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
@@ -34,7 +40,7 @@ const mockRequests: SupportRequestWithDetails[] = [
     submitted_name: 'Test User',
     created_at: '2026-03-31T10:00:00Z',
     updated_at: '2026-03-31T10:00:00Z',
-    profiles: { full_name: 'Test User', email: 'user@example.com' },
+    submitter: { full_name: 'Test User', email: 'user@example.com' },
     apps: { id: 'app-1', name: 'ArtyFish' },
   },
   {
@@ -54,7 +60,7 @@ const mockRequests: SupportRequestWithDetails[] = [
     submitted_name: 'Another User',
     created_at: '2026-03-30T09:00:00Z',
     updated_at: '2026-03-31T11:00:00Z',
-    profiles: { full_name: 'Another User', email: 'user2@example.com' },
+    submitter: { full_name: 'Another User', email: 'user2@example.com' },
     apps: null,
   },
   {
@@ -74,13 +80,14 @@ const mockRequests: SupportRequestWithDetails[] = [
     submitted_name: null,
     created_at: '2026-03-29T08:00:00Z',
     updated_at: '2026-03-31T12:00:00Z',
-    profiles: { full_name: null, email: 'user3@example.com' },
+    submitter: { full_name: null, email: 'user3@example.com' },
     apps: null,
   },
 ];
 
 beforeEach(() => {
   mockFetch.mockClear();
+  mockToastError.mockClear();
   mockFetch.mockResolvedValue({
     ok: true,
     json: () => Promise.resolve({ id: 'req-1', status: 'in_progress' }),
@@ -247,6 +254,26 @@ describe('SupportAdminClient', () => {
       await user.click(screen.getByRole('option', { name: /^completed$/i }));
       await user.click(screen.getByRole('button', { name: /cancel/i }));
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('keeps modal open and shows error toast when PATCH fails', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        json: () => Promise.resolve({ message: 'Server error' }),
+      });
+
+      const user = userEvent.setup();
+      render(<SupportAdminClient requests={mockRequests} />);
+      await user.click(screen.getByTestId('status-btn-req-1'));
+      await user.click(screen.getByRole('option', { name: /^completed$/i }));
+      await user.type(screen.getByLabelText(/resolution note/i), 'This has been fixed in the latest deploy.');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith('Server error');
+      });
+      // Modal must remain open
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
   });
 });

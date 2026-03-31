@@ -7,11 +7,12 @@ import type { Profile, SupportRequestWithDetails } from '@/lib/supabase/types';
 export default async function SupportAdminPage() {
   const supabase = await createAuthServerClient();
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/');
 
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
-    .eq('id', user!.id)
+    .eq('id', user.id)
     .single();
 
   if (!profile || (profile as Profile).role !== 'admin') {
@@ -23,7 +24,7 @@ export default async function SupportAdminPage() {
   // so we must use profiles!submitted_by syntax
   const { data: requests } = await supabase
     .from('support_requests')
-    .select('*, profiles!submitted_by(full_name, email), apps!related_app_id(id, name)')
+    .select('*, submitter:profiles!submitted_by(full_name, email), apps!related_app_id(id, name)')
     .order('created_at', { ascending: false });
 
   const typedRequests = (requests ?? []) as SupportRequestWithDetails[];
