@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera, Fingerprint, MessageSquare, Tag, ShieldCheck } from 'lucide-react';
+import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera, Fingerprint, MessageSquare, Tag, ShieldCheck, Users } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
 import { AdminActions } from '@/components/admin-actions';
@@ -796,7 +796,12 @@ export function AppProfileClient({
       {/* ── Owners ─────────────────────────────────────────── */}
       <section className="rounded-lg border bg-card p-5 card-shadow">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[15px] font-semibold tracking-tight">Owners</h3>
+          <div className="flex items-center gap-2">
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[5px]" style={{ backgroundColor: '#00C8C818' }}>
+              <Users className="h-3.5 w-3.5" style={{ color: '#00C8C8' }} />
+            </div>
+            <h3 className="text-[15px] font-semibold tracking-tight">Owners</h3>
+          </div>
           {canManageOwners && !isEditingOwners && (
             <button
               onClick={() => { setIsEditingOwners(true); setOwnerAddError(null); }}
