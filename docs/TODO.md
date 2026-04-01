@@ -1,6 +1,6 @@
 # MVF Launchpad — TODO
 
-Last updated: 2026-03-31 (session 5)
+Last updated: 2026-04-01 (session 6)
 
 ---
 
@@ -96,6 +96,35 @@ Last updated: 2026-03-31 (session 5)
   - Fix: lazy-init Resend client in `lib/email.ts` to prevent build crash when `RESEND_API_KEY` absent
   - 281 tests, 20 suites, zero TS errors
 
+- [x] **App URL field** (PR #11, merged 2026-03-31)
+  - `app_url` column added to `apps` table (`migration-app-url.sql`)
+  - URL shown on app cards and app profile; optional field in registration + Identity section edit
+
+- [x] **Per-app icons** (PR #14, merged 2026-04-01)
+  - Icon upload via `POST /api/apps/[id]/icon` — stored in Supabase Storage (`app-icons` bucket)
+  - Displayed on app cards (60×60) and app profile Identity section
+  - Deferred upload: file staged locally, uploaded on Identity section Save
+  - Icon size reduced to 60×60 after PR review (was 72×72)
+
+- [x] **App URL promoted to profile header with inline edit** (PR #17, merged 2026-04-01)
+  - URL displayed below app name in header with pencil icon; Edit → input → Save/Cancel
+  - Client-side URL format validation (http/https prefix)
+  - XSS guard on href rendering
+
+- [x] **Brand Guidelines page** (PR #15, merged 2026-04-01)
+  - `/brand-guidelines` — living styleguide for makers building on MVF Launchpad
+  - 8 colour swatches (click-to-copy hex + CSS variable), semantic tokens table, typography specimens, button examples, tier badges, spacing/radius scale, tone of voice, Lovable usage notes
+  - WIP badge; full light/dark mode support via CSS variable tokens
+  - Sidebar link visible to all authenticated users
+
+- [x] **UI polish batch** (PR #16, merged 2026-04-01)
+  - Brand Guidelines: flush colour swatches to card corners; consistent swatch card height
+  - Sidebar: Admin links (Governance, Support Inbox, Roadmap) separated into labelled "Admin" section; nav icons `--mvf-light-blue`, admin icons `--mvf-yellow`, Action Required label `--mvf-orange`
+  - App Library: Register App button pinned to page header; search bar inline with filters (right-aligned, wraps on narrow screens)
+  - App cards: more breathing room between name and description
+  - App profile: pink Lucide icons inline with all section headings; Problem Statement split into its own card section; App URL promoted to full card with Edit/Save/Cancel; Owners "Manage" button matches Edit style; redundant problem_statement removed from page header
+  - 287 tests, 20 suites, zero TS errors
+
 ### Next up
 
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app (unblocks `high_wau_red_tier` cron check)
@@ -128,4 +157,4 @@ Last updated: 2026-03-31 (session 5)
 - [ ] `middleware.ts` uses deprecated convention — Next.js 16 recommends `proxy` instead
 - [ ] Consider extracting `uses_api_keys` field in Security section to use TristateField (currently inline for conditional input handling)
 - [ ] Scale icon in TristateField is PII-specific — consider making it a prop for generic use
-- [ ] 29 pre-existing test failures in `app-profile-client`, `app-browse`, `registration-form` suites — unrelated to recent work, needs investigation
+- [ ] `uses_api_keys` field in Security section uses inline conditional rendering — consider extracting to TristateField with a prop for the conditional input

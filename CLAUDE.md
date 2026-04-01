@@ -4,7 +4,7 @@
 
 MVF Launchpad is an internal app registry and governance platform. Makers (employees who build internal tools with Lovable, Claude Code, etc.) register their tools here. Leadership gets governance visibility via dashboards. The platform uses a traffic-light tier system (Red/Amber/Green) and progressive registration.
 
-**Status (2026-03-31):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, automated risk flags (daily cron), governance flags UX, support & feedback form, backup owner management, UX/UI improvements, and app URL field shipped. 286 tests, 20 suites, zero TS errors.
+**Status (2026-04-01):** Live at https://mvf-launchpad.vercel.app — Phase 1 complete, Phase 2 in progress. Progressive registration, login page, theme toggle, animations, automated risk flags (daily cron), governance flags UX, support & feedback form, backup owner management, UX/UI improvements, app URL field, per-app icons, Brand Guidelines page, and UI polish batch shipped. 287 tests, 20 suites, zero TS errors.
 
 ## Documentation
 
