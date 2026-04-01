@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink } from 'lucide-react';
+import { useRef } from 'react';
+import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera, Loader2 } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
 import { AdminActions } from '@/components/admin-actions';
@@ -37,11 +38,15 @@ export function AppProfileClient({
   isCreator,
 }: AppProfileClientProps) {
   const router = useRouter();
+  const iconInputRef = useRef<HTMLInputElement>(null);
   const canEdit = isOwner || isAdmin;
   const canManageOwners = isCreator || isAdmin;
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [iconUrl, setIconUrl] = useState<string | null>(app.icon_url ?? null);
+  const [isUploadingIcon, setIsUploadingIcon] = useState(false);
+  const [iconUploadError, setIconUploadError] = useState<string | null>(null);
 
   // ── Owner management state ─────────────────────────────────
   const [owners, setOwners] = useState(initialOwners);
@@ -66,6 +71,30 @@ export function AppProfileClient({
   const [replacedToolName, setReplacedToolName] = useState(app.replaced_tool_name || '');
   const [replacedToolCost, setReplacedToolCost] = useState(app.replaced_tool_cost || '');
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  async function handleIconUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingIcon(true);
+    setIconUploadError(null);
+    try {
+      const form = new FormData();
+      form.append('file', file);
+      const res = await fetch(`/api/apps/${app.id}/icon`, { method: 'POST', body: form });
+      const data = await res.json();
+      if (!res.ok) {
+        setIconUploadError(data.error || 'Upload failed');
+        return;
+      }
+      setIconUrl(data.icon_url);
+    } catch {
+      setIconUploadError('Network error. Please try again.');
+    } finally {
+      setIsUploadingIcon(false);
+      // Reset input so the same file can be re-selected
+      if (iconInputRef.current) iconInputRef.current.value = '';
+    }
+  }
 
   async function handleAddOwner() {
     if (!ownerEmail.trim()) return;
@@ -226,6 +255,12 @@ export function AppProfileClient({
   const inputClass = 'w-full rounded-[6px] border bg-background px-4 h-[44px] text-[14px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50';
   const textareaClass = 'w-full rounded-[6px] border bg-background px-4 py-3 text-[14px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50 resize-none';
 
+  const placeholderBg: Record<string, string> = {
+    red: 'bg-red-500/10 text-red-600',
+    amber: 'bg-amber-500/10 text-amber-600',
+    green: 'bg-emerald-500/10 text-emerald-600',
+  };
+
   return (
     <div className="space-y-5 max-w-3xl">
       {/* Header — always read-only (name/status shown, tier via TierBadge) */}
@@ -252,6 +287,7 @@ export function AppProfileClient({
       {/* ── Section 1: Identity ────────────────────────────── */}
       <EditableSection
         title="Identity"
+        description="The app's name, what problem it solves, and where to access it."
         canEdit={canEdit}
         isEditing={editingSection === 'identity'}
         onEditStart={() => setEditingSection('identity')}
@@ -260,7 +296,19 @@ export function AppProfileClient({
         isSaving={isSaving}
         readContent={
           <div className="grid gap-3 sm:grid-cols-2">
-            <DetailItem label="App Name" value={app.name} />
+            <div className="sm:col-span-2 flex items-center gap-3">
+              {iconUrl ? (
+                <img src={iconUrl} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+              ) : (
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-[18px] font-semibold ${placeholderBg[app.tier]}`}>
+                  {app.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div>
+                <dt className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">App Name</dt>
+                <dd className="text-[13px]">{app.name}</dd>
+              </div>
+            </div>
             <DetailItem label="Problem Statement" value={app.problem_statement} span2 />
             {app.app_url && (
               <div className="space-y-0.5 sm:col-span-2">
@@ -283,6 +331,44 @@ export function AppProfileClient({
         }
       >
         <div className="space-y-3">
+          {/* Icon upload */}
+          <div className="space-y-1">
+            <p className="text-[13px] font-medium">App Icon</p>
+            <div className="flex items-center gap-3">
+              {iconUrl ? (
+                <img src={iconUrl} alt="" className="h-14 w-14 shrink-0 rounded-lg object-cover" />
+              ) : (
+                <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg text-[20px] font-semibold ${placeholderBg[app.tier]}`}>
+                  {name.charAt(0).toUpperCase() || '?'}
+                </div>
+              )}
+              <div className="space-y-1">
+                <button
+                  type="button"
+                  onClick={() => iconInputRef.current?.click()}
+                  disabled={isUploadingIcon}
+                  className="flex items-center gap-1.5 rounded-[6px] border border-input bg-background px-3 h-[36px] text-[13px] font-medium hover:border-mvf-purple/40 transition-colors duration-150 disabled:opacity-50"
+                >
+                  {isUploadingIcon ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Camera className="h-3.5 w-3.5" />
+                  )}
+                  {isUploadingIcon ? 'Uploading…' : iconUrl ? 'Change icon' : 'Upload icon'}
+                </button>
+                <p className="text-[11px] text-muted-foreground">SVG, PNG or JPG · max 2MB</p>
+                {iconUploadError && <p className="text-[12px] text-red-500">{iconUploadError}</p>}
+              </div>
+              <input
+                ref={iconInputRef}
+                type="file"
+                accept=".svg,.png,.jpg,.jpeg"
+                className="hidden"
+                onChange={handleIconUpload}
+              />
+            </div>
+          </div>
+
           <div className="space-y-1">
             <label htmlFor="edit-name" className="block text-[13px] font-medium">App Name</label>
             <input
@@ -327,6 +413,7 @@ export function AppProfileClient({
       {/* ── Section 2: Context ─────────────────────────────── */}
       <EditableSection
         title="Context"
+        description="How the app is categorised, who uses it, and its expected value."
         canEdit={canEdit}
         isEditing={editingSection === 'context'}
         onEditStart={() => setEditingSection('context')}
@@ -405,6 +492,7 @@ export function AppProfileClient({
       {/* ── Section 3: Data & Security ─────────────────────── */}
       <EditableSection
         title="Data & Security"
+        description="Whether the app handles sensitive data or connects to external services."
         canEdit={canEdit}
         isEditing={editingSection === 'security'}
         onEditStart={() => setEditingSection('security')}
@@ -478,6 +566,7 @@ export function AppProfileClient({
       {/* ── Section 4: Third-Party Replacement ─────────────── */}
       <EditableSection
         title="Third-Party Replacement"
+        description="Whether this app replaces an existing paid tool, and the cost it saves."
         canEdit={canEdit}
         isEditing={editingSection === 'thirdparty'}
         onEditStart={() => setEditingSection('thirdparty')}
