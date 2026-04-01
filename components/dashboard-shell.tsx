@@ -27,11 +27,14 @@ const navItems = [
   { href: '/', label: 'My Apps', icon: LayoutDashboard },
   { href: '/browse', label: 'App Library', icon: Search },
   { href: '/register', label: 'Register App', icon: PlusCircle },
-  { href: '/governance', label: 'Governance', icon: Shield, adminOnly: true },
   { href: '/brand-guidelines', label: 'Brand Guidelines', icon: Palette },
   { href: '/support', label: 'Support', icon: MessageSquare },
-  { href: '/support/admin', label: 'Support Inbox', icon: Inbox, adminOnly: true },
-  { href: '/prd', label: 'Roadmap [Admin]', icon: FileText, adminOnly: true },
+];
+
+const adminNavItems = [
+  { href: '/governance', label: 'Governance', icon: Shield },
+  { href: '/support/admin', label: 'Support Inbox', icon: Inbox },
+  { href: '/prd', label: 'Roadmap', icon: FileText },
 ];
 
 export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }: DashboardShellProps) {
@@ -47,27 +50,49 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
           </Link>
         </div>
 
-        <nav className="flex-1 px-2 space-y-0.5 pt-[10px]">
-          {navItems.map((item) => {
-            if ('adminOnly' in item && item.adminOnly && user.role !== 'admin') {
-              return null;
-            }
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] transition-colors duration-150 ${
-                  isActive
-                    ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
-                    : 'text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent'
-                }`}
-              >
-                <item.icon className={`h-[15px] w-[15px] ${isActive ? 'opacity-100' : 'opacity-60'}`} />
-                {item.label}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 px-2 pt-[10px] flex flex-col gap-4">
+          <div className="space-y-0.5">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] transition-colors duration-150 ${
+                    isActive
+                      ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
+                      : 'text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent'
+                  }`}
+                >
+                  <item.icon className={`h-[15px] w-[15px] ${isActive ? 'opacity-100' : 'opacity-60'}`} />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          {user.role === 'admin' && (
+            <div className="space-y-0.5">
+              <p className="px-2.5 mb-1 text-[11px] font-medium text-sidebar-foreground/30 uppercase tracking-wider">Admin</p>
+              {adminNavItems.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-2.5 rounded-[6px] px-2.5 h-8 text-[13px] transition-colors duration-150 ${
+                      isActive
+                        ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
+                        : 'text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent'
+                    }`}
+                  >
+                    <item.icon className={`h-[15px] w-[15px] ${isActive ? 'opacity-100' : 'opacity-60'}`} />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </nav>
 
         {/* Action Required */}
