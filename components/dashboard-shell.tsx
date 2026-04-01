@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, PlusCircle, Search, Shield, LogOut, AlertTriangle, FileText, MessageSquare, Inbox } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Search, Shield, LogOut, AlertTriangle, FileText, MessageSquare, Inbox, Palette } from 'lucide-react';
 import { CapacityIndicator } from '@/components/capacity-indicator';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { PulseBadge } from '@/components/pulse-badge';
@@ -28,6 +28,7 @@ const navItems = [
   { href: '/browse', label: 'App Library', icon: Search },
   { href: '/register', label: 'Register App', icon: PlusCircle },
   { href: '/governance', label: 'Governance', icon: Shield, adminOnly: true },
+  { href: '/brand-guidelines', label: 'Brand Guidelines', icon: Palette },
   { href: '/support', label: 'Support', icon: MessageSquare },
   { href: '/support/admin', label: 'Support Inbox', icon: Inbox, adminOnly: true },
   { href: '/prd', label: 'Roadmap [Admin]', icon: FileText, adminOnly: true },

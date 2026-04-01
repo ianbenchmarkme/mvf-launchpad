@@ -16,9 +16,13 @@
    Tailwind v4's dark: media-query compilation, which overrides next-themes class toggle) ── */
 :root {
   --logo-filter: none;
+  --wip-badge-bg: color-mix(in srgb, #f59e0b 12%, transparent);
+  --wip-badge-border: color-mix(in srgb, #f59e0b 25%, transparent);
+  --wip-badge-text: #92400e;
 }
 .dark {
   --logo-filter: brightness(0) invert(1);
+  --wip-badge-text: #fcd34d;
 }
 
 /* ── Light theme ─────────────────────────────────────────── */
