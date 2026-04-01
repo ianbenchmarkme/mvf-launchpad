@@ -803,9 +803,9 @@ export function AppProfileClient({
           {canManageOwners && !isEditingOwners && (
             <button
               onClick={() => { setIsEditingOwners(true); setOwnerAddError(null); }}
-              className="flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-foreground transition-colors duration-150"
+              className="flex items-center gap-1.5 rounded px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-150"
             >
-              <Pencil className="h-3 w-3" />
+              <Pencil className="h-3.5 w-3.5" />
               Manage
             </button>
           )}
