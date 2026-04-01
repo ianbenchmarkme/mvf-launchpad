@@ -95,9 +95,10 @@ describe('AppProfileClient', () => {
     expect(screen.getAllByText('AI-powered marketing creative tools').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('renders all four section titles', () => {
+  it('renders all five section titles', () => {
     render(<AppProfileClient {...defaultProps} />);
     expect(screen.getByText('Identity')).toBeInTheDocument();
+    expect(screen.getByText('Problem Statement')).toBeInTheDocument();
     expect(screen.getByText('Context')).toBeInTheDocument();
     expect(screen.getByText('Data & Security')).toBeInTheDocument();
     expect(screen.getByText('Third-Party Replacement')).toBeInTheDocument();
@@ -106,7 +107,7 @@ describe('AppProfileClient', () => {
   it('shows Edit buttons when user is owner', () => {
     render(<AppProfileClient {...defaultProps} isOwner={true} />);
     const editButtons = screen.getAllByText('Edit');
-    expect(editButtons.length).toBe(4);
+    expect(editButtons.length).toBe(5);
   });
 
   it('hides Edit buttons when user is not owner and not admin', () => {
@@ -117,7 +118,7 @@ describe('AppProfileClient', () => {
   it('shows Edit buttons when user is admin (even if not owner)', () => {
     render(<AppProfileClient {...defaultProps} isOwner={false} isAdmin={true} />);
     const editButtons = screen.getAllByText('Edit');
-    expect(editButtons.length).toBe(4);
+    expect(editButtons.length).toBe(5);
   });
 
   it('shows admin controls only for admins', () => {
@@ -135,8 +136,16 @@ describe('AppProfileClient', () => {
     // Should show Save and Cancel
     expect(screen.getByText('Save')).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
-    // Should show input fields
+    // Should show name input but NOT problem statement (that's in its own section now)
     expect(screen.getByLabelText('App Name')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Problem Statement')).not.toBeInTheDocument();
+  });
+
+  it('enters edit mode when Edit is clicked on Problem Statement section', () => {
+    render(<AppProfileClient {...defaultProps} />);
+    const editButtons = screen.getAllByText('Edit');
+    fireEvent.click(editButtons[1]); // Problem Statement section
+    expect(screen.getByText('Save')).toBeInTheDocument();
     expect(screen.getByLabelText('Problem Statement')).toBeInTheDocument();
   });
 
@@ -144,8 +153,7 @@ describe('AppProfileClient', () => {
     render(<AppProfileClient {...defaultProps} />);
     const editButtons = screen.getAllByText('Edit');
     fireEvent.click(editButtons[0]); // Edit Identity
-    // Other Edit buttons should disappear (only 0 remain since Identity is in edit mode)
-    expect(screen.queryAllByText('Edit')).toHaveLength(3); // 3 remaining sections still show Edit
+    expect(screen.queryAllByText('Edit')).toHaveLength(4); // 4 remaining sections still show Edit
   });
 
   it('cancels editing and restores original values', () => {
@@ -163,8 +171,8 @@ describe('AppProfileClient', () => {
 
     // Should exit edit mode
     expect(screen.queryByText('Save')).not.toBeInTheDocument();
-    // All 4 Edit buttons should be back
-    expect(screen.getAllByText('Edit')).toHaveLength(4);
+    // All 5 Edit buttons should be back
+    expect(screen.getAllByText('Edit')).toHaveLength(5);
   });
 
   it('validates Identity section — rejects short name', () => {
@@ -178,9 +186,9 @@ describe('AppProfileClient', () => {
     expect(screen.getByText('App name must be at least 2 characters')).toBeInTheDocument();
   });
 
-  it('validates Identity section — rejects short problem statement', () => {
+  it('validates Problem Statement section — rejects short problem statement', () => {
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[0]);
+    fireEvent.click(screen.getAllByText('Edit')[1]); // Problem Statement section
 
     const psInput = screen.getByLabelText('Problem Statement');
     fireEvent.change(psInput, { target: { value: 'Short' } });
@@ -232,10 +240,10 @@ describe('AppProfileClient', () => {
       );
     });
 
-    // Verify payload
+    // Verify payload — identity no longer includes problem_statement
     const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
     expect(callBody.name).toBe('Updated Name');
-    expect(callBody.problem_statement).toBe('AI-powered marketing creative tools');
+    expect(callBody).not.toHaveProperty('problem_statement');
 
     await waitFor(() => {
       expect(mockRefresh).toHaveBeenCalled();
@@ -266,8 +274,8 @@ describe('AppProfileClient', () => {
     global.fetch = mockFetch;
 
     render(<AppProfileClient {...defaultProps} app={appWithRoi} />);
-    // Click Edit on Context section (index 1)
-    fireEvent.click(screen.getAllByText('Edit')[1]);
+    // Click Edit on Context section (index 2, after Identity and Problem Statement)
+    fireEvent.click(screen.getAllByText('Edit')[2]);
 
     // Clear the ROI field
     const roiInput = screen.getByLabelText(/Potential ROI/);
@@ -294,7 +302,7 @@ describe('AppProfileClient', () => {
     global.fetch = mockFetch;
 
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[1]); // Context section
+    fireEvent.click(screen.getAllByText('Edit')[2]); // Context section (index 2)
     fireEvent.click(screen.getByText('Save'));
 
     await waitFor(() => {

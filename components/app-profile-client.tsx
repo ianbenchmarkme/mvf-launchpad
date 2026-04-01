@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera, Fingerprint, LayoutGrid, ShieldCheck } from 'lucide-react';
+import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera, Fingerprint, MessageSquare, Tag, ShieldCheck } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
 import { AdminActions } from '@/components/admin-actions';
@@ -17,7 +17,7 @@ import {
 } from '@/lib/field-options';
 import type { App, AppOwner, Profile, RiskFlag } from '@/lib/supabase/types';
 
-type EditingSection = 'identity' | 'context' | 'security' | 'thirdparty' | null;
+type EditingSection = 'identity' | 'purpose' | 'context' | 'security' | 'thirdparty' | null;
 
 interface AppProfileClientProps {
   app: App;
@@ -146,9 +146,10 @@ export function AppProfileClient({
   function resetSection(section: EditingSection) {
     setErrors({});
     setSaveError(null);
-    if (section === 'identity') {
-      setName(app.name);
+    if (section === 'purpose') {
       setProblemStatement(app.problem_statement);
+    } else if (section === 'identity') {
+      setName(app.name);
       setAppUrl(app.app_url || '');
       // Revert any pending icon selection
       if (previewIconUrl) URL.revokeObjectURL(previewIconUrl);
@@ -178,8 +179,10 @@ export function AppProfileClient({
 
   function getSectionPayload(section: EditingSection): Record<string, unknown> {
     switch (section) {
+      case 'purpose':
+        return { problem_statement: problemStatement };
       case 'identity':
-        return { name, problem_statement: problemStatement, app_url: appUrl || null };
+        return { name, app_url: appUrl || null };
       case 'context':
         return { category: category || null, target_users: targetUsers, potential_roi: potentialRoi || null };
       case 'security':
@@ -203,9 +206,10 @@ export function AppProfileClient({
   function validateSection(section: EditingSection): boolean {
     const sectionErrors: Record<string, string> = {};
 
-    if (section === 'identity') {
-      if (!name || name.length < 2) sectionErrors.name = 'App name must be at least 2 characters';
+    if (section === 'purpose') {
       if (!problemStatement || problemStatement.length < 10) sectionErrors.problem_statement = 'Problem statement must be at least 10 characters';
+    } else if (section === 'identity') {
+      if (!name || name.length < 2) sectionErrors.name = 'App name must be at least 2 characters';
       if (appUrl.trim() && !/^https?:\/\/.+/.test(appUrl.trim())) sectionErrors.app_url = 'URL must start with http:// or https://';
     } else if (section === 'context') {
       if (!targetUsers) sectionErrors.target_users = 'Please select target users';
@@ -414,7 +418,7 @@ export function AppProfileClient({
       {/* ── Section 1: Identity ────────────────────────────── */}
       <EditableSection
         title="Identity"
-        description="The app's name, what problem it solves, and where to access it."
+        description="The app's name, icon, and where to access it."
         icon={Fingerprint}
         iconColor="#FF00A5"
         canEdit={canEdit}
@@ -438,7 +442,6 @@ export function AppProfileClient({
                 <dd className="text-[13px]">{app.name}</dd>
               </div>
             </div>
-            <DetailItem label="Problem Statement" value={app.problem_statement} span2 />
           </div>
         }
       >
@@ -494,17 +497,6 @@ export function AppProfileClient({
             {errors.name && <p className="text-[13px] text-red-500">{errors.name}</p>}
           </div>
           <div className="space-y-1">
-            <label htmlFor="edit-problem" className="block text-[13px] font-medium">Problem Statement</label>
-            <textarea
-              id="edit-problem"
-              value={problemStatement}
-              onChange={(e) => setProblemStatement(e.target.value)}
-              rows={4}
-              className={textareaClass}
-            />
-            {errors.problem_statement && <p className="text-[13px] text-red-500">{errors.problem_statement}</p>}
-          </div>
-          <div className="space-y-1">
             <label htmlFor="edit-app-url" className="block text-[13px] font-medium">
               Where can people access it? <span className="text-muted-foreground font-normal">(optional)</span>
             </label>
@@ -524,12 +516,43 @@ export function AppProfileClient({
         </div>
       </EditableSection>
 
-      {/* ── Section 2: Context ─────────────────────────────── */}
+      {/* ── Section 2: Problem Statement ───────────────────── */}
+      <EditableSection
+        title="Problem Statement"
+        description="What problem does this app solve, and for whom?"
+        icon={MessageSquare}
+        iconColor="#FF5A41"
+        canEdit={canEdit}
+        isEditing={editingSection === 'purpose'}
+        onEditStart={() => { handleUrlCancel(); setEditingSection('purpose'); }}
+        onCancel={handleCancel}
+        onSave={handleSave}
+        isSaving={isSaving}
+        readContent={
+          <p className="text-[13px] leading-[1.7] text-muted-foreground">
+            {app.problem_statement}
+          </p>
+        }
+      >
+        <div className="space-y-1">
+          <label htmlFor="edit-problem" className="block text-[13px] font-medium">Problem Statement</label>
+          <textarea
+            id="edit-problem"
+            value={problemStatement}
+            onChange={(e) => setProblemStatement(e.target.value)}
+            rows={5}
+            className={textareaClass}
+          />
+          {errors.problem_statement && <p className="text-[13px] text-red-500">{errors.problem_statement}</p>}
+        </div>
+      </EditableSection>
+
+      {/* ── Section 3: Context ─────────────────────────────── */}
       <EditableSection
         title="Context"
         description="How the app is categorised, who uses it, and its expected value."
-        icon={LayoutGrid}
-        iconColor="#FF5A41"
+        icon={Tag}
+        iconColor="#FADC28"
         canEdit={canEdit}
         isEditing={editingSection === 'context'}
         onEditStart={() => { handleUrlCancel(); setEditingSection('context'); }}
