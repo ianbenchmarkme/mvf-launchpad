@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera } from 'lucide-react';
+import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera, Fingerprint, LayoutGrid, ShieldCheck } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
 import { AdminActions } from '@/components/admin-actions';
@@ -415,6 +415,8 @@ export function AppProfileClient({
       <EditableSection
         title="Identity"
         description="The app's name, what problem it solves, and where to access it."
+        icon={Fingerprint}
+        iconColor="#FF00A5"
         canEdit={canEdit}
         isEditing={editingSection === 'identity'}
         onEditStart={() => { handleUrlCancel(); setEditingSection('identity'); }}
@@ -526,6 +528,8 @@ export function AppProfileClient({
       <EditableSection
         title="Context"
         description="How the app is categorised, who uses it, and its expected value."
+        icon={LayoutGrid}
+        iconColor="#FF5A41"
         canEdit={canEdit}
         isEditing={editingSection === 'context'}
         onEditStart={() => { handleUrlCancel(); setEditingSection('context'); }}
@@ -605,6 +609,8 @@ export function AppProfileClient({
       <EditableSection
         title="Data & Security"
         description="Whether the app handles sensitive data or connects to external services."
+        icon={ShieldCheck}
+        iconColor="#10b981"
         canEdit={canEdit}
         isEditing={editingSection === 'security'}
         onEditStart={() => { handleUrlCancel(); setEditingSection('security'); }}
@@ -679,6 +685,8 @@ export function AppProfileClient({
       <EditableSection
         title="Third-Party Replacement"
         description="Whether this app replaces an existing paid tool, and the cost it saves."
+        icon={Replace}
+        iconColor="#8264C8"
         canEdit={canEdit}
         isEditing={editingSection === 'thirdparty'}
         onEditStart={() => { handleUrlCancel(); setEditingSection('thirdparty'); }}
