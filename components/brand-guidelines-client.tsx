@@ -55,10 +55,10 @@ function ColourSwatch({ name, hex, cssVar, usage }: { name: string; hex: string;
   return (
     <button
       onClick={handleCopy}
-      className="text-left group rounded-lg overflow-hidden border border-border hover:border-[var(--mvf-purple)] transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+      className="text-left group rounded-lg overflow-hidden border border-border hover:border-[var(--mvf-purple)] transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] flex flex-col"
       title={`Copy ${hex}`}
     >
-      <div className="h-16 w-full" style={{ backgroundColor: hex }} />
+      <div className="h-16 w-full shrink-0" style={{ backgroundColor: hex }} />
       <div className="px-3 py-2 bg-card flex flex-col min-h-[84px]">
         <div className="flex items-center justify-between gap-1">
           <p className="text-[13px] font-medium text-foreground truncate">{name}</p>
