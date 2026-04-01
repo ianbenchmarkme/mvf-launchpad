@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { Search, Filter, PlusCircle } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { AppCard } from '@/components/app-card';
 import { TIER_LABELS } from '@/lib/constants';
@@ -122,20 +121,6 @@ export function AppBrowse({ apps }: AppBrowseProps) {
         </div>
       )}
 
-      {/* Register nudge */}
-      <div className="flex items-center justify-between rounded-[8px] border border-dashed px-5 py-4">
-        <div>
-          <p className="text-[13px] font-medium text-card-foreground">Can&apos;t find what you need?</p>
-          <p className="text-[12px] text-muted-foreground mt-0.5">Register a new tool to make it discoverable for your team.</p>
-        </div>
-        <Link
-          href="/register"
-          className="shrink-0 flex items-center gap-1.5 rounded-[6px] bg-mvf-pink px-3 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150"
-        >
-          <PlusCircle className="h-3.5 w-3.5" />
-          Register App
-        </Link>
-      </div>
     </div>
   );
 }
