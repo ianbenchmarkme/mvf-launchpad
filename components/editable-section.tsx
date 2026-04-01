@@ -7,6 +7,7 @@ const EASE = [0.25, 0.1, 0.25, 1] as const;
 
 interface EditableSectionProps {
   title: string;
+  description?: string;
   canEdit: boolean;
   isEditing: boolean;
   onEditStart: () => void;
@@ -19,6 +20,7 @@ interface EditableSectionProps {
 
 export function EditableSection({
   title,
+  description,
   canEdit,
   isEditing,
   onEditStart,
@@ -30,8 +32,13 @@ export function EditableSection({
 }: EditableSectionProps) {
   return (
     <section className="rounded-lg border bg-card p-5 card-shadow">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[15px] font-semibold tracking-tight">{title}</h3>
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h3 className="text-[15px] font-semibold tracking-tight">{title}</h3>
+          {description && (
+            <p className="text-[12px] text-muted-foreground mt-0.5">{description}</p>
+          )}
+        </div>
         <AnimatePresence>
           {canEdit && !isEditing && (
             <motion.button

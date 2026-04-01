@@ -15,6 +15,12 @@ const accentColor: Record<AppTier, string> = {
   green: 'bg-emerald-500',
 };
 
+const placeholderBg: Record<AppTier, string> = {
+  red: 'bg-red-500/10 text-red-600',
+  amber: 'bg-amber-500/10 text-amber-600',
+  green: 'bg-emerald-500/10 text-emerald-600',
+};
+
 interface AppCardProps {
   app: App;
   index?: number;
@@ -38,11 +44,25 @@ export function AppCard({ app, index = 0 }: AppCardProps) {
         {/* Left accent stripe */}
         <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${accentColor[app.tier]} opacity-60 group-hover:opacity-100 transition-opacity duration-150`} />
 
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="text-[13px] font-semibold text-card-foreground group-hover:text-mvf-purple transition-colors duration-150">
-            {app.name}
-          </h3>
-          <TierBadge tier={app.tier} className="shrink-0" />
+        <div className="flex items-start gap-3">
+          {/* App icon or letter placeholder */}
+          {app.icon_url ? (
+            <img
+              src={app.icon_url}
+              alt=""
+              className="h-9 w-9 shrink-0 rounded-[6px] object-cover"
+            />
+          ) : (
+            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] text-[15px] font-semibold ${placeholderBg[app.tier]}`}>
+              {app.name.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div className="flex flex-1 items-start justify-between gap-2 min-w-0">
+            <h3 className="text-[13px] font-semibold text-card-foreground group-hover:text-mvf-purple transition-colors duration-150 leading-[1.4]">
+              {app.name}
+            </h3>
+            <TierBadge tier={app.tier} className="shrink-0" />
+          </div>
         </div>
         <p className="mt-2 text-[12px] leading-[1.6] text-muted-foreground line-clamp-4 flex-1">
           {app.problem_statement}
