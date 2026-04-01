@@ -86,7 +86,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
                         : 'text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                     }`}
                   >
-                    <item.icon className="h-[15px] w-[15px] shrink-0" style={{ color: 'var(--mvf-light-blue)' }} />
+                    <item.icon className="h-[15px] w-[15px] shrink-0" style={{ color: 'var(--mvf-yellow)' }} />
                     {item.label}
                   </Link>
                 );
@@ -99,8 +99,8 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
         {unresolvedFlags.length > 0 && (
           <div className="shrink-0 border-t border-sidebar-border px-3 py-3">
             <div className="flex items-center gap-1.5 mb-2">
-              <AlertTriangle className="h-3 w-3 text-amber-400" />
-              <p className="text-[11px] font-medium text-amber-400">
+              <AlertTriangle className="h-3 w-3" style={{ color: 'var(--mvf-orange)' }} />
+              <p className="text-[11px] font-medium" style={{ color: 'var(--mvf-orange)' }}>
                 Action Required <PulseBadge count={unresolvedFlags.length} />
               </p>
             </div>
