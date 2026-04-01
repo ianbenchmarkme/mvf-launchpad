@@ -57,6 +57,8 @@ export function AppProfileClient({
   const [urlDraft, setUrlDraft] = useState(app.app_url || '');
   const [isSavingUrl, setIsSavingUrl] = useState(false);
   const [urlSaveError, setUrlSaveError] = useState<string | null>(null);
+  // Tracks the last successfully saved URL so Cancel reverts to it, not the stale prop
+  const savedUrlRef = useRef(app.app_url || '');
 
   // ── Owner management state ─────────────────────────────────
   const [owners, setOwners] = useState(initialOwners);
@@ -265,6 +267,11 @@ export function AppProfileClient({
         return;
       }
 
+      // Keep urlDraft and savedUrlRef in sync if Identity section updated appUrl
+      if (editingSection === 'identity') {
+        savedUrlRef.current = appUrl;
+        setUrlDraft(appUrl);
+      }
       setEditingSection(null);
       setErrors({});
       router.refresh();
@@ -294,6 +301,8 @@ export function AppProfileClient({
         setUrlSaveError(data.error || 'Failed to save URL');
         return;
       }
+      savedUrlRef.current = trimmed;
+      setAppUrl(trimmed);
       setIsEditingUrl(false);
       setUrlSaveError(null);
       router.refresh();
@@ -305,7 +314,7 @@ export function AppProfileClient({
   }
 
   function handleUrlCancel() {
-    setUrlDraft(app.app_url || '');
+    setUrlDraft(savedUrlRef.current);
     setIsEditingUrl(false);
     setUrlSaveError(null);
   }
@@ -631,7 +640,7 @@ export function AppProfileClient({
         </div>
       </EditableSection>
 
-      {/* ── Section 3: Data & Security ─────────────────────── */}
+      {/* ── Section 4: Data & Security ─────────────────────── */}
       <EditableSection
         title="Data & Security"
         description="Whether the app handles sensitive data or connects to external services."
@@ -707,7 +716,7 @@ export function AppProfileClient({
         </div>
       </EditableSection>
 
-      {/* ── Section 4: Third-Party Replacement ─────────────── */}
+      {/* ── Section 5: Third-Party Replacement ─────────────── */}
       <EditableSection
         title="Third-Party Replacement"
         description="Whether this app replaces an existing paid tool, and the cost it saves."
