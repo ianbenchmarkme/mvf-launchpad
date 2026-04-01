@@ -64,7 +64,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
                       : 'text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                   }`}
                 >
-                  <item.icon className={`h-[15px] w-[15px] ${isActive ? 'opacity-100' : 'opacity-60'}`} />
+                  <item.icon className="h-[15px] w-[15px] shrink-0" style={{ color: 'var(--mvf-light-blue)' }} />
                   {item.label}
                 </Link>
               );
@@ -86,7 +86,7 @@ export function DashboardShell({ user, capacityUsed, unresolvedFlags, children }
                         : 'text-sidebar-foreground/75 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                     }`}
                   >
-                    <item.icon className={`h-[15px] w-[15px] ${isActive ? 'opacity-100' : 'opacity-60'}`} />
+                    <item.icon className="h-[15px] w-[15px] shrink-0" style={{ color: 'var(--mvf-light-blue)' }} />
                     {item.label}
                   </Link>
                 );
