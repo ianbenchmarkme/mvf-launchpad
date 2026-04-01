@@ -212,7 +212,6 @@ export function AppProfileClient({
       if (!problemStatement || problemStatement.length < 10) sectionErrors.problem_statement = 'Problem statement must be at least 10 characters';
     } else if (section === 'identity') {
       if (!name || name.length < 2) sectionErrors.name = 'App name must be at least 2 characters';
-      if (appUrl.trim() && !/^https?:\/\/.+/.test(appUrl.trim())) sectionErrors.app_url = 'URL must start with http:// or https://';
     } else if (section === 'context') {
       if (!targetUsers) sectionErrors.target_users = 'Please select target users';
     } else if (section === 'security') {
@@ -284,10 +283,6 @@ export function AppProfileClient({
 
   async function handleUrlSave() {
     const trimmed = urlDraft.trim();
-    if (trimmed && !/^https?:\/\/.+/.test(trimmed)) {
-      setUrlSaveError('URL must start with http:// or https://');
-      return;
-    }
     setIsSavingUrl(true);
     setUrlSaveError(null);
     try {
@@ -404,7 +399,7 @@ export function AppProfileClient({
         ) : (
           app.app_url ? (
             <a
-              href={app.app_url}
+              href={/^https?:\/\/.+/.test(app.app_url) ? app.app_url : '#'}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-[13px] text-mvf-purple hover:underline"

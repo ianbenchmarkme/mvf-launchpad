@@ -17,7 +17,9 @@ const baseAppFields = z.object({
   handles_pii: tristate.optional().default('unsure'),
   uses_api_keys: tristate.optional().default('unsure'),
   api_key_services: z.string().optional().default(''),
-  app_url: z.string().optional().nullable().transform(v => v || null),
+  app_url: z.string().optional().nullable()
+    .refine(v => !v || /^https?:\/\/.+/.test(v), { message: 'URL must start with http:// or https://' })
+    .transform(v => v || null),
   replaces_third_party: z.boolean().optional().default(false),
   replaced_tool_name: z.string().optional().default(''),
   replaced_tool_cost: z.string().optional().default(''),
