@@ -127,7 +127,7 @@ Last updated: 2026-04-01 (session 6)
 
 ### Next up
 
-- [ ] **Roles & permissions via Google Workspace** — derive user roles (maker/admin/viewer) from Google Workspace groups or directory attributes at sign-in, rather than manually managing roles in the database
+- [ ] **Roles & permissions via Google Groups** — derive user roles (maker/admin/viewer) from Google Group membership at sign-in, rather than manually managing roles in the database
 
 - [ ] **Amplitude integration** — usage analytics, WAU tracking per app (unblocks `high_wau_red_tier` cron check)
 - [ ] **Slack notifications** — alert admins on new registrations, flag escalations, tier change requests
