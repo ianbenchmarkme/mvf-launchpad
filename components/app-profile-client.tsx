@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
-import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera, Loader2 } from 'lucide-react';
+import { Database, KeyRound, Scale, Replace, UserPlus, X, Pencil, Link2, ExternalLink, Camera } from 'lucide-react';
 import { TierBadge } from '@/components/tier-badge';
 import { DeleteAppButton } from '@/components/delete-app-button';
 import { AdminActions } from '@/components/admin-actions';
@@ -44,8 +43,13 @@ export function AppProfileClient({
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [iconUrl, setIconUrl] = useState<string | null>(app.icon_url ?? null);
-  const [isUploadingIcon, setIsUploadingIcon] = useState(false);
+  // ── Icon state ─────────────────────────────────────────────
+  // savedIconUrl: what's persisted in DB (used to revert on Cancel)
+  // pendingIconFile: file selected but not yet uploaded (deferred until Save)
+  // previewIconUrl: blob URL for in-editor preview of pending file
+  const [savedIconUrl, setSavedIconUrl] = useState<string | null>(app.icon_url ?? null);
+  const [pendingIconFile, setPendingIconFile] = useState<File | null>(null);
+  const [previewIconUrl, setPreviewIconUrl] = useState<string | null>(null);
   const [iconUploadError, setIconUploadError] = useState<string | null>(null);
 
   // ── Owner management state ─────────────────────────────────
@@ -72,28 +76,15 @@ export function AppProfileClient({
   const [replacedToolCost, setReplacedToolCost] = useState(app.replaced_tool_cost || '');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  async function handleIconUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleIconSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setIsUploadingIcon(true);
     setIconUploadError(null);
-    try {
-      const form = new FormData();
-      form.append('file', file);
-      const res = await fetch(`/api/apps/${app.id}/icon`, { method: 'POST', body: form });
-      const data = await res.json();
-      if (!res.ok) {
-        setIconUploadError(data.error || 'Upload failed');
-        return;
-      }
-      setIconUrl(data.icon_url);
-    } catch {
-      setIconUploadError('Network error. Please try again.');
-    } finally {
-      setIsUploadingIcon(false);
-      // Reset input so the same file can be re-selected
-      if (iconInputRef.current) iconInputRef.current.value = '';
-    }
+    // Revoke previous blob URL to avoid memory leaks
+    if (previewIconUrl) URL.revokeObjectURL(previewIconUrl);
+    setPendingIconFile(file);
+    setPreviewIconUrl(URL.createObjectURL(file));
+    if (iconInputRef.current) iconInputRef.current.value = '';
   }
 
   async function handleAddOwner() {
@@ -153,6 +144,11 @@ export function AppProfileClient({
       setName(app.name);
       setProblemStatement(app.problem_statement);
       setAppUrl(app.app_url || '');
+      // Revert any pending icon selection
+      if (previewIconUrl) URL.revokeObjectURL(previewIconUrl);
+      setPendingIconFile(null);
+      setPreviewIconUrl(null);
+      setIconUploadError(null);
     } else if (section === 'context') {
       setCategory(app.category ?? null);
       setTargetUsers(app.target_users);
@@ -228,6 +224,23 @@ export function AppProfileClient({
     setSaveError(null);
 
     try {
+      // Upload pending icon first (Identity section only)
+      if (editingSection === 'identity' && pendingIconFile) {
+        const form = new FormData();
+        form.append('file', pendingIconFile);
+        const iconRes = await fetch(`/api/apps/${app.id}/icon`, { method: 'POST', body: form });
+        const iconData = await iconRes.json();
+        if (!iconRes.ok) {
+          setSaveError(iconData.error || 'Icon upload failed');
+          return;
+        }
+        // Revoke blob URL and commit the saved URL
+        if (previewIconUrl) URL.revokeObjectURL(previewIconUrl);
+        setSavedIconUrl(iconData.icon_url);
+        setPendingIconFile(null);
+        setPreviewIconUrl(null);
+      }
+
       const payload = getSectionPayload(editingSection);
       const res = await fetch(`/api/apps/${app.id}`, {
         method: 'PATCH',
@@ -297,8 +310,8 @@ export function AppProfileClient({
         readContent={
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="sm:col-span-2 flex items-center gap-3">
-              {iconUrl ? (
-                <img src={iconUrl} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+              {savedIconUrl ? (
+                <img src={savedIconUrl} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
               ) : (
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-[18px] font-semibold ${placeholderBg[app.tier]}`}>
                   {app.name.charAt(0).toUpperCase()}
@@ -331,12 +344,15 @@ export function AppProfileClient({
         }
       >
         <div className="space-y-3">
-          {/* Icon upload */}
+          {/* Icon — deferred until Save */}
           <div className="space-y-1">
             <p className="text-[13px] font-medium">App Icon</p>
             <div className="flex items-center gap-3">
-              {iconUrl ? (
-                <img src={iconUrl} alt="" className="h-14 w-14 shrink-0 rounded-lg object-cover" />
+              {/* Show blob preview if file is staged, otherwise the saved icon, otherwise placeholder */}
+              {previewIconUrl ? (
+                <img src={previewIconUrl} alt="" className="h-14 w-14 shrink-0 rounded-lg object-cover" />
+              ) : savedIconUrl ? (
+                <img src={savedIconUrl} alt="" className="h-14 w-14 shrink-0 rounded-lg object-cover" />
               ) : (
                 <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg text-[20px] font-semibold ${placeholderBg[app.tier]}`}>
                   {name.charAt(0).toUpperCase() || '?'}
@@ -346,17 +362,15 @@ export function AppProfileClient({
                 <button
                   type="button"
                   onClick={() => iconInputRef.current?.click()}
-                  disabled={isUploadingIcon}
-                  className="flex items-center gap-1.5 rounded-[6px] border border-input bg-background px-3 h-[36px] text-[13px] font-medium hover:border-mvf-purple/40 transition-colors duration-150 disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-[6px] border border-input bg-background px-3 h-[36px] text-[13px] font-medium hover:border-mvf-purple/40 transition-colors duration-150"
                 >
-                  {isUploadingIcon ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Camera className="h-3.5 w-3.5" />
-                  )}
-                  {isUploadingIcon ? 'Uploading…' : iconUrl ? 'Change icon' : 'Upload icon'}
+                  <Camera className="h-3.5 w-3.5" />
+                  {(savedIconUrl || previewIconUrl) ? 'Change icon' : 'Upload icon'}
                 </button>
-                <p className="text-[11px] text-muted-foreground">SVG, PNG or JPG · max 2MB</p>
+                <p className="text-[11px] text-muted-foreground">
+                  SVG, PNG or JPG · max 2MB
+                  {pendingIconFile && <span className="text-mvf-purple ml-1">· will upload on Save</span>}
+                </p>
                 {iconUploadError && <p className="text-[12px] text-red-500">{iconUploadError}</p>}
               </div>
               <input
@@ -364,7 +378,7 @@ export function AppProfileClient({
                 type="file"
                 accept=".svg,.png,.jpg,.jpeg"
                 className="hidden"
-                onChange={handleIconUpload}
+                onChange={handleIconSelect}
               />
             </div>
           </div>

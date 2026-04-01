@@ -88,23 +88,22 @@ export async function POST(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: uploadError.message }, { status: 500 });
   }
 
-  // Get public URL
+  // Get public URL (stored clean, without cache-buster)
   const { data: { publicUrl } } = serviceClient.storage
     .from('app-icons')
     .getPublicUrl(storagePath);
 
-  // Bust cache by appending a timestamp query param
-  const iconUrl = `${publicUrl}?t=${Date.now()}`;
-
-  // Persist icon_url on the app row
+  // Persist the clean URL in the database
   const { error: updateError } = await supabase
     .from('apps')
-    .update({ icon_url: iconUrl })
+    .update({ icon_url: publicUrl })
     .eq('id', id);
 
   if (updateError) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
-  return NextResponse.json({ icon_url: iconUrl });
+  // Return URL with a cache-bust param so the browser shows the new icon immediately.
+  // This is only used client-side for the live preview; the DB holds the clean URL.
+  return NextResponse.json({ icon_url: `${publicUrl}?t=${Date.now()}` });
 }

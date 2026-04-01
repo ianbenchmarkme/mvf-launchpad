@@ -7,17 +7,9 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('app-icons', 'app-icons', true)
 ON CONFLICT (id) DO NOTHING;
 
--- RLS: authenticated users can upload icons
-CREATE POLICY "Authenticated users can upload app icons"
-ON storage.objects FOR INSERT
-TO authenticated
-WITH CHECK (bucket_id = 'app-icons');
-
--- RLS: authenticated users can replace existing icons
-CREATE POLICY "Authenticated users can update app icons"
-ON storage.objects FOR UPDATE
-TO authenticated
-USING (bucket_id = 'app-icons');
+-- RLS: only the service role (server-side API) writes icons.
+-- Client-side direct storage writes are intentionally blocked.
+-- The upload API route uses the service-role key and handles auth/ownership itself.
 
 -- RLS: public read access for displaying icons
 CREATE POLICY "Public can read app icons"
