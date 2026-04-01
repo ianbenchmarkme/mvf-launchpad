@@ -25,7 +25,7 @@ export function EditableSection({
   title,
   description,
   icon: Icon,
-  iconColor,
+  iconColor: _iconColor,
   canEdit,
   isEditing,
   onEditStart,
@@ -41,9 +41,7 @@ export function EditableSection({
         <div>
           <div className="flex items-center gap-2">
             {Icon && (
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[5px]" style={{ backgroundColor: iconColor ? `${iconColor}18` : undefined }}>
-                <Icon className="h-3.5 w-3.5" style={{ color: iconColor }} />
-              </div>
+              <Icon className="h-[15px] w-[15px] shrink-0" style={{ color: 'var(--mvf-pink)' }} />
             )}
             <h3 className="text-[15px] font-semibold tracking-tight">{title}</h3>
           </div>

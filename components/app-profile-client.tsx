@@ -797,9 +797,7 @@ export function AppProfileClient({
       <section className="rounded-lg border bg-card p-5 card-shadow">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[5px]" style={{ backgroundColor: '#00C8C818' }}>
-              <Users className="h-3.5 w-3.5" style={{ color: '#00C8C8' }} />
-            </div>
+            <Users className="h-[15px] w-[15px] shrink-0" style={{ color: 'var(--mvf-pink)' }} />
             <h3 className="text-[15px] font-semibold tracking-tight">Owners</h3>
           </div>
           {canManageOwners && !isEditingOwners && (
