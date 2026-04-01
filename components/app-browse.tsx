@@ -47,25 +47,9 @@ export function AppBrowse({ apps }: AppBrowseProps) {
 
   return (
     <div className="space-y-5">
-      {/* Search */}
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-[14px] w-[14px] text-muted-foreground" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search apps..."
-            className="w-full rounded-[6px] border bg-background pl-9 pr-3 h-8 text-[13px] outline-none focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 transition-all duration-150"
-          />
-        </div>
-        <span className="text-[12px] text-muted-foreground tabular-nums">
-          {filtered.length} {filtered.length === 1 ? 'app' : 'apps'}
-        </span>
-      </div>
-
-      {/* Filters */}
+      {/* Filters + Search */}
       <div className="flex flex-wrap items-center gap-4">
+        {/* Filters — left */}
         <div className="flex items-center gap-1.5">
           <Filter className="h-3 w-3 text-muted-foreground/50" />
           <div className="flex gap-0.5">
@@ -103,6 +87,23 @@ export function AppBrowse({ apps }: AppBrowseProps) {
               {f.label}
             </button>
           ))}
+        </div>
+
+        {/* Search — right */}
+        <div className="flex items-center gap-3 sm:ml-auto">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-[14px] w-[14px] text-muted-foreground" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search apps..."
+              className="w-48 rounded-[6px] border bg-background pl-9 pr-3 h-8 text-[13px] outline-none focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 focus:w-64 transition-all duration-150"
+            />
+          </div>
+          <span className="text-[12px] text-muted-foreground tabular-nums whitespace-nowrap">
+            {filtered.length} {filtered.length === 1 ? 'app' : 'apps'}
+          </span>
         </div>
       </div>
 
