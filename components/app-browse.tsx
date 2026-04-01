@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { Search, Filter, PlusCircle } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { AppCard } from '@/components/app-card';
 import { TIER_LABELS } from '@/lib/constants';
@@ -48,25 +47,9 @@ export function AppBrowse({ apps }: AppBrowseProps) {
 
   return (
     <div className="space-y-5">
-      {/* Search */}
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-[14px] w-[14px] text-muted-foreground" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search apps..."
-            className="w-full rounded-[6px] border bg-background pl-9 pr-3 h-8 text-[13px] outline-none focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 transition-all duration-150"
-          />
-        </div>
-        <span className="text-[12px] text-muted-foreground tabular-nums">
-          {filtered.length} {filtered.length === 1 ? 'app' : 'apps'}
-        </span>
-      </div>
-
-      {/* Filters */}
+      {/* Filters + Search */}
       <div className="flex flex-wrap items-center gap-4">
+        {/* Filters — left */}
         <div className="flex items-center gap-1.5">
           <Filter className="h-3 w-3 text-muted-foreground/50" />
           <div className="flex gap-0.5">
@@ -105,6 +88,23 @@ export function AppBrowse({ apps }: AppBrowseProps) {
             </button>
           ))}
         </div>
+
+        {/* Search — right */}
+        <div className="flex items-center gap-3 sm:ml-auto">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-[14px] w-[14px] text-muted-foreground" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search apps..."
+              className="w-48 rounded-[6px] border bg-background pl-9 pr-3 h-8 text-[13px] outline-none focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 focus:w-64 transition-all duration-150"
+            />
+          </div>
+          <span className="text-[12px] text-muted-foreground tabular-nums whitespace-nowrap">
+            {filtered.length} {filtered.length === 1 ? 'app' : 'apps'}
+          </span>
+        </div>
       </div>
 
       {/* Results */}
@@ -122,20 +122,6 @@ export function AppBrowse({ apps }: AppBrowseProps) {
         </div>
       )}
 
-      {/* Register nudge */}
-      <div className="flex items-center justify-between rounded-[8px] border border-dashed px-5 py-4">
-        <div>
-          <p className="text-[13px] font-medium text-card-foreground">Can&apos;t find what you need?</p>
-          <p className="text-[12px] text-muted-foreground mt-0.5">Register a new tool to make it discoverable for your team.</p>
-        </div>
-        <Link
-          href="/register"
-          className="shrink-0 flex items-center gap-1.5 rounded-[6px] bg-mvf-pink px-3 h-8 text-[13px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] transition-all duration-150"
-        >
-          <PlusCircle className="h-3.5 w-3.5" />
-          Register App
-        </Link>
-      </div>
     </div>
   );
 }

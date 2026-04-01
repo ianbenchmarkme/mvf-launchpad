@@ -64,7 +64,7 @@ export function AppCard({ app, index = 0 }: AppCardProps) {
               </h3>
               <TierBadge tier={app.tier} className="shrink-0" />
             </div>
-            <p className="mt-1 text-[12px] leading-[1.6] text-muted-foreground line-clamp-3">
+            <p className="mt-3 text-[12px] leading-[1.6] text-muted-foreground line-clamp-3">
               {app.problem_statement}
             </p>
           </div>

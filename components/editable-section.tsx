@@ -2,12 +2,15 @@
 
 import { Pencil } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { LucideIcon } from 'lucide-react';
 
 const EASE = [0.25, 0.1, 0.25, 1] as const;
 
 interface EditableSectionProps {
   title: string;
   description?: string;
+  icon?: LucideIcon;
+  iconColor?: string;
   canEdit: boolean;
   isEditing: boolean;
   onEditStart: () => void;
@@ -21,6 +24,8 @@ interface EditableSectionProps {
 export function EditableSection({
   title,
   description,
+  icon: Icon,
+  iconColor,
   canEdit,
   isEditing,
   onEditStart,
@@ -34,9 +39,14 @@ export function EditableSection({
     <section className="rounded-lg border bg-card p-5 card-shadow">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-[15px] font-semibold tracking-tight">{title}</h3>
+          <div className="flex items-center gap-2">
+            {Icon && (
+              <Icon className="h-[15px] w-[15px] shrink-0" style={{ color: iconColor ?? 'var(--mvf-pink)' }} />
+            )}
+            <h3 className="text-[15px] font-semibold tracking-tight">{title}</h3>
+          </div>
           {description && (
-            <p className="text-[12px] text-muted-foreground mt-0.5">{description}</p>
+            <p className="text-[12px] text-muted-foreground mt-1">{description}</p>
           )}
         </div>
         <AnimatePresence>
