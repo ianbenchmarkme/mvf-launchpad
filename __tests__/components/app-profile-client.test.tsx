@@ -107,7 +107,7 @@ describe('AppProfileClient', () => {
   it('shows Edit buttons when user is owner', () => {
     render(<AppProfileClient {...defaultProps} isOwner={true} />);
     const editButtons = screen.getAllByText('Edit');
-    expect(editButtons.length).toBe(5);
+    expect(editButtons.length).toBe(6); // URL + Identity + Problem Statement + Context + Data & Security + Third-Party
   });
 
   it('hides Edit buttons when user is not owner and not admin', () => {
@@ -118,7 +118,7 @@ describe('AppProfileClient', () => {
   it('shows Edit buttons when user is admin (even if not owner)', () => {
     render(<AppProfileClient {...defaultProps} isOwner={false} isAdmin={true} />);
     const editButtons = screen.getAllByText('Edit');
-    expect(editButtons.length).toBe(5);
+    expect(editButtons.length).toBe(6);
   });
 
   it('shows admin controls only for admins', () => {
@@ -130,13 +130,10 @@ describe('AppProfileClient', () => {
 
   it('enters edit mode when Edit is clicked on Identity section', () => {
     render(<AppProfileClient {...defaultProps} />);
-    // Click the first Edit button (Identity section)
     const editButtons = screen.getAllByText('Edit');
-    fireEvent.click(editButtons[0]);
-    // Should show Save and Cancel
+    fireEvent.click(editButtons[1]); // index 0 = URL, index 1 = Identity
     expect(screen.getByText('Save')).toBeInTheDocument();
     expect(screen.getByText('Cancel')).toBeInTheDocument();
-    // Should show name input but NOT problem statement (that's in its own section now)
     expect(screen.getByLabelText('App Name')).toBeInTheDocument();
     expect(screen.queryByLabelText('Problem Statement')).not.toBeInTheDocument();
   });
@@ -144,7 +141,7 @@ describe('AppProfileClient', () => {
   it('enters edit mode when Edit is clicked on Problem Statement section', () => {
     render(<AppProfileClient {...defaultProps} />);
     const editButtons = screen.getAllByText('Edit');
-    fireEvent.click(editButtons[1]); // Problem Statement section
+    fireEvent.click(editButtons[2]); // index 2 = Problem Statement
     expect(screen.getByText('Save')).toBeInTheDocument();
     expect(screen.getByLabelText('Problem Statement')).toBeInTheDocument();
   });
@@ -152,32 +149,28 @@ describe('AppProfileClient', () => {
   it('only allows one section to be edited at a time', () => {
     render(<AppProfileClient {...defaultProps} />);
     const editButtons = screen.getAllByText('Edit');
-    fireEvent.click(editButtons[0]); // Edit Identity
-    expect(screen.queryAllByText('Edit')).toHaveLength(4); // 4 remaining sections still show Edit
+    fireEvent.click(editButtons[1]); // Edit Identity
+    expect(screen.queryAllByText('Edit')).toHaveLength(4); // URL hidden too (guarded by editingSection===null)
   });
 
   it('cancels editing and restores original values', () => {
     render(<AppProfileClient {...defaultProps} />);
     const editButtons = screen.getAllByText('Edit');
-    fireEvent.click(editButtons[0]); // Edit Identity
+    fireEvent.click(editButtons[1]); // Edit Identity
 
-    // Change the name
     const nameInput = screen.getByLabelText('App Name') as HTMLInputElement;
     fireEvent.change(nameInput, { target: { value: 'Changed Name' } });
     expect(nameInput.value).toBe('Changed Name');
 
-    // Cancel
     fireEvent.click(screen.getByText('Cancel'));
 
-    // Should exit edit mode
     expect(screen.queryByText('Save')).not.toBeInTheDocument();
-    // All 5 Edit buttons should be back
-    expect(screen.getAllByText('Edit')).toHaveLength(5);
+    expect(screen.getAllByText('Edit')).toHaveLength(6);
   });
 
   it('validates Identity section — rejects short name', () => {
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[0]);
+    fireEvent.click(screen.getAllByText('Edit')[1]); // Identity
 
     const nameInput = screen.getByLabelText('App Name');
     fireEvent.change(nameInput, { target: { value: 'A' } });
@@ -188,7 +181,7 @@ describe('AppProfileClient', () => {
 
   it('validates Problem Statement section — rejects short problem statement', () => {
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[1]); // Problem Statement section
+    fireEvent.click(screen.getAllByText('Edit')[2]); // Problem Statement section
 
     const psInput = screen.getByLabelText('Problem Statement');
     fireEvent.change(psInput, { target: { value: 'Short' } });
@@ -199,7 +192,7 @@ describe('AppProfileClient', () => {
 
   it('shows SimilarToolsCheck when name changes in edit mode', () => {
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[0]);
+    fireEvent.click(screen.getAllByText('Edit')[1]); // Identity
 
     const nameInput = screen.getByLabelText('App Name');
     fireEvent.change(nameInput, { target: { value: 'NewToolName' } });
@@ -210,7 +203,7 @@ describe('AppProfileClient', () => {
 
   it('does not show SimilarToolsCheck when name is unchanged', () => {
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[0]);
+    fireEvent.click(screen.getAllByText('Edit')[1]); // Identity
 
     // Name hasn't changed — no SimilarToolsCheck
     expect(screen.queryByTestId('similar-tools-check')).not.toBeInTheDocument();
@@ -224,7 +217,7 @@ describe('AppProfileClient', () => {
     global.fetch = mockFetch;
 
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[0]);
+    fireEvent.click(screen.getAllByText('Edit')[1]); // Identity
 
     const nameInput = screen.getByLabelText('App Name');
     fireEvent.change(nameInput, { target: { value: 'Updated Name' } });
@@ -257,7 +250,7 @@ describe('AppProfileClient', () => {
     });
 
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[0]);
+    fireEvent.click(screen.getAllByText('Edit')[1]); // Identity
     fireEvent.click(screen.getByText('Save'));
 
     await waitFor(() => {
@@ -274,8 +267,8 @@ describe('AppProfileClient', () => {
     global.fetch = mockFetch;
 
     render(<AppProfileClient {...defaultProps} app={appWithRoi} />);
-    // Click Edit on Context section (index 2, after Identity and Problem Statement)
-    fireEvent.click(screen.getAllByText('Edit')[2]);
+    // Click Edit on Context section (index 3: URL, Identity, Problem Statement, Context)
+    fireEvent.click(screen.getAllByText('Edit')[3]);
 
     // Clear the ROI field
     const roiInput = screen.getByLabelText(/Potential ROI/);
@@ -302,7 +295,7 @@ describe('AppProfileClient', () => {
     global.fetch = mockFetch;
 
     render(<AppProfileClient {...defaultProps} />);
-    fireEvent.click(screen.getAllByText('Edit')[2]); // Context section (index 2)
+    fireEvent.click(screen.getAllByText('Edit')[3]); // Context section (index 3)
     fireEvent.click(screen.getByText('Save'));
 
     await waitFor(() => {

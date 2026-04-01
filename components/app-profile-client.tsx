@@ -329,84 +329,87 @@ export function AppProfileClient({
             <h1 className="text-lg font-semibold tracking-tight">{app.name}</h1>
             <TierBadge tier={app.tier} />
           </div>
-          <p className="mt-1 text-[13px] text-muted-foreground">{app.problem_statement}</p>
-
-          {/* URL row — inline edit */}
-          <div className="mt-2">
-            {isEditingUrl ? (
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={urlDraft}
-                  onChange={(e) => setUrlDraft(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleUrlSave();
-                    if (e.key === 'Escape') handleUrlCancel();
-                  }}
-                  placeholder="https://..."
-                  autoFocus
-                  className="flex-1 rounded-[6px] border bg-background px-3 h-[34px] text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
-                />
-                <button
-                  type="button"
-                  onClick={handleUrlSave}
-                  disabled={isSavingUrl}
-                  className="flex items-center gap-1.5 rounded-[6px] bg-mvf-pink px-3 h-[34px] text-[13px] font-medium text-white hover:opacity-90 transition-opacity duration-150 disabled:opacity-40"
-                >
-                  {isSavingUrl ? (
-                    <div className="h-3 w-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    'Save'
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleUrlCancel}
-                  disabled={isSavingUrl}
-                  className="rounded px-2.5 h-[34px] text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-150 disabled:opacity-40"
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 group">
-                {app.app_url ? (
-                  <a
-                    href={/^https?:\/\//.test(app.app_url) ? app.app_url : '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[13px] text-mvf-purple hover:underline"
-                  >
-                    <Link2 className="h-3.5 w-3.5 shrink-0" />
-                    <span className="truncate max-w-[320px]">{app.app_url}</span>
-                    <ExternalLink className="h-3 w-3 opacity-60 shrink-0" />
-                  </a>
-                ) : (
-                  <span className="text-[13px] text-muted-foreground/60 italic">
-                    {canEdit ? 'No URL yet — add one' : 'No URL set'}
-                  </span>
-                )}
-                {canEdit && editingSection === null && (
-                  <button
-                    type="button"
-                    onClick={() => { setUrlDraft(app.app_url || ''); setIsEditingUrl(true); }}
-                    aria-label="Edit app URL"
-                    className="opacity-0 group-hover:opacity-100 flex items-center rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-150"
-                  >
-                    <Pencil className="h-3 w-3" />
-                  </button>
-                )}
-              </div>
-            )}
-            {urlSaveError && (
-              <p className="mt-1 text-[12px] text-red-500">{urlSaveError}</p>
-            )}
-          </div>
         </div>
         <span className="rounded-[5px] bg-muted px-1.5 py-0.5 text-[11px] font-medium shrink-0">
           {STATUS_LABELS[app.status]}
         </span>
       </div>
+
+      {/* ── App URL card ────────────────────────────────────── */}
+      <section className="rounded-lg border bg-card p-5 card-shadow">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Link2 className="h-[15px] w-[15px] shrink-0" style={{ color: 'var(--mvf-pink)' }} />
+            <h3 className="text-[15px] font-semibold tracking-tight">App URL</h3>
+          </div>
+          {canEdit && !isEditingUrl && editingSection === null && (
+            <button
+              type="button"
+              onClick={() => { setUrlDraft(app.app_url || ''); setIsEditingUrl(true); }}
+              className="flex items-center gap-1.5 rounded px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-150"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+              Edit
+            </button>
+          )}
+        </div>
+        {isEditingUrl ? (
+          <div className="space-y-3">
+            <input
+              type="text"
+              value={urlDraft}
+              onChange={(e) => setUrlDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleUrlSave();
+                if (e.key === 'Escape') handleUrlCancel();
+              }}
+              placeholder="https://..."
+              autoFocus
+              className={inputClass}
+            />
+            {urlSaveError && <p className="text-[12px] text-red-500">{urlSaveError}</p>}
+            <div className="flex items-center justify-end gap-2 pt-2 border-t">
+              <button
+                type="button"
+                onClick={handleUrlCancel}
+                disabled={isSavingUrl}
+                className="rounded px-4 py-2 text-[14px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-150 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleUrlSave}
+                disabled={isSavingUrl}
+                className="flex items-center gap-2 rounded-[6px] bg-mvf-pink px-4 py-2 text-[14px] font-medium text-white hover:bg-mvf-pink/85 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
+              >
+                {isSavingUrl ? (
+                  <>
+                    <div className="h-3.5 w-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Saving...
+                  </>
+                ) : 'Save'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          app.app_url ? (
+            <a
+              href={app.app_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[13px] text-mvf-purple hover:underline"
+            >
+              <span className="truncate max-w-[480px]">{app.app_url}</span>
+              <ExternalLink className="h-3 w-3 opacity-60 shrink-0" />
+            </a>
+          ) : (
+            <p className="text-[13px] text-muted-foreground/60 italic">
+              {canEdit ? 'No URL yet — add one' : 'No URL set'}
+            </p>
+          )
+        )}
+      </section>
 
       {/* Save error banner */}
       {saveError && (
