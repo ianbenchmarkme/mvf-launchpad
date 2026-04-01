@@ -59,7 +59,7 @@ function ColourSwatch({ name, hex, cssVar, usage }: { name: string; hex: string;
       title={`Copy ${hex}`}
     >
       <div className="h-16 w-full" style={{ backgroundColor: hex }} />
-      <div className="px-3 py-2 bg-card">
+      <div className="px-3 py-2 bg-card flex flex-col min-h-[84px]">
         <div className="flex items-center justify-between gap-1">
           <p className="text-[13px] font-medium text-foreground truncate">{name}</p>
           <span className="shrink-0 text-muted-foreground transition-colors duration-150">

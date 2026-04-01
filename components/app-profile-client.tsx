@@ -52,6 +52,12 @@ export function AppProfileClient({
   const [previewIconUrl, setPreviewIconUrl] = useState<string | null>(null);
   const [iconUploadError, setIconUploadError] = useState<string | null>(null);
 
+  // ── URL inline-edit state ──────────────────────────────────
+  const [isEditingUrl, setIsEditingUrl] = useState(false);
+  const [urlDraft, setUrlDraft] = useState(app.app_url || '');
+  const [isSavingUrl, setIsSavingUrl] = useState(false);
+  const [urlSaveError, setUrlSaveError] = useState<string | null>(null);
+
   // ── Owner management state ─────────────────────────────────
   const [owners, setOwners] = useState(initialOwners);
   const [isEditingOwners, setIsEditingOwners] = useState(false);
@@ -200,6 +206,7 @@ export function AppProfileClient({
     if (section === 'identity') {
       if (!name || name.length < 2) sectionErrors.name = 'App name must be at least 2 characters';
       if (!problemStatement || problemStatement.length < 10) sectionErrors.problem_statement = 'Problem statement must be at least 10 characters';
+      if (appUrl.trim() && !/^https?:\/\/.+/.test(appUrl.trim())) sectionErrors.app_url = 'URL must start with http:// or https://';
     } else if (section === 'context') {
       if (!targetUsers) sectionErrors.target_users = 'Please select target users';
     } else if (section === 'security') {
@@ -264,6 +271,41 @@ export function AppProfileClient({
     }
   }
 
+  async function handleUrlSave() {
+    const trimmed = urlDraft.trim();
+    if (trimmed && !/^https?:\/\/.+/.test(trimmed)) {
+      setUrlSaveError('URL must start with http:// or https://');
+      return;
+    }
+    setIsSavingUrl(true);
+    setUrlSaveError(null);
+    try {
+      const res = await fetch(`/api/apps/${app.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ app_url: trimmed || null }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setUrlSaveError(data.error || 'Failed to save URL');
+        return;
+      }
+      setIsEditingUrl(false);
+      setUrlSaveError(null);
+      router.refresh();
+    } catch {
+      setUrlSaveError('Network error. Please try again.');
+    } finally {
+      setIsSavingUrl(false);
+    }
+  }
+
+  function handleUrlCancel() {
+    setUrlDraft(app.app_url || '');
+    setIsEditingUrl(false);
+    setUrlSaveError(null);
+  }
+
   // ── Input class helper ─────────────────────────────────────
   const inputClass = 'w-full rounded-[6px] border bg-background px-4 h-[44px] text-[14px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50';
   const textareaClass = 'w-full rounded-[6px] border bg-background px-4 py-3 text-[14px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50 resize-none';
@@ -276,16 +318,88 @@ export function AppProfileClient({
 
   return (
     <div className="space-y-5 max-w-3xl">
-      {/* Header — always read-only (name/status shown, tier via TierBadge) */}
+      {/* Header — name/tier/status read-only; URL has inline edit */}
       <div className="flex items-start justify-between">
-        <div>
+        <div className="flex-1 min-w-0 pr-4">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-semibold tracking-tight">{app.name}</h1>
             <TierBadge tier={app.tier} />
           </div>
           <p className="mt-1 text-[13px] text-muted-foreground">{app.problem_statement}</p>
+
+          {/* URL row — inline edit */}
+          <div className="mt-2">
+            {isEditingUrl ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={urlDraft}
+                  onChange={(e) => setUrlDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleUrlSave();
+                    if (e.key === 'Escape') handleUrlCancel();
+                  }}
+                  placeholder="https://..."
+                  autoFocus
+                  className="flex-1 rounded-[6px] border bg-background px-3 h-[34px] text-[13px] transition-all duration-150 focus:border-mvf-purple/40 focus:ring-1 focus:ring-mvf-purple/20 outline-none placeholder:text-muted-foreground/50"
+                />
+                <button
+                  type="button"
+                  onClick={handleUrlSave}
+                  disabled={isSavingUrl}
+                  className="flex items-center gap-1.5 rounded-[6px] bg-mvf-pink px-3 h-[34px] text-[13px] font-medium text-white hover:opacity-90 transition-opacity duration-150 disabled:opacity-40"
+                >
+                  {isSavingUrl ? (
+                    <div className="h-3 w-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    'Save'
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleUrlCancel}
+                  disabled={isSavingUrl}
+                  className="rounded px-2.5 h-[34px] text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-150 disabled:opacity-40"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 group">
+                {app.app_url ? (
+                  <a
+                    href={/^https?:\/\//.test(app.app_url) ? app.app_url : '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[13px] text-mvf-purple hover:underline"
+                  >
+                    <Link2 className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate max-w-[320px]">{app.app_url}</span>
+                    <ExternalLink className="h-3 w-3 opacity-60 shrink-0" />
+                  </a>
+                ) : (
+                  <span className="text-[13px] text-muted-foreground/60 italic">
+                    {canEdit ? 'No URL yet — add one' : 'No URL set'}
+                  </span>
+                )}
+                {canEdit && editingSection === null && (
+                  <button
+                    type="button"
+                    onClick={() => { setUrlDraft(app.app_url || ''); setIsEditingUrl(true); }}
+                    aria-label="Edit app URL"
+                    className="opacity-0 group-hover:opacity-100 flex items-center rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-150"
+                  >
+                    <Pencil className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            )}
+            {urlSaveError && (
+              <p className="mt-1 text-[12px] text-red-500">{urlSaveError}</p>
+            )}
+          </div>
         </div>
-        <span className="rounded-[5px] bg-muted px-1.5 py-0.5 text-[11px] font-medium">
+        <span className="rounded-[5px] bg-muted px-1.5 py-0.5 text-[11px] font-medium shrink-0">
           {STATUS_LABELS[app.status]}
         </span>
       </div>
@@ -303,7 +417,7 @@ export function AppProfileClient({
         description="The app's name, what problem it solves, and where to access it."
         canEdit={canEdit}
         isEditing={editingSection === 'identity'}
-        onEditStart={() => setEditingSection('identity')}
+        onEditStart={() => { handleUrlCancel(); setEditingSection('identity'); }}
         onCancel={handleCancel}
         onSave={handleSave}
         isSaving={isSaving}
@@ -323,23 +437,6 @@ export function AppProfileClient({
               </div>
             </div>
             <DetailItem label="Problem Statement" value={app.problem_statement} span2 />
-            {app.app_url && (
-              <div className="space-y-0.5 sm:col-span-2">
-                <dt className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Access</dt>
-                <dd>
-                  <a
-                    href={/^https?:\/\//.test(app.app_url) ? app.app_url : '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[13px] text-mvf-purple hover:underline"
-                  >
-                    <Link2 className="h-3.5 w-3.5" />
-                    {app.app_url}
-                    <ExternalLink className="h-3 w-3 opacity-60" />
-                  </a>
-                </dd>
-              </div>
-            )}
           </div>
         }
       >
@@ -417,6 +514,7 @@ export function AppProfileClient({
               placeholder="https://..."
               className={inputClass}
             />
+            {errors.app_url && <p className="text-[13px] text-red-500">{errors.app_url}</p>}
           </div>
           {name !== app.name && name.length >= 2 && (
             <SimilarToolsCheck query={name} />
@@ -430,7 +528,7 @@ export function AppProfileClient({
         description="How the app is categorised, who uses it, and its expected value."
         canEdit={canEdit}
         isEditing={editingSection === 'context'}
-        onEditStart={() => setEditingSection('context')}
+        onEditStart={() => { handleUrlCancel(); setEditingSection('context'); }}
         onCancel={handleCancel}
         onSave={handleSave}
         isSaving={isSaving}
@@ -509,7 +607,7 @@ export function AppProfileClient({
         description="Whether the app handles sensitive data or connects to external services."
         canEdit={canEdit}
         isEditing={editingSection === 'security'}
-        onEditStart={() => setEditingSection('security')}
+        onEditStart={() => { handleUrlCancel(); setEditingSection('security'); }}
         onCancel={handleCancel}
         onSave={handleSave}
         isSaving={isSaving}
@@ -583,7 +681,7 @@ export function AppProfileClient({
         description="Whether this app replaces an existing paid tool, and the cost it saves."
         canEdit={canEdit}
         isEditing={editingSection === 'thirdparty'}
-        onEditStart={() => setEditingSection('thirdparty')}
+        onEditStart={() => { handleUrlCancel(); setEditingSection('thirdparty'); }}
         onCancel={handleCancel}
         onSave={handleSave}
         isSaving={isSaving}
