@@ -212,7 +212,6 @@ export function AppProfileClient({
       if (!problemStatement || problemStatement.length < 10) sectionErrors.problem_statement = 'Problem statement must be at least 10 characters';
     } else if (section === 'identity') {
       if (!name || name.length < 2) sectionErrors.name = 'App name must be at least 2 characters';
-      if (appUrl.trim() && !/^https?:\/\/.+/.test(appUrl.trim())) sectionErrors.app_url = 'URL must start with http:// or https://';
     } else if (section === 'context') {
       if (!targetUsers) sectionErrors.target_users = 'Please select target users';
     } else if (section === 'security') {
@@ -284,10 +283,6 @@ export function AppProfileClient({
 
   async function handleUrlSave() {
     const trimmed = urlDraft.trim();
-    if (trimmed && !/^https?:\/\/.+/.test(trimmed)) {
-      setUrlSaveError('URL must start with http:// or https://');
-      return;
-    }
     setIsSavingUrl(true);
     setUrlSaveError(null);
     try {
