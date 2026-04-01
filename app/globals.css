@@ -22,6 +22,8 @@
 }
 .dark {
   --logo-filter: brightness(0) invert(1);
+  --wip-badge-bg: color-mix(in srgb, #f59e0b 18%, transparent);
+  --wip-badge-border: color-mix(in srgb, #f59e0b 35%, transparent);
   --wip-badge-text: #fcd34d;
 }
 

@@ -40,13 +40,15 @@ function SectionCard({ title, children }: { title: string; children: React.React
   );
 }
 
-function ColourSwatch({ name, hex, usage }: { name: string; hex: string; usage: string }) {
+function ColourSwatch({ name, hex, cssVar, usage }: { name: string; hex: string; cssVar: string; usage: string }) {
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
     navigator.clipboard.writeText(hex).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
+    }).catch(() => {
+      // clipboard unavailable — fail silently
     });
   }
 
@@ -65,6 +67,7 @@ function ColourSwatch({ name, hex, usage }: { name: string; hex: string; usage: 
           </span>
         </div>
         <p className="text-[11px] text-muted-foreground font-mono">{hex}</p>
+        <p className="text-[11px] text-muted-foreground font-mono">{cssVar}</p>
         <p className="text-[11px] text-muted-foreground mt-0.5">{usage}</p>
       </div>
     </button>
@@ -95,7 +98,7 @@ export function BrandGuidelinesClient() {
       <SectionCard title="Colour Palette">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {BRAND_COLOURS.map((c) => (
-            <ColourSwatch key={c.hex} name={c.name} hex={c.hex} usage={c.usage} />
+            <ColourSwatch key={c.hex} name={c.name} hex={c.hex} cssVar={c.var} usage={c.usage} />
           ))}
         </div>
         <p className="mt-3 text-[12px] text-muted-foreground">Click any swatch to copy the hex value.</p>
